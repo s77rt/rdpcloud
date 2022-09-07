@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/netmgmt";
+
+package models.netmgmt;
+
+message User {
+	string username = 1;
+	string password = 2;
+	uint32 privilege = 3;
+	uint32 flags = 4;
+	string full_name = 5;
+}

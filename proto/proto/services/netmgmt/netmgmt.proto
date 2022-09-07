@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/netmgmt";
+
+package services.netmgmt;
+
+import "services/netmgmt/user.proto";
+
+service Netmgmt {
+	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {}
+	rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+}
