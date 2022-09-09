@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/netmgmt";
+
+package services.netmgmt;
+
+import "models/netmgmt/local_group.proto";
+import "models/netmgmt/user.proto";
+
+message AddUserToLocalGroupRequest { models.netmgmt.User user = 1; models.netmgmt.LocalGroup local_group = 2; }
+message AddUserToLocalGroupResponse {}
+
+message RemoveUserFromLocalGroupRequest { models.netmgmt.User user = 1; models.netmgmt.LocalGroup local_group = 2; }
+message RemoveUserFromLocalGroupResponse {}
+
+message GetLocalGroupsRequest {}
+message GetLocalGroupsResponse { repeated models.netmgmt.LocalGroup local_groups = 1; }
+
+message GetUsersInLocalGroupRequest { models.netmgmt.LocalGroup local_group = 1; }
+message GetUsersInLocalGroupResponse { repeated models.netmgmt.User users = 1; }

@@ -5,8 +5,18 @@ option go_package = "github.com/s77rt/rdpcloud/proto/go/services/netmgmt";
 package services.netmgmt;
 
 import "services/netmgmt/user.proto";
+import "services/netmgmt/local_group.proto";
 
 service Netmgmt {
-	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {}
 	rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+	rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {}
+	rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+	rpc GetUserLocalGroups(GetUserLocalGroupsRequest) returns (GetUserLocalGroupsResponse) {}
+	rpc ChangeUserPassword(ChangeUserPasswordRequest) returns (ChangeUserPasswordResponse) {}
+
+	rpc AddUserToLocalGroup(AddUserToLocalGroupRequest) returns (AddUserToLocalGroupResponse) {}
+	rpc RemoveUserFromLocalGroup(RemoveUserFromLocalGroupRequest) returns (RemoveUserFromLocalGroupResponse) {}
+	rpc GetLocalGroups(GetLocalGroupsRequest) returns (GetLocalGroupsResponse) {}
+	rpc GetUsersInLocalGroup(GetUsersInLocalGroupRequest) returns (GetUsersInLocalGroupResponse) {}
 }

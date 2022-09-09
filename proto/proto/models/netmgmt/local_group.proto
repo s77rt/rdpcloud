@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/netmgmt";
+
+package models.netmgmt;
+
+message LocalGroup {
+	string groupname = 1;
+}

@@ -5,9 +5,22 @@ option go_package = "github.com/s77rt/rdpcloud/proto/go/services/netmgmt";
 package services.netmgmt;
 
 import "models/netmgmt/user.proto";
+import "models/netmgmt/local_group.proto";
+
+message AddUserRequest { models.netmgmt.User user = 1; }
+message AddUserResponse {}
+
+message DeleteUserRequest { models.netmgmt.User user = 1; }
+message DeleteUserResponse {}
 
 message GetUsersRequest {}
 message GetUsersResponse { repeated models.netmgmt.User users = 1; }
 
-message AddUserRequest { models.netmgmt.User user = 1; }
-message AddUserResponse {}
+message GetUserRequest { models.netmgmt.User user = 1; }
+message GetUserResponse { models.netmgmt.User user = 1; }
+
+message GetUserLocalGroupsRequest { models.netmgmt.User user = 1; }
+message GetUserLocalGroupsResponse { repeated models.netmgmt.LocalGroup local_groups = 1; }
+
+message ChangeUserPasswordRequest { models.netmgmt.User user = 1; }
+message ChangeUserPasswordResponse {}
