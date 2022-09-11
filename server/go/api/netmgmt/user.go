@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	netmgmtModelsPb "github.com/s77rt/rdpcloud/proto/go/models/netmgmt"
+	"github.com/s77rt/rdpcloud/server/go/internal/encode"
+	"github.com/s77rt/rdpcloud/server/go/internal/secure"
 	"github.com/s77rt/rdpcloud/server/go/internal/win"
 	netmgmtInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/netmgmt"
 )
@@ -19,25 +21,26 @@ func AddUser(user *netmgmtModelsPb.User) error {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
 
-	usri2_name, err := win.UTF16PtrFromString(user.Username)
+	usri2_name, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
-	usri2_password, err := win.UTF16PtrFromString(user.Password)
+	usri2_password, err := encode.UTF16PtrFromString(user.Password)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode password to UTF16")
 	}
-	usri2_full_name, err := win.UTF16PtrFromString(user.FullName)
+	usri2_full_name, err := encode.UTF16PtrFromString(user.FullName)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode full name to UTF16")
 	}
 
 	var bufData = &netmgmtInternalApi.USER_INFO_2{
-		Usri2_name:      usri2_name,
-		Usri2_password:  usri2_password,
-		Usri2_priv:      netmgmtInternalApi.USER_PRIV_USER,
-		Usri2_flags:     netmgmtInternalApi.UF_NORMAL_ACCOUNT | netmgmtInternalApi.UF_SCRIPT | netmgmtInternalApi.UF_DONT_EXPIRE_PASSWD,
-		Usri2_full_name: usri2_full_name,
+		Usri2_name:         usri2_name,
+		Usri2_password:     usri2_password,
+		Usri2_priv:         netmgmtInternalApi.USER_PRIV_USER,
+		Usri2_flags:        netmgmtInternalApi.UF_NORMAL_ACCOUNT | netmgmtInternalApi.UF_SCRIPT | netmgmtInternalApi.UF_DONT_EXPIRE_PASSWD,
+		Usri2_full_name:    usri2_full_name,
+		Usri2_acct_expires: netmgmtInternalApi.TIMEQ_FOREVER,
 	}
 	var bufPtr = unsafe.Pointer(bufData)
 	var buf = (*byte)(bufPtr)
@@ -50,6 +53,9 @@ func AddUser(user *netmgmtModelsPb.User) error {
 		buf,
 		&parm_err,
 	)
+
+	user.Password = ""
+	secure.ZeroMemoryUint16FromPtr(usri2_password)
 
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
@@ -76,7 +82,7 @@ func DeleteUser(user *netmgmtModelsPb.User) error {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
 
-	username, err := win.UTF16PtrFromString(user.Username)
+	username, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
@@ -129,10 +135,10 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 				var bufData = (*netmgmtInternalApi.USER_INFO_2)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 
 				var user = &netmgmtModelsPb.User{
-					Username:  win.UTF16PtrToString(bufData.Usri2_name),
+					Username:  encode.UTF16PtrToString(bufData.Usri2_name),
 					Privilege: bufData.Usri2_priv,
 					Flags:     bufData.Usri2_flags,
-					FullName:  win.UTF16PtrToString(bufData.Usri2_full_name),
+					FullName:  encode.UTF16PtrToString(bufData.Usri2_full_name),
 				}
 				users = append(users, user)
 			}
@@ -166,7 +172,7 @@ func GetUser(user *netmgmtModelsPb.User) (*netmgmtModelsPb.User, error) {
 		return nil, status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
 
-	username, err := win.UTF16PtrFromString(user.Username)
+	username, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
@@ -185,10 +191,10 @@ func GetUser(user *netmgmtModelsPb.User) (*netmgmtModelsPb.User, error) {
 		var bufData = (*netmgmtInternalApi.USER_INFO_2)(bufPtr)
 
 		user = &netmgmtModelsPb.User{
-			Username:  win.UTF16PtrToString(bufData.Usri2_name),
+			Username:  encode.UTF16PtrToString(bufData.Usri2_name),
 			Privilege: bufData.Usri2_priv,
 			Flags:     bufData.Usri2_flags,
-			FullName:  win.UTF16PtrToString(bufData.Usri2_full_name),
+			FullName:  encode.UTF16PtrToString(bufData.Usri2_full_name),
 		}
 	}
 
@@ -215,7 +221,7 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGro
 		return nil, status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
 
-	username, err := win.UTF16PtrFromString(user.Username)
+	username, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
@@ -245,7 +251,7 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGro
 				var bufData = (*netmgmtInternalApi.LOCALGROUP_USERS_INFO_0)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 
 				var localGroup = &netmgmtModelsPb.LocalGroup{
-					Groupname: win.UTF16PtrToString(bufData.Lgrui0_name),
+					Groupname: encode.UTF16PtrToString(bufData.Lgrui0_name),
 				}
 				localGroups = append(localGroups, localGroup)
 			}
@@ -283,11 +289,11 @@ func ChangeUserPassword(user *netmgmtModelsPb.User) error {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
 
-	username, err := win.UTF16PtrFromString(user.Username)
+	username, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
-	usri1003_password, err := win.UTF16PtrFromString(user.Password)
+	usri1003_password, err := encode.UTF16PtrFromString(user.Password)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode password to UTF16")
 	}
@@ -307,6 +313,9 @@ func ChangeUserPassword(user *netmgmtModelsPb.User) error {
 		buf,
 		&parm_err,
 	)
+
+	user.Password = ""
+	secure.ZeroMemoryUint16FromPtr(usri1003_password)
 
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {

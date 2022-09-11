@@ -185,9 +185,9 @@ func main() {
 
 	netmgmtClient = netmgmtServicePb.NewNetmgmtClient(conn)
 
-	GetUsers()
+	/*GetUsers()
 	AddUser()
 	AddUserToLocalGroup("Users")
 	AddUserToLocalGroup("Remote Desktop Users")
-	GetUser()
+	GetUser()*/
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/secauthn";
+
+package services.secauthn;
+
+import "services/secauthn/logon_user.proto";
+
+service Secauthn {
+	rpc LogonUser(LogonUserRequest) returns (LogonUserResponse) {}
+}

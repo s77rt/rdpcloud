@@ -1,6 +1,6 @@
 //go:build windows && amd64
 
-package win
+package encode
 
 import (
 	"golang.org/x/sys/windows"

@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	netmgmtModelsPb "github.com/s77rt/rdpcloud/proto/go/models/netmgmt"
+	"github.com/s77rt/rdpcloud/server/go/internal/encode"
 	"github.com/s77rt/rdpcloud/server/go/internal/win"
 	netmgmtInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/netmgmt"
 )
@@ -30,11 +31,11 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtModelsPb
 		return status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
 	}
 
-	lgrmi3_domainandname, err := win.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
+	lgrmi3_domainandname, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode domain and name to UTF16")
 	}
-	groupname, err := win.UTF16PtrFromString(localGroup.Groupname)
+	groupname, err := encode.UTF16PtrFromString(localGroup.Groupname)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode groupname to UTF16")
 	}
@@ -58,6 +59,8 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtModelsPb
 		case netmgmtInternalApi.NERR_BadUsername:
 			return status.Errorf(codes.InvalidArgument, "Bad username")
 		case netmgmtInternalApi.NERR_GroupNotFound:
+			return status.Errorf(codes.NotFound, "Group not found")
+		case win.ERROR_NO_SUCH_ALIAS:
 			return status.Errorf(codes.NotFound, "Group not found")
 		case win.ERROR_NO_SUCH_MEMBER:
 			return status.Errorf(codes.NotFound, "User not found")
@@ -87,11 +90,11 @@ func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtMod
 		return status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
 	}
 
-	lgrmi3_domainandname, err := win.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
+	lgrmi3_domainandname, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode domain and name to UTF16")
 	}
-	groupname, err := win.UTF16PtrFromString(localGroup.Groupname)
+	groupname, err := encode.UTF16PtrFromString(localGroup.Groupname)
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode groupname to UTF16")
 	}
@@ -115,6 +118,8 @@ func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtMod
 		case netmgmtInternalApi.NERR_BadUsername:
 			return status.Errorf(codes.InvalidArgument, "Bad username")
 		case netmgmtInternalApi.NERR_GroupNotFound:
+			return status.Errorf(codes.NotFound, "Group not found")
+		case win.ERROR_NO_SUCH_ALIAS:
 			return status.Errorf(codes.NotFound, "Group not found")
 		case win.ERROR_NO_SUCH_MEMBER:
 			return status.Errorf(codes.NotFound, "User not found")
@@ -158,7 +163,7 @@ func GetLocalGroups() ([]*netmgmtModelsPb.LocalGroup, error) {
 				var bufData = (*netmgmtInternalApi.LOCALGROUP_INFO_0)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 
 				var localGroup = &netmgmtModelsPb.LocalGroup{
-					Groupname: win.UTF16PtrToString(bufData.Lgrpi0_name),
+					Groupname: encode.UTF16PtrToString(bufData.Lgrpi0_name),
 				}
 				localGroups = append(localGroups, localGroup)
 			}
@@ -199,7 +204,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup) ([]*netmgmtMod
 		return nil, status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
 	}
 
-	groupname, err := win.UTF16PtrFromString(localGroup.Groupname)
+	groupname, err := encode.UTF16PtrFromString(localGroup.Groupname)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Unable to encode groupname to UTF16")
 	}
@@ -229,7 +234,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup) ([]*netmgmtMod
 			for i := uint32(0); i < entriesread; i++ {
 				var bufData = (*netmgmtInternalApi.LOCALGROUP_MEMBERS_INFO_3)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 
-				domainandname := win.UTF16PtrToString(bufData.Lgrmi3_domainandname)
+				domainandname := encode.UTF16PtrToString(bufData.Lgrmi3_domainandname)
 				domainandname_splitted := strings.Split(domainandname, "\\")
 				if len(domainandname_splitted) != 2 {
 					continue

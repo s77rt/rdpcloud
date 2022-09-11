@@ -7,6 +7,7 @@ import (
 )
 
 const MAX_PREFERRED_LENGTH = 0xffffffff // (DWORD) -1 == 2^32 - 1
+const TIMEQ_FOREVER = 0xffffffff        // (unsigned __LONG32) -1 == 2^32 - 1
 
 const NERR_Success = 0
 
