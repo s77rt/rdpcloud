@@ -1,0 +1,10 @@
+For syscall, we get 3 returned values (r1, r2 uintptr, lastErr error)
+r1 is used and compared with constants that we defined (such as internal/win/errors.go)
+r2 is rarely/never used
+lastErr is used and compared with errors offered in golang.org/x/sys/windows
+
+Freeing the buffer (NetApiBufferFree) can be done even in the case of function call failure
+since a buffer is nothing special.
+However freeing a Handle or an Object must only be done after a successful function call
+that's because such types may actually contains props that determine how to handle the freeing operation
+you can't just pass in an address and hope it contains such props, it won't and if it does it's probably just random garbage that will cause a crash

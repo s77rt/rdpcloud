@@ -19,21 +19,17 @@ const LOGON32_PROVIDER_WINNT50 = 3
 const LOGON32_PROVIDER_VIRTUAL = 4
 
 var (
-	procLogonUserExA = modadvapi32.NewProc("LogonUserExA")
+	procLogonUserW = modadvapi32.NewProc("LogonUserW")
 )
 
-func LogonUserExA(lpszUsername *uint8, lpszDomain *uint8, lpszPassword *uint8, dwLogonType uint32, dwLogonProvider uint32, phToken *byte, ppLogonSid **byte, ppProfileBuffer **byte, pdwProfileLength *uint32, pQuotaLimits *byte) (r1, r2 uintptr, lastErr error) {
-	r1, r2, lastErr = procLogonUserExA.Call(
+func LogonUserW(lpszUsername *uint16, lpszDomain *uint16, lpszPassword *uint16, dwLogonType uint32, dwLogonProvider uint32, phToken *uintptr) (r1, r2 uintptr, lastErr error) {
+	r1, r2, lastErr = procLogonUserW.Call(
 		uintptr(unsafe.Pointer(lpszUsername)),
 		uintptr(unsafe.Pointer(lpszDomain)),
 		uintptr(unsafe.Pointer(lpszPassword)),
 		uintptr(dwLogonType),
 		uintptr(dwLogonProvider),
 		uintptr(unsafe.Pointer(phToken)),
-		uintptr(unsafe.Pointer(ppLogonSid)),
-		uintptr(unsafe.Pointer(ppProfileBuffer)),
-		uintptr(unsafe.Pointer(pdwProfileLength)),
-		uintptr(unsafe.Pointer(pQuotaLimits)),
 	)
 	return
 }

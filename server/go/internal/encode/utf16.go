@@ -6,6 +6,10 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+func UTF16ToString(s []uint16) string {
+	return windows.UTF16ToString(s)
+}
+
 func UTF16PtrToString(p *uint16) string {
 	return windows.UTF16PtrToString(p)
 }

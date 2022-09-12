@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"golang.org/x/sys/windows"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -15,6 +17,7 @@ import (
 	memoryInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/memory"
 	secauthnInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/secauthn"
 	secauthzInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/secauthz"
+	sysinfoInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/sysinfo"
 )
 
 func LogonUser(user *secauthnModelsPb.User) (string, error) {
@@ -27,55 +30,101 @@ func LogonUser(user *secauthnModelsPb.User) (string, error) {
 		return "", status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
 	}
 
-	lpszUsername, err := encode.Windows1252PtrFromString(user.Username)
+	lpszUsername, err := encode.UTF16PtrFromString(user.Username)
 	if err != nil {
-		return "", status.Errorf(codes.InvalidArgument, "Unable to encode username to Windows1252")
+		return "", status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
 	}
-	lpszDomain, err := encode.Windows1252PtrFromString(hostname)
+	lpszDomain, err := encode.UTF16PtrFromString(hostname)
 	if err != nil {
-		return "", status.Errorf(codes.InvalidArgument, "Unable to encode domain to Windows1252")
+		return "", status.Errorf(codes.InvalidArgument, "Unable to encode domain to UTF16")
 	}
-	lpszPassword, err := encode.Windows1252PtrFromString(user.Password)
+	lpszPassword, err := encode.UTF16PtrFromString(user.Password)
 	if err != nil {
-		return "", status.Errorf(codes.InvalidArgument, "Unable to encode password to Windows1252")
+		return "", status.Errorf(codes.InvalidArgument, "Unable to encode password to UTF16")
 	}
 
-	var ppLogonSid = new(byte)
+	var phToken uintptr
 
-	ret, _, _ := secauthnInternalApi.LogonUserExA(
+	ret, _, lasterr := secauthnInternalApi.LogonUserW(
 		lpszUsername,
 		lpszDomain,
 		lpszPassword,
 		secauthnInternalApi.LOGON32_LOGON_NETWORK,
 		secauthnInternalApi.LOGON32_PROVIDER_DEFAULT,
-		nil, // phToken not required
-		&ppLogonSid,
-		nil, // ppProfileBuffer not required
-		nil, // pdwProfileLength not required
-		nil, // pQuotaLimits not required
+		&phToken,
 	)
 
-	var sidString = new(uint8)
-
-	var ret2 uintptr
-
-	if ret != uintptr(0) {
-		ret2, _, _ = secauthzInternalApi.ConvertSidToStringSidA(
-			ppLogonSid,
-			&sidString,
-		)
-		memoryInternalApi.LocalFree(ppLogonSid)
-	}
-
 	user.Password = ""
-	secure.ZeroMemoryUint8FromPtr(lpszPassword)
+	secure.ZeroMemoryUint16FromPtr(lpszPassword)
 
-	if ret == uintptr(0) {
-		return "", status.Errorf(codes.Unknown, "Failed to logon user")
-	}
-	if ret2 == uintptr(0) {
-		return "", status.Errorf(codes.Unknown, "Failed to logon user (ConvertSidToStringSidA failure)")
+	if ret == 0 {
+		if lasterr == windows.ERROR_LOGON_FAILURE {
+			return "", status.Errorf(codes.Unauthenticated, "Login failure")
+		}
+		return "", status.Errorf(codes.Unknown, fmt.Sprintf("Failed to logon user (error: %d)", lasterr))
 	}
 
-	return encode.Windows1252PtrToString(sidString), nil
+	sysinfoInternalApi.CloseHandle(phToken)
+
+	lpAccountName, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
+	if err != nil {
+		return "", status.Errorf(codes.InvalidArgument, "Unable to encode account name to UTF16")
+	}
+
+	var cbSid uint32
+	var cchReferencedDomainName uint32
+	var peUse uint32
+
+	ret, _, lasterr = secauthzInternalApi.LookupAccountNameW(
+		nil, // start lookup on local
+		lpAccountName,
+		nil,
+		&cbSid,
+		nil,
+		&cchReferencedDomainName,
+		&peUse,
+	)
+
+	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
+		return "", status.Errorf(codes.Unknown, fmt.Sprintf("Failed to logon user [LookupAccountNameW STEP1] (error: %d)", lasterr))
+	}
+
+	var Sid = make([]byte, cbSid)
+	var ReferencedDomainName = make([]uint16, cchReferencedDomainName)
+
+	ret, _, lasterr = secauthzInternalApi.LookupAccountNameW(
+		nil, // start lookup on local
+		lpAccountName,
+		&Sid[0],
+		&cbSid,
+		&ReferencedDomainName[0],
+		&cchReferencedDomainName,
+		&peUse,
+	)
+
+	if ret == 0 {
+		return "", status.Errorf(codes.Unknown, fmt.Sprintf("Failed to logon user [LookupAccountNameW STEP2] (error: %d)", lasterr))
+	}
+
+	domain := encode.UTF16ToString(ReferencedDomainName)
+	if domain != hostname {
+		return "", status.Errorf(codes.Unknown, "Failed to logon user (domain mismatch)")
+	}
+
+	var StringSid = new(uint16)
+
+	ret, _, lasterr = secauthzInternalApi.ConvertSidToStringSidW(
+		&Sid[0],
+		&StringSid,
+	)
+
+	if ret == 0 {
+		return "", status.Errorf(codes.Unknown, fmt.Sprintf("Failed to logon user [ConvertSidToStringSidW] (error: %d)", lasterr))
+	}
+
+	sidString := encode.UTF16PtrToString(StringSid)
+
+	memoryInternalApi.LocalFree(StringSid)
+
+	return sidString, nil
 }
