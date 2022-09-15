@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex, nofollow">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>RDPCloud Web Client</title>
+
+		<link rel="shortcut icon" type="image/png" href="favicon.png" />
+		<link rel="stylesheet" href="s/jquery-ui.min.css" />
+		<link rel="stylesheet" href="grpc-web-form.css" />
+
+		<link rel="stylesheet" href="s/app-main.css" />
+
+		<script src="s/jquery.min.js"></script>
+		<script src="s/jquery-ui.min.js"></script>
+		<script src="grpc-web-form.js"></script>
+
+		<script>
+			// ZOMG this is awful. This beast comes from https://developer.mozilla.org/en-US/docs/Web/API/document/cookie
+			var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)_grpcui_csrf_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+			// add CSRF token to all non-GET requests
+			$(document).ajaxSend(function(event, request, settings) {
+				if (settings.method !== "GET") {
+					request.setRequestHeader("x-grpcui-csrf-token", cookieValue);
+				}
+			});
+		</script>
+
+		<style>
+			#grpc-request-form div.input_container {
+				display: flex;
+				overflow: auto;
+				padding: 0;
+				border-radius: 0;
+			}
+			#grpc-request-form td {
+				vertical-align: middle;
+			}
+			#grpc-request-form td.name {
+				text-align: left;
+				font-size: initial;
+			}
+			#grpc-request-form td.name strong {
+				font-size: initial;
+			}
+			#grpc-request-form td.toggle_presence{
+				width: auto;
+			}
+			#grpc-request-form div.one-of-3 {
+				border: none;
+			}
+			#grpc-request-form div.two-of-3 {
+				border: 1px solid #ddd;
+    			padding: 12px;
+    			border-radius: 2px;
+			}
+			#grpc-request-form div.three-of-3 {
+				border: 1px solid #ddd;
+    			padding: 12px;
+    			border-radius: 2px;
+			}
+			#grpc-request-form button, #grpc-request-form input:not([type=checkbox]), #grpc-request-form select, #grpc-request-form textarea {
+				width: 100%;
+			}
+			#grpc-request-form td input[type=checkbox] {
+				margin: auto;
+			}
+			#grpc-request-form table {
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+			}
+			#grpc-request-form table td:not(:last-child), #grpc-request-form table th:not(:last-child) {
+				white-space: nowrap;
+			}
+			#grpc-request-form table td:last-child, #grpc-request-form table th:last-child {
+				width: 100%;
+			}
+		</style>
+
+		{{ range .AddlResources }}
+		  {{ . }}
+		{{ end }}
+	</head>
+	<body>
+		<div id="app" style="display: none;"></div>
+		<div>
+			{{ if not (eq .Target "") }}
+				<div>Connected to <span class="target">{{ .Target }}</span></div>
+			{{ end }}
+			<div>
+				{{ .WebFormContents }}
+			</div>
+		</div>
+
+		<script>
+			window.InitApp = function(App) {
+				var grpc_service = document.getElementById("grpc-service");
+				var grpc_method = document.getElementById("grpc-method");
+				var grpc_request_form = $("#grpc-request-form");
+				var grpc_invoke = $(".grpc-invoke")[0];
+
+				document.addEventListener("App-Invoke", () => {
+					if (grpc_invoke.disabled === true) {
+						App.ThrowErrorMessage("Unable to invoke");
+						App.SetInvokeLoading(false);
+						return;
+					}
+					const observer = new MutationObserver((mutationList, observer) => {
+						const mutationRecord = mutationList[0];
+						if (mutationRecord.type === "attributes") {
+							if (mutationRecord.target.disabled === false) {
+								observer.disconnect();
+								if ($("#grpc-response-error").css("display") !== "none") {
+									var error = $("#grpc-response-error-desc").text().replace(/([A-Z])/g, ' $1').trim();
+									var error_msg = $("#grpc-response-error-msg").text();
+									App.SetResponse(null, error, error_msg);
+								} else {
+									var data = $(".grpc-response-textarea").val();
+									App.SetResponse(data, null, null);
+								}
+								App.SetInvokeLoading(false);
+							}
+						}
+					});
+					observer.observe(grpc_invoke, { attributes: true });
+					grpc_invoke.click();
+				});
+				document.addEventListener("App-SelectService", (e) => {
+					grpc_service.value = e.detail;
+					$(grpc_service).trigger("change");
+				});
+				document.addEventListener("App-SelectMethod", (e) => {
+					grpc_method.value = e.detail;
+					$(grpc_method).trigger("change");
+				});
+
+				grpc_request_form.remove();
+				$("#App-Request-Form-Container").append(grpc_request_form);
+				$(function() {
+					const observer = new MutationObserver(() => {
+						$("#grpc-request-form input:not([type=checkbox]):not('.ant-input'), #grpc-request-form select:not('.ant-input'), #grpc-request-form textarea:not('.ant-input')").addClass("ant-input");
+						$("#grpc-request-form input[type=checkbox]:not('.ant-checkbox.ant-checkbox-inner')").addClass("ant-checkbox ant-checkbox-inner");
+					});
+					observer.observe($("#App-Request-Form-Container")[0], { childList: true, subtree: true });
+				});
+
+				$(function() {
+					$("#grpc-request-metadata-form input.name:first").val("authorization");
+					$("#grpc-request-metadata-form input.value:first").val("token here");
+				});
+
+				for (const service_option of grpc_service) {
+					const service = service_option.value;
+					App.AddService(service);
+
+					grpc_service.value = service;
+					$(grpc_service).trigger("change");
+					for (const method_option of grpc_method) {
+						const method = method_option.value;
+						App.AddServiceMethod(service, method);
+					}
+				}
+
+				$("#app").show();
+			}
+		</script>
+
+		<script src="s/app-main.js"></script>
+		<script src="s/app-chunk.js"></script>
+	</body>
+</html>

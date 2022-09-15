@@ -20,7 +20,7 @@ import (
 	sysinfoInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/sysinfo"
 )
 
-func LogonUser(user *secauthnModelsPb.User) (string, error) {
+func LogonUser(user *secauthnModelsPb.User_3) (string, error) {
 	if user == nil {
 		return "", status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}

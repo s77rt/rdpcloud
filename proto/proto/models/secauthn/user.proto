@@ -8,3 +8,8 @@ message User {
 	string username = 1;
 	string password = 2;
 }
+
+message User_3 {
+	string username = 1;
+	string password = 2;
+}

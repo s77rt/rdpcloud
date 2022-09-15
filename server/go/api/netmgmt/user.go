@@ -16,7 +16,7 @@ import (
 	netmgmtInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/netmgmt"
 )
 
-func AddUser(user *netmgmtModelsPb.User) error {
+func AddUser(user *netmgmtModelsPb.User_3) error {
 	if user == nil {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
@@ -29,17 +29,12 @@ func AddUser(user *netmgmtModelsPb.User) error {
 	if err != nil {
 		return status.Errorf(codes.InvalidArgument, "Unable to encode password to UTF16")
 	}
-	usri2_full_name, err := encode.UTF16PtrFromString(user.FullName)
-	if err != nil {
-		return status.Errorf(codes.InvalidArgument, "Unable to encode full name to UTF16")
-	}
 
 	var bufData = &netmgmtInternalApi.USER_INFO_2{
 		Usri2_name:         usri2_name,
 		Usri2_password:     usri2_password,
 		Usri2_priv:         netmgmtInternalApi.USER_PRIV_USER,
 		Usri2_flags:        netmgmtInternalApi.UF_NORMAL_ACCOUNT | netmgmtInternalApi.UF_SCRIPT | netmgmtInternalApi.UF_DONT_EXPIRE_PASSWD,
-		Usri2_full_name:    usri2_full_name,
 		Usri2_acct_expires: netmgmtInternalApi.TIMEQ_FOREVER,
 	}
 	var bufPtr = unsafe.Pointer(bufData)
@@ -77,7 +72,7 @@ func AddUser(user *netmgmtModelsPb.User) error {
 	return nil
 }
 
-func DeleteUser(user *netmgmtModelsPb.User) error {
+func DeleteUser(user *netmgmtModelsPb.User_1) error {
 	if user == nil {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
@@ -138,7 +133,6 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 					Username:  encode.UTF16PtrToString(bufData.Usri2_name),
 					Privilege: bufData.Usri2_priv,
 					Flags:     bufData.Usri2_flags,
-					FullName:  encode.UTF16PtrToString(bufData.Usri2_full_name),
 				}
 				users = append(users, user)
 			}
@@ -155,8 +149,6 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 		}
 	}
 
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
@@ -164,10 +156,12 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 		}
 	}
 
+	netmgmtInternalApi.NetApiBufferFree(buf)
+
 	return users, nil
 }
 
-func GetUser(user *netmgmtModelsPb.User) (*netmgmtModelsPb.User, error) {
+func GetUser(user *netmgmtModelsPb.User_1) (*netmgmtModelsPb.User, error) {
 	if user == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
@@ -186,20 +180,6 @@ func GetUser(user *netmgmtModelsPb.User) (*netmgmtModelsPb.User, error) {
 		&buf,
 	)
 
-	if ret == netmgmtInternalApi.NERR_Success {
-		var bufPtr = unsafe.Pointer(buf)
-		var bufData = (*netmgmtInternalApi.USER_INFO_2)(bufPtr)
-
-		user = &netmgmtModelsPb.User{
-			Username:  encode.UTF16PtrToString(bufData.Usri2_name),
-			Privilege: bufData.Usri2_priv,
-			Flags:     bufData.Usri2_flags,
-			FullName:  encode.UTF16PtrToString(bufData.Usri2_full_name),
-		}
-	}
-
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		case netmgmtInternalApi.NERR_BadUsername:
@@ -211,11 +191,22 @@ func GetUser(user *netmgmtModelsPb.User) (*netmgmtModelsPb.User, error) {
 		}
 	}
 
-	return user, nil
+	var bufPtr = unsafe.Pointer(buf)
+	var bufData = (*netmgmtInternalApi.USER_INFO_2)(bufPtr)
+
+	netmgmtInternalApi.NetApiBufferFree(buf)
+
+	fetchedUser := &netmgmtModelsPb.User{
+		Username:  encode.UTF16PtrToString(bufData.Usri2_name),
+		Privilege: bufData.Usri2_priv,
+		Flags:     bufData.Usri2_flags,
+	}
+
+	return fetchedUser, nil
 }
 
-func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGroup, error) {
-	var localGroups []*netmgmtModelsPb.LocalGroup
+func GetUserLocalGroups(user *netmgmtModelsPb.User_1) ([]*netmgmtModelsPb.LocalGroup_1, error) {
+	var localGroups []*netmgmtModelsPb.LocalGroup_1
 
 	if user == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "User cannot be nil")
@@ -250,7 +241,7 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGro
 			for i := uint32(0); i < entriesread; i++ {
 				var bufData = (*netmgmtInternalApi.LOCALGROUP_USERS_INFO_0)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 
-				var localGroup = &netmgmtModelsPb.LocalGroup{
+				var localGroup = &netmgmtModelsPb.LocalGroup_1{
 					Groupname: encode.UTF16PtrToString(bufData.Lgrui0_name),
 				}
 				localGroups = append(localGroups, localGroup)
@@ -268,8 +259,6 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGro
 		}
 	}
 
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		case netmgmtInternalApi.NERR_BadUsername:
@@ -281,10 +270,12 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User) ([]*netmgmtModelsPb.LocalGro
 		}
 	}
 
+	netmgmtInternalApi.NetApiBufferFree(buf)
+
 	return localGroups, nil
 }
 
-func ChangeUserPassword(user *netmgmtModelsPb.User) error {
+func ChangeUserPassword(user *netmgmtModelsPb.User_3) error {
 	if user == nil {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}

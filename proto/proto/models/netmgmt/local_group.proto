@@ -7,3 +7,7 @@ package models.netmgmt;
 message LocalGroup {
 	string groupname = 1;
 }
+
+message LocalGroup_1 {
+	string groupname = 1;
+}

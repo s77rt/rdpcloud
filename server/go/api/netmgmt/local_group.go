@@ -17,7 +17,7 @@ import (
 	netmgmtInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/netmgmt"
 )
 
-func AddUserToLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtModelsPb.LocalGroup) error {
+func AddUserToLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtModelsPb.LocalGroup_1) error {
 	if user == nil {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
@@ -76,7 +76,7 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtModelsPb
 	return nil
 }
 
-func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User, localGroup *netmgmtModelsPb.LocalGroup) error {
+func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtModelsPb.LocalGroup_1) error {
 	if user == nil {
 		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
 	}
@@ -180,8 +180,6 @@ func GetLocalGroups() ([]*netmgmtModelsPb.LocalGroup, error) {
 		}
 	}
 
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
@@ -189,11 +187,13 @@ func GetLocalGroups() ([]*netmgmtModelsPb.LocalGroup, error) {
 		}
 	}
 
+	netmgmtInternalApi.NetApiBufferFree(buf)
+
 	return localGroups, nil
 }
 
-func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup) ([]*netmgmtModelsPb.User, error) {
-	var users []*netmgmtModelsPb.User
+func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup_1) ([]*netmgmtModelsPb.User_1, error) {
+	var users []*netmgmtModelsPb.User_1
 
 	if localGroup == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "LocalGroup cannot be nil")
@@ -247,7 +247,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup) ([]*netmgmtMod
 
 				name := domainandname_splitted[1]
 
-				var user = &netmgmtModelsPb.User{
+				var user = &netmgmtModelsPb.User_1{
 					Username: name,
 				}
 				users = append(users, user)
@@ -265,14 +265,16 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup) ([]*netmgmtMod
 		}
 	}
 
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
+		case netmgmtInternalApi.NERR_GroupNotFound:
+			return nil, status.Errorf(codes.NotFound, "Group not found")
 		default:
 			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get users in local group (error: %d)", ret))
 		}
 	}
+
+	netmgmtInternalApi.NetApiBufferFree(buf)
 
 	return users, nil
 }

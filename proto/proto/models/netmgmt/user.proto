@@ -9,5 +9,13 @@ message User {
 	string password = 2;
 	uint32 privilege = 3;
 	uint32 flags = 4;
-	string full_name = 5;
+}
+
+message User_1 {
+	string username = 1;
+}
+
+message User_3 {
+	string username = 1;
+	string password = 2;
 }
