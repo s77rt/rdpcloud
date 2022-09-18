@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/secauthz";
+
+package services.secauthz;
+
+import "services/secauthz/basic_access_control.proto";
+
+service Secauthz {
+	rpc LookupAccountByName(LookupAccountByNameRequest) returns (LookupAccountByNameResponse) {}
+	rpc LookupAccountBySid(LookupAccountBySidRequest) returns (LookupAccountBySidResponse) {}
+}

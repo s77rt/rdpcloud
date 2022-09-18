@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/secauthz";
+
+package models.secauthz;
+
+message User {
+	string username = 1;
+}
+
+message User_1 {
+	string username = 1;
+}

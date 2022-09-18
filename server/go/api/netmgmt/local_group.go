@@ -28,7 +28,7 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtModels
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		return status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
+		return status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
 	}
 
 	lgrmi3_domainandname, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
@@ -69,7 +69,7 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtModels
 		case win.ERROR_INVALID_MEMBER:
 			return status.Errorf(codes.FailedPrecondition, "User account type is invalid")
 		default:
-			return status.Errorf(codes.Unknown, fmt.Sprintf("Failed to add user to local group (error: %d)", ret))
+			return status.Errorf(codes.Unknown, "Failed to add user to local group (error: %d)", ret)
 		}
 	}
 
@@ -87,7 +87,7 @@ func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtM
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		return status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
+		return status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
 	}
 
 	lgrmi3_domainandname, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
@@ -128,7 +128,7 @@ func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtM
 		case win.ERROR_INVALID_MEMBER:
 			return status.Errorf(codes.FailedPrecondition, "User account type is invalid")
 		default:
-			return status.Errorf(codes.Unknown, fmt.Sprintf("Failed to remove user from local group (error: %d)", ret))
+			return status.Errorf(codes.Unknown, "Failed to remove user from local group (error: %d)", ret)
 		}
 	}
 
@@ -183,7 +183,7 @@ func GetLocalGroups() ([]*netmgmtModelsPb.LocalGroup, error) {
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
-			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get local groups (error: %d)", ret))
+			return nil, status.Errorf(codes.Unknown, "Failed to get local groups (error: %d)", ret)
 		}
 	}
 
@@ -201,7 +201,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup_1) ([]*netmgmtM
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		return nil, status.Errorf(codes.FailedPrecondition, fmt.Sprintf("Unable to get hostname (%s)", err.Error()))
+		return nil, status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
 	}
 
 	groupname, err := encode.UTF16PtrFromString(localGroup.Groupname)
@@ -270,7 +270,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup_1) ([]*netmgmtM
 		case netmgmtInternalApi.NERR_GroupNotFound:
 			return nil, status.Errorf(codes.NotFound, "Group not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get users in local group (error: %d)", ret))
+			return nil, status.Errorf(codes.Unknown, "Failed to get users in local group (error: %d)", ret)
 		}
 	}
 

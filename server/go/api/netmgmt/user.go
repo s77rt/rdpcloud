@@ -3,7 +3,6 @@
 package netmgmt
 
 import (
-	"fmt"
 	"unsafe"
 
 	"google.golang.org/grpc/codes"
@@ -65,7 +64,7 @@ func AddUser(user *netmgmtModelsPb.User_3) error {
 		case netmgmtInternalApi.NERR_PasswordTooShort:
 			return status.Errorf(codes.InvalidArgument, "Password does not meet the password policy requirements")
 		default:
-			return status.Errorf(codes.Unknown, fmt.Sprintf("Failed to add user (error: %d)", ret))
+			return status.Errorf(codes.Unknown, "Failed to add user (error: %d)", ret)
 		}
 	}
 
@@ -94,7 +93,7 @@ func DeleteUser(user *netmgmtModelsPb.User_1) error {
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return status.Errorf(codes.NotFound, "User not found")
 		default:
-			return status.Errorf(codes.Unknown, fmt.Sprintf("Failed to delete user (error: %d)", ret))
+			return status.Errorf(codes.Unknown, "Failed to delete user (error: %d)", ret)
 		}
 	}
 
@@ -152,7 +151,7 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
-			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get users (error: %d)", ret))
+			return nil, status.Errorf(codes.Unknown, "Failed to get users (error: %d)", ret)
 		}
 	}
 
@@ -187,20 +186,20 @@ func GetUser(user *netmgmtModelsPb.User_1) (*netmgmtModelsPb.User, error) {
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return nil, status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get user (error: %d)", ret))
+			return nil, status.Errorf(codes.Unknown, "Failed to get user (error: %d)", ret)
 		}
 	}
 
 	var bufPtr = unsafe.Pointer(buf)
 	var bufData = (*netmgmtInternalApi.USER_INFO_2)(bufPtr)
 
-	netmgmtInternalApi.NetApiBufferFree(buf)
-
 	fetchedUser := &netmgmtModelsPb.User{
 		Username:  encode.UTF16PtrToString(bufData.Usri2_name),
 		Privilege: bufData.Usri2_priv,
 		Flags:     bufData.Usri2_flags,
 	}
+
+	netmgmtInternalApi.NetApiBufferFree(buf)
 
 	return fetchedUser, nil
 }
@@ -266,7 +265,7 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User_1) ([]*netmgmtModelsPb.LocalG
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return nil, status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, fmt.Sprintf("Failed to get user local groups (error: %d)", ret))
+			return nil, status.Errorf(codes.Unknown, "Failed to get user local groups (error: %d)", ret)
 		}
 	}
 
@@ -321,7 +320,7 @@ func ChangeUserPassword(user *netmgmtModelsPb.User_3) error {
 		case netmgmtInternalApi.NERR_LastAdmin:
 			return status.Errorf(codes.FailedPrecondition, "Operation not allowed on the last administrative account")
 		default:
-			return status.Errorf(codes.Unknown, fmt.Sprintf("Failed to change user password (error: %d)", ret))
+			return status.Errorf(codes.Unknown, "Failed to change user password (error: %d)", ret)
 		}
 	}
 

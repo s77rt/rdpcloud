@@ -9,13 +9,13 @@
 
 		<link rel="shortcut icon" type="image/png" href="favicon.png" />
 		<link rel="stylesheet" href="s/jquery-ui.min.css" />
-		<link rel="stylesheet" href="grpc-web-form.css" />
+		<link rel="stylesheet" href="s/grpc-web-form.css" />
 
 		<link rel="stylesheet" href="s/app-main.css" />
 
 		<script src="s/jquery.min.js"></script>
 		<script src="s/jquery-ui.min.js"></script>
-		<script src="grpc-web-form.js"></script>
+		<script src="s/grpc-web-form.js"></script>
 
 		<script>
 			// ZOMG this is awful. This beast comes from https://developer.mozilla.org/en-US/docs/Web/API/document/cookie
@@ -61,8 +61,9 @@
     			padding: 12px;
     			border-radius: 2px;
 			}
-			#grpc-request-form button, #grpc-request-form input:not([type=checkbox]), #grpc-request-form select, #grpc-request-form textarea {
+			#grpc-request-form input:not([type=checkbox]), #grpc-request-form select, #grpc-request-form textarea {
 				width: 100%;
+				min-width: 100px;
 			}
 			#grpc-request-form td input[type=checkbox] {
 				margin: auto;
@@ -80,13 +81,15 @@
 			}
 		</style>
 
-		{{ range .AddlResources }}
-		  {{ . }}
-		{{ end }}
+		{{/*
+			{{ range .AddlResources }}
+			  {{ . }}
+			{{ end }}
+		*/}}
 	</head>
 	<body>
 		<div id="app" style="display: none;"></div>
-		<div>
+		<div style="display: none;">
 			{{ if not (eq .Target "") }}
 				<div>Connected to <span class="target">{{ .Target }}</span></div>
 			{{ end }}
@@ -96,49 +99,128 @@
 		</div>
 
 		<script>
-			window.InitApp = function(App) {
-				var grpc_service = document.getElementById("grpc-service");
-				var grpc_method = document.getElementById("grpc-method");
-				var grpc_request_form = $("#grpc-request-form");
-				var grpc_invoke = $(".grpc-invoke")[0];
+			window.InitApp = async function(App) {
+				const grpc_service = document.getElementById("grpc-service");
+				const grpc_method = document.getElementById("grpc-method");
+				const grpc_request_form = $("#grpc-request-form");
+				const grpc_invoke = $(".grpc-invoke")[0];
 
-				document.addEventListener("App-Invoke", () => {
+				const grpc_auth_service = "services.secauthn.Secauthn";
+				const grpc_auth_method = "LogonUser";
+
+				document.addEventListener("App-Login", async (e) => {
+					grpc_service.value = grpc_auth_service;
+					await formServiceSelectedWithPromise();
+
+					grpc_method.value = grpc_auth_method;
+					await formMethodSelectedWithPromise();
+
 					if (grpc_invoke.disabled === true) {
-						App.ThrowErrorMessage("Unable to invoke");
+						App.ThrowErrorMessage("invoke function is disabled");
+						App.SetLoginLoading(false);
+						return;
+					}
+
+					var customData = {
+						user: {
+							username: e.detail.username,
+							password: e.detail.password
+						}
+					}
+					var customMetadata = [];
+					
+					invokeWithPromise(customData, customMetadata).then(
+						(responseData) => {
+							if (responseData.error) {
+								const error = (responseData.error.name + ' (' + responseData.error.code + ')').replace(/([A-Z])/g, ' $1').trim();
+								const error_msg = responseData.error.message;
+								App.LoginResponseCallback(null, error, error_msg);
+							} else if (responseData.requests.total === 1 && responseData.requests.sent === 1 && responseData.responses.length === 1) {
+								if (responseData.responses[0].isError) {
+									const error = "Server error processing message"
+									const error_msg = "Server failed to process the sent message"
+									App.LoginResponseCallback(null, error, error_msg);
+								} else {
+									const data = JSON.stringify(responseData.responses[0].message);
+									App.LoginResponseCallback(data, null, null);
+								}
+							} else {
+								const error = "Reequests/Responses mismatch"
+								const error_msg = "The number of sent requests does not match with the number of received responses"
+								App.LoginResponseCallback(null, error, error_msg);
+							}
+						},
+						(failureData, status) => {
+							const error = "HTTP Status: " + status;
+							const error_msg = "HTTP Response: " + failureData.responseText;
+							App.LoginResponseCallback(null, error, error_msg);
+						}
+					).then(() => {
+						App.SetLoginLoading(false);
+					});
+				});
+
+				document.addEventListener("App-Invoke", (e) => {
+					if (grpc_invoke.disabled === true) {
+						App.ThrowErrorMessage("invoke function is disabled");
 						App.SetInvokeLoading(false);
 						return;
 					}
-					const observer = new MutationObserver((mutationList, observer) => {
-						const mutationRecord = mutationList[0];
-						if (mutationRecord.type === "attributes") {
-							if (mutationRecord.target.disabled === false) {
-								observer.disconnect();
-								if ($("#grpc-response-error").css("display") !== "none") {
-									var error = $("#grpc-response-error-desc").text().replace(/([A-Z])/g, ' $1').trim();
-									var error_msg = $("#grpc-response-error-msg").text();
-									App.SetResponse(null, error, error_msg);
+
+					var customMetadata = [{name: "authorization", value: "Bearer " + e.detail}];
+
+					invokeWithPromise(undefined, customMetadata).then(
+						(responseData) => {
+							if (responseData.error) {
+								const error = (responseData.error.name + ' (' + responseData.error.code + ')').replace(/([A-Z])/g, ' $1').trim();
+								const error_msg = responseData.error.message;
+								App.InvokeResponseCallback(null, error, error_msg);
+							} else if (responseData.requests.total === 1 && responseData.requests.sent === 1 && responseData.responses.length === 1) {
+								if (responseData.responses[0].isError) {
+									const error = "Server error processing message"
+									const error_msg = "Server failed to process the sent message"
+									App.InvokeResponseCallback(null, error, error_msg);
 								} else {
-									var data = $(".grpc-response-textarea").val();
-									App.SetResponse(data, null, null);
+									const data = JSON.stringify(responseData.responses[0].message);
+									App.InvokeResponseCallback(data, null, null);
 								}
-								App.SetInvokeLoading(false);
+							} else {
+								const error = "Reequests/Responses mismatch"
+								const error_msg = "The number of sent requests does not match with the number of received responses"
+								App.InvokeResponseCallback(null, error, error_msg);
 							}
+						},
+						(failureData, status) => {
+							const error = "HTTP Status: " + status;
+							const error_msg = "HTTP Response: " + failureData.responseText;
+							App.InvokeResponseCallback(null, error, error_msg);
 						}
+					).then(() => {
+						App.SetInvokeLoading(false);
 					});
-					observer.observe(grpc_invoke, { attributes: true });
-					grpc_invoke.click();
-				});
-				document.addEventListener("App-SelectService", (e) => {
-					grpc_service.value = e.detail;
-					$(grpc_service).trigger("change");
-				});
-				document.addEventListener("App-SelectMethod", (e) => {
-					grpc_method.value = e.detail;
-					$(grpc_method).trigger("change");
 				});
 
+				document.addEventListener("App-SelectService", async (e) => {
+					grpc_service.value = e.detail;
+					await formServiceSelectedWithPromise();
+					App.SetSelectingService(false);
+				});
+
+				document.addEventListener("App-SelectMethod", async (e) => {
+					grpc_method.value = e.detail;
+					await formMethodSelectedWithPromise();
+					App.SetSelectingMethod(false);
+				});
+
+				// Set app name
+				App.SetAppName($(".target").text());
+
+				// Move the grpc request form to our app
+				// since it's too hard to be imitated or even duplicated
 				grpc_request_form.remove();
 				$("#App-Request-Form-Container").append(grpc_request_form);
+
+				// Watch the grpc request form and apply our style classes
 				$(function() {
 					const observer = new MutationObserver(() => {
 						$("#grpc-request-form input:not([type=checkbox]):not('.ant-input'), #grpc-request-form select:not('.ant-input'), #grpc-request-form textarea:not('.ant-input')").addClass("ant-input");
@@ -147,23 +229,20 @@
 					observer.observe($("#App-Request-Form-Container")[0], { childList: true, subtree: true });
 				});
 
-				$(function() {
-					$("#grpc-request-metadata-form input.name:first").val("authorization");
-					$("#grpc-request-metadata-form input.value:first").val("token here");
-				});
-
+				// Add services and methods
 				for (const service_option of grpc_service) {
 					const service = service_option.value;
 					App.AddService(service);
 
 					grpc_service.value = service;
-					$(grpc_service).trigger("change");
+					await formServiceSelectedWithPromise();
 					for (const method_option of grpc_method) {
 						const method = method_option.value;
 						App.AddServiceMethod(service, method);
 					}
 				}
 
+				// Showtime
 				$("#app").show();
 			}
 		</script>
