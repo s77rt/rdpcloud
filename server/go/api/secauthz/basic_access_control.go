@@ -48,7 +48,14 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 	)
 
 	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (1) (error: %d)", lasterr)
+		switch lasterr {
+		case windows.ERROR_INVALID_ACCOUNT_NAME:
+			return "", status.Errorf(codes.InvalidArgument, "Invalid account name")
+		case windows.ERROR_NONE_MAPPED:
+			return "", status.Errorf(codes.NotFound, "User not found")
+		default:
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (1) (error: %d)", lasterr)
+		}
 	}
 
 	var Sid = make([]byte, cbSid)
@@ -65,7 +72,14 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (2) (error: %d)", lasterr)
+		switch lasterr {
+		case windows.ERROR_INVALID_ACCOUNT_NAME:
+			return "", status.Errorf(codes.InvalidArgument, "Invalid account name")
+		case windows.ERROR_NONE_MAPPED:
+			return "", status.Errorf(codes.NotFound, "User not found")
+		default:
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (2) (error: %d)", lasterr)
+		}
 	}
 
 	domain := encode.UTF16ToString(ReferencedDomainName)
@@ -130,7 +144,14 @@ func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
 	)
 
 	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
-		return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (1) (error: %d)", lasterr)
+		switch lasterr {
+		case windows.ERROR_INVALID_SID:
+			return nil, status.Errorf(codes.InvalidArgument, "Invalid SID")
+		case windows.ERROR_NONE_MAPPED:
+			return nil, status.Errorf(codes.NotFound, "User not found")
+		default:
+			return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (1) (error: %d)", lasterr)
+		}
 	}
 
 	var Name = make([]uint16, cchName)
@@ -147,7 +168,14 @@ func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
 	)
 
 	if ret == 0 {
-		return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (2) (error: %d)", lasterr)
+		switch lasterr {
+		case windows.ERROR_INVALID_SID:
+			return nil, status.Errorf(codes.InvalidArgument, "Invalid SID")
+		case windows.ERROR_NONE_MAPPED:
+			return nil, status.Errorf(codes.NotFound, "User not found")
+		default:
+			return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (2) (error: %d)", lasterr)
+		}
 	}
 
 	hostname, err := os.Hostname()

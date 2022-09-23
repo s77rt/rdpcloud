@@ -31,4 +31,11 @@ var AceessLevel = map[string]uint32{
 	"/services.netmgmt.Netmgmt/GetUsers":              2,
 	"/services.secauthz.Secauthz/LookupAccountByName": 1,
 	"/services.secauthz.Secauthz/LookupAccountBySid":  1,
+	"/services.fileio.Fileio/GetQuotaState":           1,
+	"/services.fileio.Fileio/SetQuotaState":           1,
+	"/services.fileio.Fileio/GetUsersQuotaEntries":    1,
+	"/services.fileio.Fileio/GetUserQuotaEntry":       1,
+	"/services.fileio.Fileio/SetUserQuotaEntry":       1,
+	"/services.fileio.Fileio/GetDefaultQuota":         1,
+	"/services.fileio.Fileio/SetDefaultQuota":         1,
 }

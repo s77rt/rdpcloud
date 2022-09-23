@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -17,11 +18,13 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 
+	fileioServicePb "github.com/s77rt/rdpcloud/proto/go/services/fileio"
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	secauthzServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthz"
 	"github.com/s77rt/rdpcloud/server/go/config"
 	customJWT "github.com/s77rt/rdpcloud/server/go/jwt"
+	fileioService "github.com/s77rt/rdpcloud/server/go/services/fileio"
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
 	secauthzService "github.com/s77rt/rdpcloud/server/go/services/secauthz"
@@ -32,9 +35,13 @@ var (
 )
 
 func main() {
+	var port int
+	flag.IntVar(&port, "port", 5027, "port on which server will listen")
+	flag.Parse()
+
 	log.Printf("Running RDPCloud Server (Version: %s)", Version)
 
-	lis, err := net.Listen("tcp", ":5027")
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
@@ -54,6 +61,7 @@ func main() {
 	netmgmtServicePb.RegisterNetmgmtServer(s, &netmgmtService.Server{})
 	secauthnServicePb.RegisterSecauthnServer(s, &secauthnService.Server{})
 	secauthzServicePb.RegisterSecauthzServer(s, &secauthzService.Server{})
+	fileioServicePb.RegisterFileioServer(s, &fileioService.Server{})
 
 	// Register reflection service
 	reflection.Register(s)

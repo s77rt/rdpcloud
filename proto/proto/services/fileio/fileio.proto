@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/fileio";
+
+package services.fileio;
+
+import "services/fileio/dskquota.proto";
+
+service Fileio {
+	rpc GetQuotaState(GetQuotaStateRequest) returns (GetQuotaStateResponse) {}
+	rpc SetQuotaState(SetQuotaStateRequest) returns (SetQuotaStateResponse) {}
+	rpc GetDefaultQuota(GetDefaultQuotaRequest) returns (GetDefaultQuotaResponse) {}
+	rpc SetDefaultQuota(SetDefaultQuotaRequest) returns (SetDefaultQuotaResponse) {}
+	rpc GetUsersQuotaEntries(GetUsersQuotaEntriesRequest) returns (GetUsersQuotaEntriesResponse) {}
+	rpc GetUserQuotaEntry(GetUserQuotaEntryRequest) returns (GetUserQuotaEntryResponse) {}
+	rpc SetUserQuotaEntry(SetUserQuotaEntryRequest) returns (SetUserQuotaEntryResponse) {}
+}

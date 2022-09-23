@@ -13,12 +13,12 @@ gen-go:
 
 build-server-go-windows:
 	rm -rf server/go/bin/windows && mkdir -p server/go/bin/windows
-	cd server/go && GOOS=windows GOARCH=amd64 go build -trimpath -ldflags $(SERVER_LD_FLAGS) -o bin/windows/rdpcloud_server.exe
+	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags $(SERVER_LD_FLAGS) -o bin/windows/rdpcloud_server.exe
 	cd server/go/bin/windows && 7za -y a rdpcloud_server_windows.7z rdpcloud_server.exe
 
 build-client-go-linux:
 	rm -rf client/go/bin/linux && mkdir -p client/go/bin/linux
-	cd client/go && GOOS=linux GOARCH=amd64 go build -trimpath -ldflags $(CLIENT_LD_FLAGS) -o bin/linux/rdpcloud_client
+	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags $(CLIENT_LD_FLAGS) -o bin/linux/rdpcloud_client
 	cd client/go/bin/linux && 7za -y a rdpcloud_client_linux.7z rdpcloud_client
 
 build-client-frontend-react:

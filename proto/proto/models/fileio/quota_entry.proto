@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/fileio";
+
+package models.fileio;
+
+message QuotaEntry {
+	string username = 1;
+	int64 quota_threshold = 2;
+	int64 quota_limit = 3;
+	int64 quota_used = 4;
+	uint32 account_status = 5;
+}
+
+message QuotaEntry_6 {
+	int64 quota_threshold = 2;
+	int64 quota_limit = 3;
+}
+
+message QuotaEntry_30 {
+	int64 quota_threshold = 2;
+	int64 quota_limit = 3;
+	int64 quota_used = 4;
+	uint32 account_status = 5;
+}

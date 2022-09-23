@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/fileio";
+
+package services.fileio;
+
+import "models/fileio/quota_entry.proto";
+import "models/fileio/user.proto";
+
+message GetQuotaStateRequest { string volume = 1; }
+message GetQuotaStateResponse { uint32 quota_state = 1; }
+
+message SetQuotaStateRequest { string volume = 1; uint32 quota_state = 2; }
+message SetQuotaStateResponse {}
+
+message GetDefaultQuotaRequest { string volume = 1; }
+message GetDefaultQuotaResponse { models.fileio.QuotaEntry_6 default_quota = 1; }
+
+message SetDefaultQuotaRequest { string volume = 1; models.fileio.QuotaEntry_6 default_quota = 2; }
+message SetDefaultQuotaResponse {}
+
+message GetUsersQuotaEntriesRequest { string volume = 1; }
+message GetUsersQuotaEntriesResponse { repeated models.fileio.QuotaEntry quota_entries = 1; }
+
+message GetUserQuotaEntryRequest { string volume = 1; models.fileio.User_1 user = 2; }
+message GetUserQuotaEntryResponse { models.fileio.QuotaEntry_30 quota_entry = 1; }
+
+message SetUserQuotaEntryRequest { string volume = 1; models.fileio.User_1 user = 2; models.fileio.QuotaEntry_6 quota_entry = 3; }
+message SetUserQuotaEntryResponse {}
