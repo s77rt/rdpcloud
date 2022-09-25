@@ -13,7 +13,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 
 	netmgmtModelsPb "github.com/s77rt/rdpcloud/proto/go/models/netmgmt"
-	secauthzModelsPb "github.com/s77rt/rdpcloud/proto/go/models/secauthz"
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	netmgmtApi "github.com/s77rt/rdpcloud/server/go/api/netmgmt"
 	secauthnApi "github.com/s77rt/rdpcloud/server/go/api/secauthn"
@@ -29,7 +28,7 @@ func (s *Server) LogonUser(ctx context.Context, in *secauthnServicePb.LogonUserR
 		return nil, err
 	}
 
-	sidString, err := secauthzApi.LookupAccountByName(&secauthzModelsPb.User_1{Username: user.GetUsername()})
+	sidString, err := secauthzApi.LookupAccountSidByUsername(user.GetUsername())
 	if err != nil {
 		return nil, err
 	}

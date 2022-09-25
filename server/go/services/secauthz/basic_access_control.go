@@ -9,24 +9,24 @@ import (
 	secauthzApi "github.com/s77rt/rdpcloud/server/go/api/secauthz"
 )
 
-func (s *Server) LookupAccountByName(ctx context.Context, in *secauthzServicePb.LookupAccountByNameRequest) (*secauthzServicePb.LookupAccountByNameResponse, error) {
-	sidString, err := secauthzApi.LookupAccountByName(in.GetUser())
+func (s *Server) LookupAccountSidByUsername(ctx context.Context, in *secauthzServicePb.LookupAccountSidByUsernameRequest) (*secauthzServicePb.LookupAccountSidByUsernameResponse, error) {
+	sidString, err := secauthzApi.LookupAccountSidByUsername(in.GetUsername())
 	if err != nil {
 		return nil, err
 	}
 
-	return &secauthzServicePb.LookupAccountByNameResponse{
+	return &secauthzServicePb.LookupAccountSidByUsernameResponse{
 		Sid: sidString,
 	}, nil
 }
 
-func (s *Server) LookupAccountBySid(ctx context.Context, in *secauthzServicePb.LookupAccountBySidRequest) (*secauthzServicePb.LookupAccountBySidResponse, error) {
-	user, err := secauthzApi.LookupAccountBySid(in.GetSid())
+func (s *Server) LookupAccountUsernameBySid(ctx context.Context, in *secauthzServicePb.LookupAccountUsernameBySidRequest) (*secauthzServicePb.LookupAccountUsernameBySidResponse, error) {
+	username, err := secauthzApi.LookupAccountUsernameBySid(in.GetSid())
 	if err != nil {
 		return nil, err
 	}
 
-	return &secauthzServicePb.LookupAccountBySidResponse{
-		User: user,
+	return &secauthzServicePb.LookupAccountUsernameBySidResponse{
+		Username: username,
 	}, nil
 }

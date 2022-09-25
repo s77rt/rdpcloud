@@ -31,7 +31,7 @@ func getQuotaState(wg *sync.WaitGroup, volume string, pdwState *uint32, err *err
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get quota state (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get quota state (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -45,12 +45,12 @@ func getQuotaState(wg *sync.WaitGroup, volume string, pdwState *uint32, err *err
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get quota state (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get quota state (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -71,14 +71,14 @@ func getQuotaState(wg *sync.WaitGroup, volume string, pdwState *uint32, err *err
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to get quota state (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to get quota state (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
 
 	ret, _, _ = diskQuotaControl.GetQuotaState(pdwState)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get quota state (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get quota state (error: 0x%x)", ret)
 		return
 	}
 
@@ -114,7 +114,7 @@ func setQuotaState(wg *sync.WaitGroup, volume string, dwState uint32, err *error
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set quota state (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set quota state (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -128,12 +128,12 @@ func setQuotaState(wg *sync.WaitGroup, volume string, dwState uint32, err *error
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set quota state (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set quota state (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -154,14 +154,14 @@ func setQuotaState(wg *sync.WaitGroup, volume string, dwState uint32, err *error
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to set quota state (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to set quota state (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
 
 	ret, _, _ = diskQuotaControl.SetQuotaState(dwState)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set quota state (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set quota state (error: 0x%x)", ret)
 		return
 	}
 
@@ -196,7 +196,7 @@ func getDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota **fileioMod
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get default quota (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get default quota (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -210,12 +210,12 @@ func getDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota **fileioMod
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get default quota (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get default quota (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -236,7 +236,7 @@ func getDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota **fileioMod
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to get default quota (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to get default quota (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
@@ -244,14 +244,14 @@ func getDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota **fileioMod
 	var pllThreshold int64
 	ret, _, _ = diskQuotaControl.GetDefaultQuotaThreshold(&pllThreshold)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get default quota (GetDefaultQuotaThreshold) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get default quota (GetDefaultQuotaThreshold) (error: 0x%x)", ret)
 		return
 	}
 
 	var pllLimit int64
 	ret, _, _ = diskQuotaControl.GetDefaultQuotaLimit(&pllLimit)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get default quota (GetDefaultQuotaLimit) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get default quota (GetDefaultQuotaLimit) (error: 0x%x)", ret)
 		return
 	}
 
@@ -292,7 +292,7 @@ func setDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota *fileioMode
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set default quota (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set default quota (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -306,12 +306,12 @@ func setDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota *fileioMode
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set default quota (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set default quota (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -332,7 +332,7 @@ func setDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota *fileioMode
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to set default quota (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to set default quota (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
@@ -346,13 +346,13 @@ func setDefaultQuota(wg *sync.WaitGroup, volume string, defaultQuota *fileioMode
 
 	ret, _, _ = diskQuotaControl.SetDefaultQuotaThreshold(defaultQuota.QuotaThreshold)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set default quota (SetDefaultQuotaThreshold) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set default quota (SetDefaultQuotaThreshold) (error: 0x%x)", ret)
 		return
 	}
 
 	ret, _, _ = diskQuotaControl.SetDefaultQuotaLimit(defaultQuota.QuotaLimit)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set default quota (SetDefaultQuotaLimit) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set default quota (SetDefaultQuotaLimit) (error: 0x%x)", ret)
 		return
 	}
 
@@ -391,7 +391,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volume string, quotaEntries *[]*fi
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -405,12 +405,12 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volume string, quotaEntries *[]*fi
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -431,7 +431,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volume string, quotaEntries *[]*fi
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
@@ -444,10 +444,10 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volume string, quotaEntries *[]*fi
 		&ppEnum,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CreateEnumUsers) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CreateEnumUsers) (error: 0x%x)", ret)
 		return
 	}
-	defer ppEnum.Release()
+	defer func() { ppEnum.Release(); ppEnum = nil }()
 
 	hostname, rerr := os.Hostname()
 	if rerr != nil {
@@ -496,6 +496,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volume string, quotaEntries *[]*fi
 		}
 
 		ppUser.Release()
+		ppUser = nil
 	}
 
 	return
@@ -530,7 +531,7 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -544,12 +545,12 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -570,7 +571,7 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
@@ -594,39 +595,40 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 	)
 	if ret != win.S_OK {
 		switch ret {
-		case win.ERROR_NONE_MAPPED:
+		case win.ERROR_NONE_MAPPED, win.DIERR_NOTFOUND:
 			*err = status.Errorf(codes.NotFound, "User not found")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (FindUserName) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (FindUserName) (error: 0x%x)", ret)
 		}
+		return
 	}
-	defer ppUser.Release()
+	defer func() { ppUser.Release(); ppUser = nil }()
 
 	var pllThreshold int64
 	ret, _, _ = ppUser.GetQuotaThreshold(&pllThreshold)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaThreshold) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaThreshold) (error: 0x%x)", ret)
 		return
 	}
 
 	var pllLimit int64
 	ret, _, _ = ppUser.GetQuotaLimit(&pllLimit)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaLimit) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaLimit) (error: 0x%x)", ret)
 		return
 	}
 
 	var pllUsed int64
 	ret, _, _ = ppUser.GetQuotaUsed(&pllUsed)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaUsed) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetQuotaUsed) (error: 0x%x)", ret)
 		return
 	}
 
 	var pdwStatus uint32
 	ret, _, _ = ppUser.GetAccountStatus(&pdwStatus)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetAccountStatus) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (GetAccountStatus) (error: 0x%x)", ret)
 		return
 	}
 
@@ -673,7 +675,7 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		com.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (CoInitializeEx) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
 	defer com.CoUninitialize()
@@ -687,12 +689,12 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		&ppv,
 	)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (CoCreateInstance) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (CoCreateInstance) (error: 0x%x)", ret)
 		return
 	}
 
 	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
-	defer diskQuotaControl.Release()
+	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volume)
 	if rerr != nil {
@@ -713,7 +715,7 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 		case win.ERROR_NOT_SUPPORTED:
 			*err = status.Errorf(codes.FailedPrecondition, "Volume does not support quotas")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (Initialize) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (Initialize) (error: 0x%x)", ret)
 		}
 		return
 	}
@@ -738,26 +740,26 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volume string, user *fileioModelsPb.U
 	)
 	if ret != win.S_OK && ret != win.S_FALSE {
 		switch ret {
-		case win.ERROR_NONE_MAPPED:
+		case win.ERROR_NONE_MAPPED, win.DIERR_NOTFOUND:
 			*err = status.Errorf(codes.NotFound, "User not found")
 		default:
-			*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (AddUserName) (error: %d)", ret)
+			*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (AddUserName) (error: 0x%x)", ret)
 		}
 		return
 	}
-	defer ppUser.Release()
+	defer func() { ppUser.Release(); ppUser = nil }()
 
 	// NOT atomic; read comments on setDefaultQuota()
 
 	ret, _, _ = ppUser.SetQuotaThreshold(quotaEntry.QuotaThreshold, 1)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (SetQuotaThreshold) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (SetQuotaThreshold) (error: 0x%x)", ret)
 		return
 	}
 
 	ret, _, _ = ppUser.SetQuotaLimit(quotaEntry.QuotaLimit, 1)
 	if ret != win.S_OK {
-		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (SetQuotaLimit) (error: %d)", ret)
+		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (SetQuotaLimit) (error: 0x%x)", ret)
 		return
 	}
 

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-option go_package = "github.com/s77rt/rdpcloud/proto/go/models/secauthz";
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/termserv";
 
-package models.secauthz;
+package models.termserv;
 
 message User {
 	string username = 1;

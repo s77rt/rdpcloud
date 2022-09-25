@@ -4,10 +4,8 @@ option go_package = "github.com/s77rt/rdpcloud/proto/go/services/secauthz";
 
 package services.secauthz;
 
-import "models/secauthz/user.proto";
+message LookupAccountSidByUsernameRequest { string username = 1; }
+message LookupAccountSidByUsernameResponse { string sid = 1; }
 
-message LookupAccountByNameRequest { models.secauthz.User_1 user = 1; }
-message LookupAccountByNameResponse { string sid = 1; }
-
-message LookupAccountBySidRequest { string sid = 1; }
-message LookupAccountBySidResponse { models.secauthz.User_1 user = 1; }
+message LookupAccountUsernameBySidRequest { string sid = 1; }
+message LookupAccountUsernameBySidResponse { string username = 1; }

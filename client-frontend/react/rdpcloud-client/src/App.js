@@ -3,6 +3,7 @@ import './App.css';
 import { ConfigProvider, Layout, Form, Input, Button, message, notification, Space, Typography, Result, Menu, Alert, Spin } from 'antd';
 import { SmileOutlined, UserOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import { parseJWT, isExpiredJWT } from "./jwt";
+import { buildResponseFromResponseData } from "./responseBuilder";
 
 ConfigProvider.config({
 	theme: {
@@ -120,7 +121,7 @@ class App extends React.Component {
 						methods: {
 							...previousState.services[service].methods,
 							[method]: {
-								label: method.replace(/([A-Z])/g, ' $1').trim(),
+								label: method.replace(/([A-Z])/g, " $1").trim(),
 								key: method
 							}
 						},
@@ -435,15 +436,7 @@ class App extends React.Component {
 												subTitle={this.state.response_error.error_msg}
 											/>
 										) : (this.state.response_data ? (
-											(Object.keys(this.state.response_data.data).length === 0 ? (
-												<Result
-													status="success"
-													title="Operation completed successfully"
-													subTitle="Your operation has been executed"
-												/>
-											) : (
-												<textarea>{JSON.stringify(this.state.response_data.data, null, 2)}</textarea>
-											))
+											buildResponseFromResponseData(this.state.response_data.data)
 										) : null
 										)}
 									</div>

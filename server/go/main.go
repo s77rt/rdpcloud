@@ -22,12 +22,14 @@ import (
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	secauthzServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthz"
+	termservServicePb "github.com/s77rt/rdpcloud/proto/go/services/termserv"
 	"github.com/s77rt/rdpcloud/server/go/config"
 	customJWT "github.com/s77rt/rdpcloud/server/go/jwt"
 	fileioService "github.com/s77rt/rdpcloud/server/go/services/fileio"
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
 	secauthzService "github.com/s77rt/rdpcloud/server/go/services/secauthz"
+	termservService "github.com/s77rt/rdpcloud/server/go/services/termserv"
 )
 
 var (
@@ -62,6 +64,7 @@ func main() {
 	secauthnServicePb.RegisterSecauthnServer(s, &secauthnService.Server{})
 	secauthzServicePb.RegisterSecauthzServer(s, &secauthzService.Server{})
 	fileioServicePb.RegisterFileioServer(s, &fileioService.Server{})
+	termservServicePb.RegisterTermservServer(s, &termservService.Server{})
 
 	// Register reflection service
 	reflection.Register(s)

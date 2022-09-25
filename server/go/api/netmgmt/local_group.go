@@ -69,7 +69,7 @@ func AddUserToLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtModels
 		case win.ERROR_INVALID_MEMBER:
 			return status.Errorf(codes.FailedPrecondition, "User account type is invalid")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to add user to local group (error: %d)", ret)
+			return status.Errorf(codes.Unknown, "Failed to add user to local group (error: 0x%x)", ret)
 		}
 	}
 
@@ -128,7 +128,7 @@ func RemoveUserFromLocalGroup(user *netmgmtModelsPb.User_1, localGroup *netmgmtM
 		case win.ERROR_INVALID_MEMBER:
 			return status.Errorf(codes.FailedPrecondition, "User account type is invalid")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to remove user from local group (error: %d)", ret)
+			return status.Errorf(codes.Unknown, "Failed to remove user from local group (error: 0x%x)", ret)
 		}
 	}
 
@@ -183,11 +183,12 @@ func GetLocalGroups() ([]*netmgmtModelsPb.LocalGroup, error) {
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to get local groups (error: %d)", ret)
+			return nil, status.Errorf(codes.Unknown, "Failed to get local groups (error: 0x%x)", ret)
 		}
 	}
 
 	netmgmtInternalApi.NetApiBufferFree(buf)
+	buf = nil
 
 	return localGroups, nil
 }
@@ -270,11 +271,12 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup_1) ([]*netmgmtM
 		case netmgmtInternalApi.NERR_GroupNotFound:
 			return nil, status.Errorf(codes.NotFound, "Group not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to get users in local group (error: %d)", ret)
+			return nil, status.Errorf(codes.Unknown, "Failed to get users in local group (error: 0x%x)", ret)
 		}
 	}
 
 	netmgmtInternalApi.NetApiBufferFree(buf)
+	buf = nil
 
 	return users, nil
 }

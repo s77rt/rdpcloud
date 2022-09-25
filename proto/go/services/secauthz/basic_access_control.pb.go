@@ -7,7 +7,6 @@
 package secauthz
 
 import (
-	secauthz "github.com/s77rt/rdpcloud/proto/go/models/secauthz"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -21,16 +20,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type LookupAccountByNameRequest struct {
+type LookupAccountSidByUsernameRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User *secauthz.User_1 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 }
 
-func (x *LookupAccountByNameRequest) Reset() {
-	*x = LookupAccountByNameRequest{}
+func (x *LookupAccountSidByUsernameRequest) Reset() {
+	*x = LookupAccountSidByUsernameRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_services_secauthz_basic_access_control_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -38,13 +37,13 @@ func (x *LookupAccountByNameRequest) Reset() {
 	}
 }
 
-func (x *LookupAccountByNameRequest) String() string {
+func (x *LookupAccountSidByUsernameRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LookupAccountByNameRequest) ProtoMessage() {}
+func (*LookupAccountSidByUsernameRequest) ProtoMessage() {}
 
-func (x *LookupAccountByNameRequest) ProtoReflect() protoreflect.Message {
+func (x *LookupAccountSidByUsernameRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_secauthz_basic_access_control_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,19 +55,19 @@ func (x *LookupAccountByNameRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LookupAccountByNameRequest.ProtoReflect.Descriptor instead.
-func (*LookupAccountByNameRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LookupAccountSidByUsernameRequest.ProtoReflect.Descriptor instead.
+func (*LookupAccountSidByUsernameRequest) Descriptor() ([]byte, []int) {
 	return file_services_secauthz_basic_access_control_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LookupAccountByNameRequest) GetUser() *secauthz.User_1 {
+func (x *LookupAccountSidByUsernameRequest) GetUsername() string {
 	if x != nil {
-		return x.User
+		return x.Username
 	}
-	return nil
+	return ""
 }
 
-type LookupAccountByNameResponse struct {
+type LookupAccountSidByUsernameResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -76,8 +75,8 @@ type LookupAccountByNameResponse struct {
 	Sid string `protobuf:"bytes,1,opt,name=sid,proto3" json:"sid,omitempty"`
 }
 
-func (x *LookupAccountByNameResponse) Reset() {
-	*x = LookupAccountByNameResponse{}
+func (x *LookupAccountSidByUsernameResponse) Reset() {
+	*x = LookupAccountSidByUsernameResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_services_secauthz_basic_access_control_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -85,13 +84,13 @@ func (x *LookupAccountByNameResponse) Reset() {
 	}
 }
 
-func (x *LookupAccountByNameResponse) String() string {
+func (x *LookupAccountSidByUsernameResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LookupAccountByNameResponse) ProtoMessage() {}
+func (*LookupAccountSidByUsernameResponse) ProtoMessage() {}
 
-func (x *LookupAccountByNameResponse) ProtoReflect() protoreflect.Message {
+func (x *LookupAccountSidByUsernameResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_services_secauthz_basic_access_control_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -103,19 +102,19 @@ func (x *LookupAccountByNameResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LookupAccountByNameResponse.ProtoReflect.Descriptor instead.
-func (*LookupAccountByNameResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LookupAccountSidByUsernameResponse.ProtoReflect.Descriptor instead.
+func (*LookupAccountSidByUsernameResponse) Descriptor() ([]byte, []int) {
 	return file_services_secauthz_basic_access_control_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *LookupAccountByNameResponse) GetSid() string {
+func (x *LookupAccountSidByUsernameResponse) GetSid() string {
 	if x != nil {
 		return x.Sid
 	}
 	return ""
 }
 
-type LookupAccountBySidRequest struct {
+type LookupAccountUsernameBySidRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -123,8 +122,8 @@ type LookupAccountBySidRequest struct {
 	Sid string `protobuf:"bytes,1,opt,name=sid,proto3" json:"sid,omitempty"`
 }
 
-func (x *LookupAccountBySidRequest) Reset() {
-	*x = LookupAccountBySidRequest{}
+func (x *LookupAccountUsernameBySidRequest) Reset() {
+	*x = LookupAccountUsernameBySidRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_services_secauthz_basic_access_control_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -132,13 +131,13 @@ func (x *LookupAccountBySidRequest) Reset() {
 	}
 }
 
-func (x *LookupAccountBySidRequest) String() string {
+func (x *LookupAccountUsernameBySidRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LookupAccountBySidRequest) ProtoMessage() {}
+func (*LookupAccountUsernameBySidRequest) ProtoMessage() {}
 
-func (x *LookupAccountBySidRequest) ProtoReflect() protoreflect.Message {
+func (x *LookupAccountUsernameBySidRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_secauthz_basic_access_control_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -150,28 +149,28 @@ func (x *LookupAccountBySidRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LookupAccountBySidRequest.ProtoReflect.Descriptor instead.
-func (*LookupAccountBySidRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LookupAccountUsernameBySidRequest.ProtoReflect.Descriptor instead.
+func (*LookupAccountUsernameBySidRequest) Descriptor() ([]byte, []int) {
 	return file_services_secauthz_basic_access_control_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *LookupAccountBySidRequest) GetSid() string {
+func (x *LookupAccountUsernameBySidRequest) GetSid() string {
 	if x != nil {
 		return x.Sid
 	}
 	return ""
 }
 
-type LookupAccountBySidResponse struct {
+type LookupAccountUsernameBySidResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User *secauthz.User_1 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 }
 
-func (x *LookupAccountBySidResponse) Reset() {
-	*x = LookupAccountBySidResponse{}
+func (x *LookupAccountUsernameBySidResponse) Reset() {
+	*x = LookupAccountUsernameBySidResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_services_secauthz_basic_access_control_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -179,13 +178,13 @@ func (x *LookupAccountBySidResponse) Reset() {
 	}
 }
 
-func (x *LookupAccountBySidResponse) String() string {
+func (x *LookupAccountUsernameBySidResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LookupAccountBySidResponse) ProtoMessage() {}
+func (*LookupAccountUsernameBySidResponse) ProtoMessage() {}
 
-func (x *LookupAccountBySidResponse) ProtoReflect() protoreflect.Message {
+func (x *LookupAccountUsernameBySidResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_services_secauthz_basic_access_control_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -197,16 +196,16 @@ func (x *LookupAccountBySidResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LookupAccountBySidResponse.ProtoReflect.Descriptor instead.
-func (*LookupAccountBySidResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LookupAccountUsernameBySidResponse.ProtoReflect.Descriptor instead.
+func (*LookupAccountUsernameBySidResponse) Descriptor() ([]byte, []int) {
 	return file_services_secauthz_basic_access_control_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *LookupAccountBySidResponse) GetUser() *secauthz.User_1 {
+func (x *LookupAccountUsernameBySidResponse) GetUsername() string {
 	if x != nil {
-		return x.User
+		return x.Username
 	}
-	return nil
+	return ""
 }
 
 var File_services_secauthz_basic_access_control_proto protoreflect.FileDescriptor
@@ -216,24 +215,22 @@ var file_services_secauthz_basic_access_control_proto_rawDesc = []byte{
 	0x74, 0x68, 0x7a, 0x2f, 0x62, 0x61, 0x73, 0x69, 0x63, 0x5f, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x11,
 	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x65, 0x63, 0x61, 0x75, 0x74, 0x68,
-	0x7a, 0x1a, 0x1a, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2f, 0x73, 0x65, 0x63, 0x61, 0x75, 0x74,
-	0x68, 0x7a, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x49, 0x0a,
-	0x1a, 0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x79,
-	0x4e, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2b, 0x0a, 0x04, 0x75,
-	0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x6d, 0x6f, 0x64, 0x65,
-	0x6c, 0x73, 0x2e, 0x73, 0x65, 0x63, 0x61, 0x75, 0x74, 0x68, 0x7a, 0x2e, 0x55, 0x73, 0x65, 0x72,
-	0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x2f, 0x0a, 0x1b, 0x4c, 0x6f, 0x6f, 0x6b,
-	0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x69, 0x64, 0x22, 0x2d, 0x0a, 0x19, 0x4c, 0x6f, 0x6f,
-	0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x79, 0x53, 0x69, 0x64, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x69, 0x64, 0x22, 0x49, 0x0a, 0x1a, 0x4c, 0x6f, 0x6f, 0x6b,
-	0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x79, 0x53, 0x69, 0x64, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x73, 0x65,
-	0x63, 0x61, 0x75, 0x74, 0x68, 0x7a, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75,
-	0x73, 0x65, 0x72, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
+	0x7a, 0x22, 0x3f, 0x0a, 0x21, 0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x53, 0x69, 0x64, 0x42, 0x79, 0x55, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x22, 0x36, 0x0a, 0x22, 0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x53, 0x69, 0x64, 0x42, 0x79, 0x55, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x69, 0x64, 0x22, 0x35, 0x0a, 0x21, 0x4c, 0x6f,
+	0x6f, 0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x6e,
+	0x61, 0x6d, 0x65, 0x42, 0x79, 0x53, 0x69, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x10, 0x0a, 0x03, 0x73, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x69,
+	0x64, 0x22, 0x40, 0x0a, 0x22, 0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x41, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x42, 0x79, 0x53, 0x69, 0x64, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e,
+	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e,
+	0x61, 0x6d, 0x65, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
 	0x6d, 0x2f, 0x73, 0x37, 0x37, 0x72, 0x74, 0x2f, 0x72, 0x64, 0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64,
 	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x73, 0x2f, 0x73, 0x65, 0x63, 0x61, 0x75, 0x74, 0x68, 0x7a, 0x62, 0x06, 0x70, 0x72, 0x6f,
@@ -254,20 +251,17 @@ func file_services_secauthz_basic_access_control_proto_rawDescGZIP() []byte {
 
 var file_services_secauthz_basic_access_control_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_services_secauthz_basic_access_control_proto_goTypes = []interface{}{
-	(*LookupAccountByNameRequest)(nil),  // 0: services.secauthz.LookupAccountByNameRequest
-	(*LookupAccountByNameResponse)(nil), // 1: services.secauthz.LookupAccountByNameResponse
-	(*LookupAccountBySidRequest)(nil),   // 2: services.secauthz.LookupAccountBySidRequest
-	(*LookupAccountBySidResponse)(nil),  // 3: services.secauthz.LookupAccountBySidResponse
-	(*secauthz.User_1)(nil),             // 4: models.secauthz.User_1
+	(*LookupAccountSidByUsernameRequest)(nil),  // 0: services.secauthz.LookupAccountSidByUsernameRequest
+	(*LookupAccountSidByUsernameResponse)(nil), // 1: services.secauthz.LookupAccountSidByUsernameResponse
+	(*LookupAccountUsernameBySidRequest)(nil),  // 2: services.secauthz.LookupAccountUsernameBySidRequest
+	(*LookupAccountUsernameBySidResponse)(nil), // 3: services.secauthz.LookupAccountUsernameBySidResponse
 }
 var file_services_secauthz_basic_access_control_proto_depIdxs = []int32{
-	4, // 0: services.secauthz.LookupAccountByNameRequest.user:type_name -> models.secauthz.User_1
-	4, // 1: services.secauthz.LookupAccountBySidResponse.user:type_name -> models.secauthz.User_1
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_services_secauthz_basic_access_control_proto_init() }
@@ -277,7 +271,7 @@ func file_services_secauthz_basic_access_control_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_services_secauthz_basic_access_control_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LookupAccountByNameRequest); i {
+			switch v := v.(*LookupAccountSidByUsernameRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -289,7 +283,7 @@ func file_services_secauthz_basic_access_control_proto_init() {
 			}
 		}
 		file_services_secauthz_basic_access_control_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LookupAccountByNameResponse); i {
+			switch v := v.(*LookupAccountSidByUsernameResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -301,7 +295,7 @@ func file_services_secauthz_basic_access_control_proto_init() {
 			}
 		}
 		file_services_secauthz_basic_access_control_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LookupAccountBySidRequest); i {
+			switch v := v.(*LookupAccountUsernameBySidRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -313,7 +307,7 @@ func file_services_secauthz_basic_access_control_proto_init() {
 			}
 		}
 		file_services_secauthz_basic_access_control_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LookupAccountBySidResponse); i {
+			switch v := v.(*LookupAccountUsernameBySidResponse); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -50,6 +50,7 @@ func AddUser(user *netmgmtModelsPb.User_3) error {
 
 	user.Password = ""
 	secure.ZeroMemoryUint16FromPtr(usri2_password)
+	usri2_password = nil
 
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
@@ -64,7 +65,7 @@ func AddUser(user *netmgmtModelsPb.User_3) error {
 		case netmgmtInternalApi.NERR_PasswordTooShort:
 			return status.Errorf(codes.InvalidArgument, "Password does not meet the password policy requirements")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to add user (error: %d)", ret)
+			return status.Errorf(codes.Unknown, "Failed to add user (error: 0x%x)", ret)
 		}
 	}
 
@@ -93,7 +94,7 @@ func DeleteUser(user *netmgmtModelsPb.User_1) error {
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return status.Errorf(codes.NotFound, "User not found")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to delete user (error: %d)", ret)
+			return status.Errorf(codes.Unknown, "Failed to delete user (error: 0x%x)", ret)
 		}
 	}
 
@@ -151,11 +152,12 @@ func GetUsers() ([]*netmgmtModelsPb.User, error) {
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to get users (error: %d)", ret)
+			return nil, status.Errorf(codes.Unknown, "Failed to get users (error: 0x%x)", ret)
 		}
 	}
 
 	netmgmtInternalApi.NetApiBufferFree(buf)
+	buf = nil
 
 	return users, nil
 }
@@ -186,7 +188,7 @@ func GetUser(user *netmgmtModelsPb.User_1) (*netmgmtModelsPb.User, error) {
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return nil, status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to get user (error: %d)", ret)
+			return nil, status.Errorf(codes.Unknown, "Failed to get user (error: 0x%x)", ret)
 		}
 	}
 
@@ -200,6 +202,7 @@ func GetUser(user *netmgmtModelsPb.User_1) (*netmgmtModelsPb.User, error) {
 	}
 
 	netmgmtInternalApi.NetApiBufferFree(buf)
+	buf = nil
 
 	return fetchedUser, nil
 }
@@ -265,11 +268,12 @@ func GetUserLocalGroups(user *netmgmtModelsPb.User_1) ([]*netmgmtModelsPb.LocalG
 		case netmgmtInternalApi.NERR_UserNotFound:
 			return nil, status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to get user local groups (error: %d)", ret)
+			return nil, status.Errorf(codes.Unknown, "Failed to get user local groups (error: 0x%x)", ret)
 		}
 	}
 
 	netmgmtInternalApi.NetApiBufferFree(buf)
+	buf = nil
 
 	return localGroups, nil
 }
@@ -306,6 +310,7 @@ func ChangeUserPassword(user *netmgmtModelsPb.User_3) error {
 
 	user.Password = ""
 	secure.ZeroMemoryUint16FromPtr(usri1003_password)
+	usri1003_password = nil
 
 	if ret != netmgmtInternalApi.NERR_Success {
 		switch ret {
@@ -320,9 +325,85 @@ func ChangeUserPassword(user *netmgmtModelsPb.User_3) error {
 		case netmgmtInternalApi.NERR_LastAdmin:
 			return status.Errorf(codes.FailedPrecondition, "Operation not allowed on the last administrative account")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to change user password (error: %d)", ret)
+			return status.Errorf(codes.Unknown, "Failed to change user password (error: 0x%x)", ret)
 		}
 	}
 
 	return nil
+}
+
+func getUserFlags(user *netmgmtModelsPb.User_1) (uint32, error) {
+	fetchedUser, err := GetUser(user)
+	if err != nil {
+		return 0, err
+	}
+	return fetchedUser.Flags, nil
+}
+
+func setUserFlags(user *netmgmtModelsPb.User_1, flags uint32) error {
+	username, err := encode.UTF16PtrFromString(user.Username)
+	if err != nil {
+		return status.Errorf(codes.InvalidArgument, "Unable to encode username to UTF16")
+	}
+
+	var bufData = &netmgmtInternalApi.USER_INFO_1008{
+		Usri1008_flags: flags,
+	}
+	var bufPtr = unsafe.Pointer(bufData)
+	var buf = (*byte)(bufPtr)
+
+	var parm_err uint32
+
+	ret, _, _ := netmgmtInternalApi.NetUserSetInfo(
+		nil, // local
+		username,
+		1008, // level 1008, USER_INFO_1008
+		buf,
+		&parm_err,
+	)
+
+	if ret != netmgmtInternalApi.NERR_Success {
+		switch ret {
+		case netmgmtInternalApi.NERR_BadUsername:
+			return status.Errorf(codes.InvalidArgument, "Bad username")
+		case netmgmtInternalApi.NERR_UserNotFound:
+			return status.Errorf(codes.NotFound, "User not found")
+		case netmgmtInternalApi.NERR_LastAdmin:
+			return status.Errorf(codes.FailedPrecondition, "Operation not allowed on the last administrative account")
+		default:
+			return status.Errorf(codes.Unknown, "Failed to set user flags (error: 0x%x)", ret)
+		}
+	}
+
+	return nil
+}
+
+func EnableUser(user *netmgmtModelsPb.User_1) error {
+	if user == nil {
+		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
+	}
+
+	flags, err := getUserFlags(user)
+	if err != nil {
+		return err
+	}
+
+	flags &^= netmgmtInternalApi.UF_ACCOUNTDISABLE
+
+	return setUserFlags(user, flags)
+}
+
+func DisableUser(user *netmgmtModelsPb.User_1) error {
+	if user == nil {
+		return status.Errorf(codes.InvalidArgument, "User cannot be nil")
+	}
+
+	flags, err := getUserFlags(user)
+	if err != nil {
+		return err
+	}
+
+	flags |= netmgmtInternalApi.UF_ACCOUNTDISABLE
+
+	return setUserFlags(user, flags)
 }

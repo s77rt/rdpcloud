@@ -10,6 +10,10 @@ type USER_INFO_1003 struct {
 	Usri1003_password *uint16
 }
 
+type USER_INFO_1008 struct {
+	Usri1008_flags uint32
+}
+
 type USER_INFO_2 struct {
 	Usri2_name           *uint16
 	Usri2_password       *uint16

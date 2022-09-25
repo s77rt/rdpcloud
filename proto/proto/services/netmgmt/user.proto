@@ -24,3 +24,9 @@ message GetUserLocalGroupsResponse { repeated models.netmgmt.LocalGroup_1 local_
 
 message ChangeUserPasswordRequest { models.netmgmt.User_3 user = 1; }
 message ChangeUserPasswordResponse {}
+
+message EnableUserRequest { models.netmgmt.User_1 user = 1; }
+message EnableUserResponse {}
+
+message DisableUserRequest { models.netmgmt.User_1 user = 1; }
+message DisableUserResponse {}

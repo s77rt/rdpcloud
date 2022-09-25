@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/termserv";
+
+package services.termserv;
+
+import "models/termserv/user.proto";
+
+message LogoffUserRequest { models.termserv.User_1 user = 1; }
+message LogoffUserResponse {}
+

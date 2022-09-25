@@ -65,3 +65,19 @@ func (s *Server) ChangeUserPassword(ctx context.Context, in *netmgmtServicePb.Ch
 
 	return &netmgmtServicePb.ChangeUserPasswordResponse{}, nil
 }
+
+func (s *Server) EnableUser(ctx context.Context, in *netmgmtServicePb.EnableUserRequest) (*netmgmtServicePb.EnableUserResponse, error) {
+	if err := netmgmtApi.EnableUser(in.GetUser()); err != nil {
+		return nil, err
+	}
+
+	return &netmgmtServicePb.EnableUserResponse{}, nil
+}
+
+func (s *Server) DisableUser(ctx context.Context, in *netmgmtServicePb.DisableUserRequest) (*netmgmtServicePb.DisableUserResponse, error) {
+	if err := netmgmtApi.DisableUser(in.GetUser()); err != nil {
+		return nil, err
+	}
+
+	return &netmgmtServicePb.DisableUserResponse{}, nil
+}

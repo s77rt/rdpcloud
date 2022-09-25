@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/termserv";
+
+package services.termserv;
+
+import "services/termserv/wtsapi32.proto";
+
+service Termserv {
+	rpc LogoffUser(LogoffUserRequest) returns (LogoffUserResponse) {}
+}

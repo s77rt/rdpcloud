@@ -549,6 +549,176 @@ func (*ChangeUserPasswordResponse) Descriptor() ([]byte, []int) {
 	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{11}
 }
 
+type EnableUserRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	User *netmgmt.User_1 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+}
+
+func (x *EnableUserRequest) Reset() {
+	*x = EnableUserRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EnableUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnableUserRequest) ProtoMessage() {}
+
+func (x *EnableUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EnableUserRequest.ProtoReflect.Descriptor instead.
+func (*EnableUserRequest) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *EnableUserRequest) GetUser() *netmgmt.User_1 {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+type EnableUserResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *EnableUserResponse) Reset() {
+	*x = EnableUserResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EnableUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnableUserResponse) ProtoMessage() {}
+
+func (x *EnableUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EnableUserResponse.ProtoReflect.Descriptor instead.
+func (*EnableUserResponse) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{13}
+}
+
+type DisableUserRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	User *netmgmt.User_1 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+}
+
+func (x *DisableUserRequest) Reset() {
+	*x = DisableUserRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DisableUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DisableUserRequest) ProtoMessage() {}
+
+func (x *DisableUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DisableUserRequest.ProtoReflect.Descriptor instead.
+func (*DisableUserRequest) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DisableUserRequest) GetUser() *netmgmt.User_1 {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+type DisableUserResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *DisableUserResponse) Reset() {
+	*x = DisableUserResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DisableUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DisableUserResponse) ProtoMessage() {}
+
+func (x *DisableUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DisableUserResponse.ProtoReflect.Descriptor instead.
+func (*DisableUserResponse) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{15}
+}
+
 var File_services_netmgmt_user_proto protoreflect.FileDescriptor
 
 var file_services_netmgmt_user_proto_rawDesc = []byte{
@@ -599,6 +769,17 @@ var file_services_netmgmt_user_proto_rawDesc = []byte{
 	0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x33, 0x52, 0x04, 0x75,
 	0x73, 0x65, 0x72, 0x22, 0x1c, 0x0a, 0x1a, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x55, 0x73, 0x65,
 	0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x3f, 0x0a, 0x11, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65,
+	0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73,
+	0x65, 0x72, 0x22, 0x14, 0x0a, 0x12, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x40, 0x0a, 0x12, 0x44, 0x69, 0x73, 0x61,
+	0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a,
+	0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d,
+	0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73,
+	0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x69,
+	0x73, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x42, 0x35, 0x5a, 0x33, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
 	0x73, 0x37, 0x37, 0x72, 0x74, 0x2f, 0x72, 0x64, 0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2f, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73,
@@ -617,7 +798,7 @@ func file_services_netmgmt_user_proto_rawDescGZIP() []byte {
 	return file_services_netmgmt_user_proto_rawDescData
 }
 
-var file_services_netmgmt_user_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_services_netmgmt_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_services_netmgmt_user_proto_goTypes = []interface{}{
 	(*AddUserRequest)(nil),             // 0: services.netmgmt.AddUserRequest
 	(*AddUserResponse)(nil),            // 1: services.netmgmt.AddUserResponse
@@ -631,25 +812,31 @@ var file_services_netmgmt_user_proto_goTypes = []interface{}{
 	(*GetUserLocalGroupsResponse)(nil), // 9: services.netmgmt.GetUserLocalGroupsResponse
 	(*ChangeUserPasswordRequest)(nil),  // 10: services.netmgmt.ChangeUserPasswordRequest
 	(*ChangeUserPasswordResponse)(nil), // 11: services.netmgmt.ChangeUserPasswordResponse
-	(*netmgmt.User_3)(nil),             // 12: models.netmgmt.User_3
-	(*netmgmt.User_1)(nil),             // 13: models.netmgmt.User_1
-	(*netmgmt.User)(nil),               // 14: models.netmgmt.User
-	(*netmgmt.LocalGroup_1)(nil),       // 15: models.netmgmt.LocalGroup_1
+	(*EnableUserRequest)(nil),          // 12: services.netmgmt.EnableUserRequest
+	(*EnableUserResponse)(nil),         // 13: services.netmgmt.EnableUserResponse
+	(*DisableUserRequest)(nil),         // 14: services.netmgmt.DisableUserRequest
+	(*DisableUserResponse)(nil),        // 15: services.netmgmt.DisableUserResponse
+	(*netmgmt.User_3)(nil),             // 16: models.netmgmt.User_3
+	(*netmgmt.User_1)(nil),             // 17: models.netmgmt.User_1
+	(*netmgmt.User)(nil),               // 18: models.netmgmt.User
+	(*netmgmt.LocalGroup_1)(nil),       // 19: models.netmgmt.LocalGroup_1
 }
 var file_services_netmgmt_user_proto_depIdxs = []int32{
-	12, // 0: services.netmgmt.AddUserRequest.user:type_name -> models.netmgmt.User_3
-	13, // 1: services.netmgmt.DeleteUserRequest.user:type_name -> models.netmgmt.User_1
-	14, // 2: services.netmgmt.GetUsersResponse.users:type_name -> models.netmgmt.User
-	13, // 3: services.netmgmt.GetUserRequest.user:type_name -> models.netmgmt.User_1
-	14, // 4: services.netmgmt.GetUserResponse.user:type_name -> models.netmgmt.User
-	13, // 5: services.netmgmt.GetUserLocalGroupsRequest.user:type_name -> models.netmgmt.User_1
-	15, // 6: services.netmgmt.GetUserLocalGroupsResponse.local_groups:type_name -> models.netmgmt.LocalGroup_1
-	12, // 7: services.netmgmt.ChangeUserPasswordRequest.user:type_name -> models.netmgmt.User_3
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	16, // 0: services.netmgmt.AddUserRequest.user:type_name -> models.netmgmt.User_3
+	17, // 1: services.netmgmt.DeleteUserRequest.user:type_name -> models.netmgmt.User_1
+	18, // 2: services.netmgmt.GetUsersResponse.users:type_name -> models.netmgmt.User
+	17, // 3: services.netmgmt.GetUserRequest.user:type_name -> models.netmgmt.User_1
+	18, // 4: services.netmgmt.GetUserResponse.user:type_name -> models.netmgmt.User
+	17, // 5: services.netmgmt.GetUserLocalGroupsRequest.user:type_name -> models.netmgmt.User_1
+	19, // 6: services.netmgmt.GetUserLocalGroupsResponse.local_groups:type_name -> models.netmgmt.LocalGroup_1
+	16, // 7: services.netmgmt.ChangeUserPasswordRequest.user:type_name -> models.netmgmt.User_3
+	17, // 8: services.netmgmt.EnableUserRequest.user:type_name -> models.netmgmt.User_1
+	17, // 9: services.netmgmt.DisableUserRequest.user:type_name -> models.netmgmt.User_1
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_services_netmgmt_user_proto_init() }
@@ -802,6 +989,54 @@ func file_services_netmgmt_user_proto_init() {
 				return nil
 			}
 		}
+		file_services_netmgmt_user_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnableUserRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnableUserResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DisableUserRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DisableUserResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -809,7 +1044,7 @@ func file_services_netmgmt_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_services_netmgmt_user_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

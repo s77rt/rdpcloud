@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SecauthzClient interface {
-	LookupAccountByName(ctx context.Context, in *LookupAccountByNameRequest, opts ...grpc.CallOption) (*LookupAccountByNameResponse, error)
-	LookupAccountBySid(ctx context.Context, in *LookupAccountBySidRequest, opts ...grpc.CallOption) (*LookupAccountBySidResponse, error)
+	LookupAccountSidByUsername(ctx context.Context, in *LookupAccountSidByUsernameRequest, opts ...grpc.CallOption) (*LookupAccountSidByUsernameResponse, error)
+	LookupAccountUsernameBySid(ctx context.Context, in *LookupAccountUsernameBySidRequest, opts ...grpc.CallOption) (*LookupAccountUsernameBySidResponse, error)
 }
 
 type secauthzClient struct {
@@ -34,18 +34,18 @@ func NewSecauthzClient(cc grpc.ClientConnInterface) SecauthzClient {
 	return &secauthzClient{cc}
 }
 
-func (c *secauthzClient) LookupAccountByName(ctx context.Context, in *LookupAccountByNameRequest, opts ...grpc.CallOption) (*LookupAccountByNameResponse, error) {
-	out := new(LookupAccountByNameResponse)
-	err := c.cc.Invoke(ctx, "/services.secauthz.Secauthz/LookupAccountByName", in, out, opts...)
+func (c *secauthzClient) LookupAccountSidByUsername(ctx context.Context, in *LookupAccountSidByUsernameRequest, opts ...grpc.CallOption) (*LookupAccountSidByUsernameResponse, error) {
+	out := new(LookupAccountSidByUsernameResponse)
+	err := c.cc.Invoke(ctx, "/services.secauthz.Secauthz/LookupAccountSidByUsername", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *secauthzClient) LookupAccountBySid(ctx context.Context, in *LookupAccountBySidRequest, opts ...grpc.CallOption) (*LookupAccountBySidResponse, error) {
-	out := new(LookupAccountBySidResponse)
-	err := c.cc.Invoke(ctx, "/services.secauthz.Secauthz/LookupAccountBySid", in, out, opts...)
+func (c *secauthzClient) LookupAccountUsernameBySid(ctx context.Context, in *LookupAccountUsernameBySidRequest, opts ...grpc.CallOption) (*LookupAccountUsernameBySidResponse, error) {
+	out := new(LookupAccountUsernameBySidResponse)
+	err := c.cc.Invoke(ctx, "/services.secauthz.Secauthz/LookupAccountUsernameBySid", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +56,8 @@ func (c *secauthzClient) LookupAccountBySid(ctx context.Context, in *LookupAccou
 // All implementations must embed UnimplementedSecauthzServer
 // for forward compatibility
 type SecauthzServer interface {
-	LookupAccountByName(context.Context, *LookupAccountByNameRequest) (*LookupAccountByNameResponse, error)
-	LookupAccountBySid(context.Context, *LookupAccountBySidRequest) (*LookupAccountBySidResponse, error)
+	LookupAccountSidByUsername(context.Context, *LookupAccountSidByUsernameRequest) (*LookupAccountSidByUsernameResponse, error)
+	LookupAccountUsernameBySid(context.Context, *LookupAccountUsernameBySidRequest) (*LookupAccountUsernameBySidResponse, error)
 	mustEmbedUnimplementedSecauthzServer()
 }
 
@@ -65,11 +65,11 @@ type SecauthzServer interface {
 type UnimplementedSecauthzServer struct {
 }
 
-func (UnimplementedSecauthzServer) LookupAccountByName(context.Context, *LookupAccountByNameRequest) (*LookupAccountByNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LookupAccountByName not implemented")
+func (UnimplementedSecauthzServer) LookupAccountSidByUsername(context.Context, *LookupAccountSidByUsernameRequest) (*LookupAccountSidByUsernameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LookupAccountSidByUsername not implemented")
 }
-func (UnimplementedSecauthzServer) LookupAccountBySid(context.Context, *LookupAccountBySidRequest) (*LookupAccountBySidResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LookupAccountBySid not implemented")
+func (UnimplementedSecauthzServer) LookupAccountUsernameBySid(context.Context, *LookupAccountUsernameBySidRequest) (*LookupAccountUsernameBySidResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LookupAccountUsernameBySid not implemented")
 }
 func (UnimplementedSecauthzServer) mustEmbedUnimplementedSecauthzServer() {}
 
@@ -84,38 +84,38 @@ func RegisterSecauthzServer(s grpc.ServiceRegistrar, srv SecauthzServer) {
 	s.RegisterService(&Secauthz_ServiceDesc, srv)
 }
 
-func _Secauthz_LookupAccountByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LookupAccountByNameRequest)
+func _Secauthz_LookupAccountSidByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LookupAccountSidByUsernameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SecauthzServer).LookupAccountByName(ctx, in)
+		return srv.(SecauthzServer).LookupAccountSidByUsername(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.secauthz.Secauthz/LookupAccountByName",
+		FullMethod: "/services.secauthz.Secauthz/LookupAccountSidByUsername",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SecauthzServer).LookupAccountByName(ctx, req.(*LookupAccountByNameRequest))
+		return srv.(SecauthzServer).LookupAccountSidByUsername(ctx, req.(*LookupAccountSidByUsernameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Secauthz_LookupAccountBySid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LookupAccountBySidRequest)
+func _Secauthz_LookupAccountUsernameBySid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LookupAccountUsernameBySidRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SecauthzServer).LookupAccountBySid(ctx, in)
+		return srv.(SecauthzServer).LookupAccountUsernameBySid(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.secauthz.Secauthz/LookupAccountBySid",
+		FullMethod: "/services.secauthz.Secauthz/LookupAccountUsernameBySid",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SecauthzServer).LookupAccountBySid(ctx, req.(*LookupAccountBySidRequest))
+		return srv.(SecauthzServer).LookupAccountUsernameBySid(ctx, req.(*LookupAccountUsernameBySidRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,12 +128,12 @@ var Secauthz_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*SecauthzServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "LookupAccountByName",
-			Handler:    _Secauthz_LookupAccountByName_Handler,
+			MethodName: "LookupAccountSidByUsername",
+			Handler:    _Secauthz_LookupAccountSidByUsername_Handler,
 		},
 		{
-			MethodName: "LookupAccountBySid",
-			Handler:    _Secauthz_LookupAccountBySid_Handler,
+			MethodName: "LookupAccountUsernameBySid",
+			Handler:    _Secauthz_LookupAccountUsernameBySid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

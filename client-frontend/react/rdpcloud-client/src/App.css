@@ -23,6 +23,7 @@
 .content-box {
   padding: 24px;
   background: #fff;
+  overflow: auto;
 }
 
 .ant-tabs-tab {

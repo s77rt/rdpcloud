@@ -5,22 +5,21 @@ package secauthz
 import (
 	"fmt"
 	"os"
+	"unsafe"
 
 	"golang.org/x/sys/windows"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	secauthzModelsPb "github.com/s77rt/rdpcloud/proto/go/models/secauthz"
 	"github.com/s77rt/rdpcloud/server/go/internal/encode"
 	memoryInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/memory"
 	secauthzInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/secauthz"
 )
 
-// LookupAccountByName lookup for an account by it's name and returns the corresponding SID
-func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
-	if user == nil {
-		return "", status.Errorf(codes.InvalidArgument, "User cannot be nil")
+func LookupAccountSidByUsername(username string) (string, error) {
+	if username == "" {
+		return "", status.Errorf(codes.InvalidArgument, "Username cannot be empty")
 	}
 
 	hostname, err := os.Hostname()
@@ -28,7 +27,7 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 		return "", status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
 	}
 
-	lpAccountName, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, user.Username))
+	lpAccountName, err := encode.UTF16PtrFromString(fmt.Sprintf("%s\\%s", hostname, username))
 	if err != nil {
 		return "", status.Errorf(codes.InvalidArgument, "Unable to encode account name to UTF16")
 	}
@@ -54,7 +53,7 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (1) (error: %d)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (1) (error: 0x%x)", lasterr)
 		}
 	}
 
@@ -78,13 +77,13 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (2) (error: %d)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (2) (error: 0x%x)", lasterr)
 		}
 	}
 
 	domain := encode.UTF16ToString(ReferencedDomainName)
 	if domain != hostname {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (domain mismatch)")
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (domain mismatch)")
 	}
 
 	var StringSid = new(uint16)
@@ -95,25 +94,25 @@ func LookupAccountByName(user *secauthzModelsPb.User_1) (string, error) {
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account by name (ConvertSidToStringSidW) (error: %d)", lasterr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (ConvertSidToStringSidW) (error: 0x%x)", lasterr)
 	}
 
 	sidString := encode.UTF16PtrToString(StringSid)
 
-	memoryInternalApi.LocalFree(StringSid)
+	memoryInternalApi.LocalFree(uintptr(unsafe.Pointer(StringSid)))
+	StringSid = nil
 
 	return sidString, nil
 }
 
-// LookupAccountBySid lookup for an account by it's SID and returns the corresponding name
-func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
+func LookupAccountUsernameBySid(sidString string) (string, error) {
 	if sidString == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "SID cannot be empty")
+		return "", status.Errorf(codes.InvalidArgument, "SID cannot be empty")
 	}
 
 	StringSid, err := encode.UTF16PtrFromString(sidString)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Unable to encode SID to UTF16")
+		return "", status.Errorf(codes.InvalidArgument, "Unable to encode SID to UTF16")
 	}
 
 	var Sid = new(byte)
@@ -124,10 +123,10 @@ func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
 	)
 
 	if ret == 0 {
-		return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (ConvertStringSidToSidW) (error: %d)", lasterr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (ConvertStringSidToSidW) (error: 0x%x)", lasterr)
 	}
 
-	defer memoryInternalApi.LocalFree(Sid)
+	defer func() { memoryInternalApi.LocalFree(uintptr(unsafe.Pointer(Sid))); Sid = nil }()
 
 	var cchName uint32
 	var cchReferencedDomainName uint32
@@ -146,11 +145,11 @@ func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
 	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
 		switch lasterr {
 		case windows.ERROR_INVALID_SID:
-			return nil, status.Errorf(codes.InvalidArgument, "Invalid SID")
+			return "", status.Errorf(codes.InvalidArgument, "Invalid SID")
 		case windows.ERROR_NONE_MAPPED:
-			return nil, status.Errorf(codes.NotFound, "User not found")
+			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (1) (error: %d)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (1) (error: 0x%x)", lasterr)
 		}
 	}
 
@@ -170,27 +169,25 @@ func LookupAccountBySid(sidString string) (*secauthzModelsPb.User_1, error) {
 	if ret == 0 {
 		switch lasterr {
 		case windows.ERROR_INVALID_SID:
-			return nil, status.Errorf(codes.InvalidArgument, "Invalid SID")
+			return "", status.Errorf(codes.InvalidArgument, "Invalid SID")
 		case windows.ERROR_NONE_MAPPED:
-			return nil, status.Errorf(codes.NotFound, "User not found")
+			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (2) (error: %d)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (2) (error: 0x%x)", lasterr)
 		}
 	}
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		return nil, status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
+		return "", status.Errorf(codes.FailedPrecondition, "Unable to get hostname (%s)", err.Error())
 	}
 
 	domain := encode.UTF16ToString(ReferencedDomainName)
 	if domain != hostname {
-		return nil, status.Errorf(codes.Unknown, "Failed to lookup account by SID (domain mismatch)")
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (domain mismatch)")
 	}
 
-	user := &secauthzModelsPb.User_1{
-		Username: encode.UTF16PtrToString(&Name[0]),
-	}
+	username := encode.UTF16PtrToString(&Name[0])
 
-	return user, nil
+	return username, nil
 }

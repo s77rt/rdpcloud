@@ -14,6 +14,8 @@ service Netmgmt {
 	rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
 	rpc GetUserLocalGroups(GetUserLocalGroupsRequest) returns (GetUserLocalGroupsResponse) {}
 	rpc ChangeUserPassword(ChangeUserPasswordRequest) returns (ChangeUserPasswordResponse) {}
+	rpc EnableUser(EnableUserRequest) returns (EnableUserResponse) {}
+	rpc DisableUser(DisableUserRequest) returns (DisableUserResponse) {}
 
 	rpc AddUserToLocalGroup(AddUserToLocalGroupRequest) returns (AddUserToLocalGroupResponse) {}
 	rpc RemoveUserFromLocalGroup(RemoveUserFromLocalGroupRequest) returns (RemoveUserFromLocalGroupResponse) {}

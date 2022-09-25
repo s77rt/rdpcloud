@@ -53,17 +53,19 @@ func LogonUser(user *secauthnModelsPb.User_3) error {
 
 	user.Password = ""
 	secure.ZeroMemoryUint16FromPtr(lpszPassword)
+	lpszPassword = nil
 
 	if ret == 0 {
 		switch lasterr {
 		case windows.ERROR_LOGON_FAILURE:
 			return status.Errorf(codes.Unauthenticated, "Login failure")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to logon user (error: %d)", lasterr)
+			return status.Errorf(codes.Unknown, "Failed to logon user (error: 0x%x)", lasterr)
 		}
 	}
 
 	sysinfoInternalApi.CloseHandle(phToken)
+	phToken = 0
 
 	return nil
 }
