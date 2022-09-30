@@ -36,7 +36,7 @@ func LookupAccountSidByUsername(username string) (string, error) {
 	var cchReferencedDomainName uint32
 	var peUse uint32
 
-	ret, _, lasterr := secauthzInternalApi.LookupAccountNameW(
+	ret, _, lastErr := secauthzInternalApi.LookupAccountNameW(
 		nil, // start lookup on local
 		lpAccountName,
 		nil,
@@ -46,21 +46,21 @@ func LookupAccountSidByUsername(username string) (string, error) {
 		&peUse,
 	)
 
-	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
-		switch lasterr {
+	if ret == 0 && lastErr != windows.ERROR_INSUFFICIENT_BUFFER {
+		switch lastErr {
 		case windows.ERROR_INVALID_ACCOUNT_NAME:
 			return "", status.Errorf(codes.InvalidArgument, "Invalid account name")
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (1) (error: 0x%x)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (1) (error: 0x%x)", lastErr)
 		}
 	}
 
 	var Sid = make([]byte, cbSid)
 	var ReferencedDomainName = make([]uint16, cchReferencedDomainName)
 
-	ret, _, lasterr = secauthzInternalApi.LookupAccountNameW(
+	ret, _, lastErr = secauthzInternalApi.LookupAccountNameW(
 		nil, // start lookup on local
 		lpAccountName,
 		&Sid[0],
@@ -71,13 +71,13 @@ func LookupAccountSidByUsername(username string) (string, error) {
 	)
 
 	if ret == 0 {
-		switch lasterr {
+		switch lastErr {
 		case windows.ERROR_INVALID_ACCOUNT_NAME:
 			return "", status.Errorf(codes.InvalidArgument, "Invalid account name")
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (2) (error: 0x%x)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (2) (error: 0x%x)", lastErr)
 		}
 	}
 
@@ -88,13 +88,13 @@ func LookupAccountSidByUsername(username string) (string, error) {
 
 	var StringSid = new(uint16)
 
-	ret, _, lasterr = secauthzInternalApi.ConvertSidToStringSidW(
+	ret, _, lastErr = secauthzInternalApi.ConvertSidToStringSidW(
 		&Sid[0],
 		&StringSid,
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (ConvertSidToStringSidW) (error: 0x%x)", lasterr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (ConvertSidToStringSidW) (error: 0x%x)", lastErr)
 	}
 
 	sidString := encode.UTF16PtrToString(StringSid)
@@ -117,13 +117,13 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 
 	var Sid = new(byte)
 
-	ret, _, lasterr := secauthzInternalApi.ConvertStringSidToSidW(
+	ret, _, lastErr := secauthzInternalApi.ConvertStringSidToSidW(
 		StringSid,
 		&Sid,
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (ConvertStringSidToSidW) (error: 0x%x)", lasterr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (ConvertStringSidToSidW) (error: 0x%x)", lastErr)
 	}
 
 	defer func() { memoryInternalApi.LocalFree(uintptr(unsafe.Pointer(Sid))); Sid = nil }()
@@ -132,7 +132,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 	var cchReferencedDomainName uint32
 	var peUse uint32
 
-	ret, _, lasterr = secauthzInternalApi.LookupAccountSidW(
+	ret, _, lastErr = secauthzInternalApi.LookupAccountSidW(
 		nil, // start lookup on local
 		Sid,
 		nil,
@@ -142,21 +142,21 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 		&peUse,
 	)
 
-	if ret == 0 && lasterr != windows.ERROR_INSUFFICIENT_BUFFER {
-		switch lasterr {
+	if ret == 0 && lastErr != windows.ERROR_INSUFFICIENT_BUFFER {
+		switch lastErr {
 		case windows.ERROR_INVALID_SID:
 			return "", status.Errorf(codes.InvalidArgument, "Invalid SID")
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (1) (error: 0x%x)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (1) (error: 0x%x)", lastErr)
 		}
 	}
 
 	var Name = make([]uint16, cchName)
 	var ReferencedDomainName = make([]uint16, cchReferencedDomainName)
 
-	ret, _, lasterr = secauthzInternalApi.LookupAccountSidW(
+	ret, _, lastErr = secauthzInternalApi.LookupAccountSidW(
 		nil, // start lookup on local
 		Sid,
 		&Name[0],
@@ -167,13 +167,13 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 	)
 
 	if ret == 0 {
-		switch lasterr {
+		switch lastErr {
 		case windows.ERROR_INVALID_SID:
 			return "", status.Errorf(codes.InvalidArgument, "Invalid SID")
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (2) (error: 0x%x)", lasterr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (2) (error: 0x%x)", lastErr)
 		}
 	}
 

@@ -1,0 +1,28 @@
+{
+	"require": {
+		"grpc/grpc": "^v1.42.0",
+		"google/protobuf": "^v3.21.6"
+	},
+	"autoload": {
+		"psr-4": {
+			"Models\\Secauthn\\": "lib/proto/Models/Secauthn", 
+			"Models\\Termserv\\": "lib/proto/Models/Termserv", 
+			"Models\\Netmgmt\\": "lib/proto/Models/Netmgmt", 
+			"Models\\Fileio\\": "lib/proto/Models/Fileio", 
+			"Services\\Secauthn\\": "lib/proto/Services/Secauthn", 
+			"Services\\Termserv\\": "lib/proto/Services/Termserv", 
+			"Services\\Netmgmt\\": "lib/proto/Services/Netmgmt", 
+			"Services\\Secauthz\\": "lib/proto/Services/Secauthz", 
+			"Services\\Fileio\\": "lib/proto/Services/Fileio", 
+			"GPBMetadata\\Models\\Secauthn\\": "lib/proto/GPBMetadata/Models/Secauthn", 
+			"GPBMetadata\\Models\\Termserv\\": "lib/proto/GPBMetadata/Models/Termserv", 
+			"GPBMetadata\\Models\\Netmgmt\\": "lib/proto/GPBMetadata/Models/Netmgmt", 
+			"GPBMetadata\\Models\\Fileio\\": "lib/proto/GPBMetadata/Models/Fileio", 
+			"GPBMetadata\\Services\\Secauthn\\": "lib/proto/GPBMetadata/Services/Secauthn", 
+			"GPBMetadata\\Services\\Termserv\\": "lib/proto/GPBMetadata/Services/Termserv", 
+			"GPBMetadata\\Services\\Netmgmt\\": "lib/proto/GPBMetadata/Services/Netmgmt", 
+			"GPBMetadata\\Services\\Secauthz\\": "lib/proto/GPBMetadata/Services/Secauthz", 
+			"GPBMetadata\\Services\\Fileio\\": "lib/proto/GPBMetadata/Services/Fileio"
+		}
+	}
+}

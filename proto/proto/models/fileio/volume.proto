@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/fileio";
+
+package models.fileio;
+
+message Volume {
+	string guid = 1;
+	repeated string paths = 2;
+}

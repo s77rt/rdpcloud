@@ -29,6 +29,8 @@ type FileioClient interface {
 	GetUsersQuotaEntries(ctx context.Context, in *GetUsersQuotaEntriesRequest, opts ...grpc.CallOption) (*GetUsersQuotaEntriesResponse, error)
 	GetUserQuotaEntry(ctx context.Context, in *GetUserQuotaEntryRequest, opts ...grpc.CallOption) (*GetUserQuotaEntryResponse, error)
 	SetUserQuotaEntry(ctx context.Context, in *SetUserQuotaEntryRequest, opts ...grpc.CallOption) (*SetUserQuotaEntryResponse, error)
+	DeleteUserQuotaEntry(ctx context.Context, in *DeleteUserQuotaEntryRequest, opts ...grpc.CallOption) (*DeleteUserQuotaEntryResponse, error)
+	GetVolumes(ctx context.Context, in *GetVolumesRequest, opts ...grpc.CallOption) (*GetVolumesResponse, error)
 }
 
 type fileioClient struct {
@@ -102,6 +104,24 @@ func (c *fileioClient) SetUserQuotaEntry(ctx context.Context, in *SetUserQuotaEn
 	return out, nil
 }
 
+func (c *fileioClient) DeleteUserQuotaEntry(ctx context.Context, in *DeleteUserQuotaEntryRequest, opts ...grpc.CallOption) (*DeleteUserQuotaEntryResponse, error) {
+	out := new(DeleteUserQuotaEntryResponse)
+	err := c.cc.Invoke(ctx, "/services.fileio.Fileio/DeleteUserQuotaEntry", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileioClient) GetVolumes(ctx context.Context, in *GetVolumesRequest, opts ...grpc.CallOption) (*GetVolumesResponse, error) {
+	out := new(GetVolumesResponse)
+	err := c.cc.Invoke(ctx, "/services.fileio.Fileio/GetVolumes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileioServer is the server API for Fileio service.
 // All implementations must embed UnimplementedFileioServer
 // for forward compatibility
@@ -113,6 +133,8 @@ type FileioServer interface {
 	GetUsersQuotaEntries(context.Context, *GetUsersQuotaEntriesRequest) (*GetUsersQuotaEntriesResponse, error)
 	GetUserQuotaEntry(context.Context, *GetUserQuotaEntryRequest) (*GetUserQuotaEntryResponse, error)
 	SetUserQuotaEntry(context.Context, *SetUserQuotaEntryRequest) (*SetUserQuotaEntryResponse, error)
+	DeleteUserQuotaEntry(context.Context, *DeleteUserQuotaEntryRequest) (*DeleteUserQuotaEntryResponse, error)
+	GetVolumes(context.Context, *GetVolumesRequest) (*GetVolumesResponse, error)
 	mustEmbedUnimplementedFileioServer()
 }
 
@@ -140,6 +162,12 @@ func (UnimplementedFileioServer) GetUserQuotaEntry(context.Context, *GetUserQuot
 }
 func (UnimplementedFileioServer) SetUserQuotaEntry(context.Context, *SetUserQuotaEntryRequest) (*SetUserQuotaEntryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetUserQuotaEntry not implemented")
+}
+func (UnimplementedFileioServer) DeleteUserQuotaEntry(context.Context, *DeleteUserQuotaEntryRequest) (*DeleteUserQuotaEntryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserQuotaEntry not implemented")
+}
+func (UnimplementedFileioServer) GetVolumes(context.Context, *GetVolumesRequest) (*GetVolumesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVolumes not implemented")
 }
 func (UnimplementedFileioServer) mustEmbedUnimplementedFileioServer() {}
 
@@ -280,6 +308,42 @@ func _Fileio_SetUserQuotaEntry_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Fileio_DeleteUserQuotaEntry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserQuotaEntryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileioServer).DeleteUserQuotaEntry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.fileio.Fileio/DeleteUserQuotaEntry",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileioServer).DeleteUserQuotaEntry(ctx, req.(*DeleteUserQuotaEntryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Fileio_GetVolumes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVolumesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileioServer).GetVolumes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.fileio.Fileio/GetVolumes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileioServer).GetVolumes(ctx, req.(*GetVolumesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Fileio_ServiceDesc is the grpc.ServiceDesc for Fileio service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +378,14 @@ var Fileio_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetUserQuotaEntry",
 			Handler:    _Fileio_SetUserQuotaEntry_Handler,
+		},
+		{
+			MethodName: "DeleteUserQuotaEntry",
+			Handler:    _Fileio_DeleteUserQuotaEntry_Handler,
+		},
+		{
+			MethodName: "GetVolumes",
+			Handler:    _Fileio_GetVolumes_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

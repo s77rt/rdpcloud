@@ -33,6 +33,8 @@ var AceessLevel = map[string]uint32{
 	"/services.fileio.Fileio/GetUsersQuotaEntries":           1,
 	"/services.fileio.Fileio/GetUserQuotaEntry":              1,
 	"/services.fileio.Fileio/SetUserQuotaEntry":              1,
+	"/services.fileio.Fileio/DeleteUserQuotaEntry":           1,
+	"/services.fileio.Fileio/GetVolumes":                     1,
 	"/services.netmgmt.Netmgmt/AddUser":                      1,
 	"/services.netmgmt.Netmgmt/DeleteUser":                   1,
 	"/services.netmgmt.Netmgmt/GetUsers":                     1,

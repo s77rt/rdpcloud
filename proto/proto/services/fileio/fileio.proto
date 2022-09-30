@@ -4,7 +4,8 @@ option go_package = "github.com/s77rt/rdpcloud/proto/go/services/fileio";
 
 package services.fileio;
 
-import "services/fileio/dskquota.proto";
+import "services/fileio/disk_management.proto";
+import "services/fileio/volume_management.proto";
 
 service Fileio {
 	rpc GetQuotaState(GetQuotaStateRequest) returns (GetQuotaStateResponse) {}
@@ -14,4 +15,7 @@ service Fileio {
 	rpc GetUsersQuotaEntries(GetUsersQuotaEntriesRequest) returns (GetUsersQuotaEntriesResponse) {}
 	rpc GetUserQuotaEntry(GetUserQuotaEntryRequest) returns (GetUserQuotaEntryResponse) {}
 	rpc SetUserQuotaEntry(SetUserQuotaEntryRequest) returns (SetUserQuotaEntryResponse) {}
+	rpc DeleteUserQuotaEntry(DeleteUserQuotaEntryRequest) returns (DeleteUserQuotaEntryResponse) {}
+
+	rpc GetVolumes(GetVolumesRequest) returns (GetVolumesResponse) {}
 }

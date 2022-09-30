@@ -388,6 +388,10 @@ func EnableUser(user *netmgmtModelsPb.User_1) error {
 		return err
 	}
 
+	if flags&netmgmtInternalApi.UF_ACCOUNTDISABLE == 0 {
+		return status.Errorf(codes.FailedPrecondition, "User is already enabled")
+	}
+
 	flags &^= netmgmtInternalApi.UF_ACCOUNTDISABLE
 
 	return setUserFlags(user, flags)
@@ -401,6 +405,10 @@ func DisableUser(user *netmgmtModelsPb.User_1) error {
 	flags, err := getUserFlags(user)
 	if err != nil {
 		return err
+	}
+
+	if flags&netmgmtInternalApi.UF_ACCOUNTDISABLE != 0 {
+		return status.Errorf(codes.FailedPrecondition, "User is already disabled")
 	}
 
 	flags |= netmgmtInternalApi.UF_ACCOUNTDISABLE

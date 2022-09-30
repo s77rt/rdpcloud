@@ -42,7 +42,7 @@ func LogonUser(user *secauthnModelsPb.User_3) error {
 
 	var phToken uintptr
 
-	ret, _, lasterr := secauthnInternalApi.LogonUserW(
+	ret, _, lastErr := secauthnInternalApi.LogonUserW(
 		lpszUsername,
 		lpszDomain,
 		lpszPassword,
@@ -56,11 +56,11 @@ func LogonUser(user *secauthnModelsPb.User_3) error {
 	lpszPassword = nil
 
 	if ret == 0 {
-		switch lasterr {
+		switch lastErr {
 		case windows.ERROR_LOGON_FAILURE:
 			return status.Errorf(codes.Unauthenticated, "Login failure")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to logon user (error: 0x%x)", lasterr)
+			return status.Errorf(codes.Unknown, "Failed to logon user (error: 0x%x)", lastErr)
 		}
 	}
 
