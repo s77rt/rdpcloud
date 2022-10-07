@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/sysinfo";
+
+package services.sysinfo;
+
+message GetUptimeRequest {}
+message GetUptimeResponse { uint64 uptime = 1; }

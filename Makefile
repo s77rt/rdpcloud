@@ -4,7 +4,7 @@ DISPLAY_NAME ?= RDPCloud
 SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)'"
 CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.DisplayName=$(DISPLAY_NAME)'"
 
-all: gen-go build-server-go-windows build-client-frontend-react build-client-go-linux
+all: gen-go gen-php build-server-go-windows build-client-frontend-react build-client-go-linux build-client-php-whmcs-provisioning-module
 
 gen-go:
 	rm -rf proto/go && mkdir proto/go
@@ -41,6 +41,8 @@ build-client-php-whmcs-provisioning-module:
 	rm -rf client/php/whmcs-provisioning-module/dist && mkdir -p client/php/whmcs-provisioning-module/dist
 	cd client/php/whmcs-provisioning-module/src/rdpcloud && composer install --no-dev --optimize-autoloader
 	cd client/php/whmcs-provisioning-module && mkdir -p dist/rdpcloud
+	cd client/php/whmcs-provisioning-module && cp README.md dist/rdpcloud/
+	cd client/php/whmcs-provisioning-module && cp src/htaccess/.htaccess dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/lib/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/vendor/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp src/rdpcloud/rdpcloud.php dist/rdpcloud/

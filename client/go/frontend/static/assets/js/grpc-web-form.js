@@ -2215,14 +2215,14 @@ window.initGRPCForm = function(services, svcDescs, mtdDescs, invokeURI, metadata
             .done(function(responseData) {
                 var durationMs = window.performance.now() - startTime;
                 // renderResponse(durationMs, responseData);
-                callback_success?.(responseData);
+                callback_success?.(service, method, responseData);
             })
             .fail(function(failureData, status) {
                 alert("Unexpected error: " + status);
                 if (debug) {
                     console.trace(failureData.responseText);
                 }
-                callback_failure?.(failureData, status);
+                callback_failure?.(service, method, failureData, status);
             })
             .always(function() {
                 $(".grpc-invoke").prop("disabled", false);
@@ -2230,7 +2230,7 @@ window.initGRPCForm = function(services, svcDescs, mtdDescs, invokeURI, metadata
     }
     window.invokeWithPromise = (customData, customMetadata) => {
         return new Promise((resolve, reject) => {
-            invoke(customData, customMetadata, (responseData) => resolve(responseData), (failureData, status) => reject(failureData, status))
+            invoke(customData, customMetadata, (service, method, responseData) => resolve([service, method, responseData]), (service, method, failureData, status) => reject([service, method, failureData, status]))
         });
     }
 

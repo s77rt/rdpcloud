@@ -96,7 +96,7 @@ func main() {
 
 	h, err := standalone.HandlerViaReflection(context.Background(), conn, target, grpcUiOpts...)
 	if err != nil {
-		log.Fatalf("Failed to create handle: %v", err)
+		log.Fatalf("Failed to create handler: %v", err)
 	}
 
 	serveMux := http.NewServeMux()

@@ -99,6 +99,11 @@
 		</div>
 
 		<script>
+			// TODO: Find a better way to get methods access levels. Currently they are HARD-CODED
+			window.AccessLevel = {"/services.fileio.Fileio/DeleteUserQuotaEntry":2,"/services.fileio.Fileio/GetDefaultQuota":2,"/services.fileio.Fileio/GetQuotaState":2,"/services.fileio.Fileio/GetUserQuotaEntry":2,"/services.fileio.Fileio/GetUsersQuotaEntries":2,"/services.fileio.Fileio/GetVolumes":2,"/services.fileio.Fileio/SetDefaultQuota":2,"/services.fileio.Fileio/SetQuotaState":2,"/services.fileio.Fileio/SetUserQuotaEntry":2,"/services.netmgmt.Netmgmt/AddUser":2,"/services.netmgmt.Netmgmt/AddUserToLocalGroup":2,"/services.netmgmt.Netmgmt/ChangeUserPassword":2,"/services.netmgmt.Netmgmt/DeleteUser":2,"/services.netmgmt.Netmgmt/DisableUser":2,"/services.netmgmt.Netmgmt/EnableUser":2,"/services.netmgmt.Netmgmt/GetLocalGroups":2,"/services.netmgmt.Netmgmt/GetUser":2,"/services.netmgmt.Netmgmt/GetUserLocalGroups":2,"/services.netmgmt.Netmgmt/GetUsers":2,"/services.netmgmt.Netmgmt/GetUsersInLocalGroup":2,"/services.netmgmt.Netmgmt/RemoveUserFromLocalGroup":2,"/services.secauthn.Secauthn/LogonUser":0,"/services.secauthz.Secauthz/LookupAccountSidByUsername":2,"/services.secauthz.Secauthz/LookupAccountUsernameBySid":2,"/services.shell.Shell/DeleteProfile":2,"/services.sysinfo.Sysinfo/GetUptime":2,"/services.termserv.Termserv/LogoffUser":2};
+		</script>
+
+		<script>
 			window.InitApp = async function(App) {
 				const grpc_service = document.getElementById("grpc-service");
 				const grpc_method = document.getElementById("grpc-method");
@@ -130,30 +135,30 @@
 					var customMetadata = [];
 					
 					invokeWithPromise(customData, customMetadata).then(
-						(responseData) => {
+						([service, method, responseData]) => {
 							if (responseData.error) {
 								const error = (responseData.error.name + ' (' + responseData.error.code + ')').replace(/([A-Z])/g, ' $1').trim();
 								const error_msg = responseData.error.message;
-								App.LoginResponseCallback(null, error, error_msg);
+								App.LoginResponseCallback(service, method, null, error, error_msg);
 							} else if (responseData.requests.total === 1 && responseData.requests.sent === 1 && responseData.responses.length === 1) {
 								if (responseData.responses[0].isError) {
 									const error = "Server error processing message"
 									const error_msg = "Server failed to process the sent message"
-									App.LoginResponseCallback(null, error, error_msg);
+									App.LoginResponseCallback(service, method, null, error, error_msg);
 								} else {
 									const data = JSON.stringify(responseData.responses[0].message);
-									App.LoginResponseCallback(data, null, null);
+									App.LoginResponseCallback(service, method, data, null, null);
 								}
 							} else {
 								const error = "Reequests/Responses mismatch"
 								const error_msg = "The number of sent requests does not match with the number of received responses"
-								App.LoginResponseCallback(null, error, error_msg);
+								App.LoginResponseCallback(service, method, null, error, error_msg);
 							}
 						},
-						(failureData, status) => {
+						([service, method, failureData, status]) => {
 							const error = "HTTP Status: " + status;
 							const error_msg = "HTTP Response: " + failureData.responseText;
-							App.LoginResponseCallback(null, error, error_msg);
+							App.LoginResponseCallback(service, method, null, error, error_msg);
 						}
 					).then(() => {
 						App.SetLoginLoading(false);
@@ -170,30 +175,30 @@
 					var customMetadata = [{name: "authorization", value: "Bearer " + e.detail}];
 
 					invokeWithPromise(undefined, customMetadata).then(
-						(responseData) => {
+						([service, method, responseData]) => {
 							if (responseData.error) {
 								const error = (responseData.error.name + ' (' + responseData.error.code + ')').replace(/([A-Z])/g, ' $1').trim();
 								const error_msg = responseData.error.message;
-								App.InvokeResponseCallback(null, error, error_msg);
+								App.InvokeResponseCallback(service, method, null, error, error_msg);
 							} else if (responseData.requests.total === 1 && responseData.requests.sent === 1 && responseData.responses.length === 1) {
 								if (responseData.responses[0].isError) {
 									const error = "Server error processing message"
 									const error_msg = "Server failed to process the sent message"
-									App.InvokeResponseCallback(null, error, error_msg);
+									App.InvokeResponseCallback(service, method, null, error, error_msg);
 								} else {
 									const data = JSON.stringify(responseData.responses[0].message);
-									App.InvokeResponseCallback(data, null, null);
+									App.InvokeResponseCallback(service, method, data, null, null);
 								}
 							} else {
 								const error = "Reequests/Responses mismatch"
 								const error_msg = "The number of sent requests does not match with the number of received responses"
-								App.InvokeResponseCallback(null, error, error_msg);
+								App.InvokeResponseCallback(service, method, null, error, error_msg);
 							}
 						},
-						(failureData, status) => {
+						([service, method, failureData, status]) => {
 							const error = "HTTP Status: " + status;
 							const error_msg = "HTTP Response: " + failureData.responseText;
-							App.InvokeResponseCallback(null, error, error_msg);
+							App.InvokeResponseCallback(service, method, null, error, error_msg);
 						}
 					).then(() => {
 						App.SetInvokeLoading(false);

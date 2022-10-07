@@ -22,6 +22,8 @@ import (
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	secauthzServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthz"
+	shellServicePb "github.com/s77rt/rdpcloud/proto/go/services/shell"
+	sysinfoServicePb "github.com/s77rt/rdpcloud/proto/go/services/sysinfo"
 	termservServicePb "github.com/s77rt/rdpcloud/proto/go/services/termserv"
 	"github.com/s77rt/rdpcloud/server/go/config"
 	customJWT "github.com/s77rt/rdpcloud/server/go/jwt"
@@ -29,6 +31,8 @@ import (
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
 	secauthzService "github.com/s77rt/rdpcloud/server/go/services/secauthz"
+	shellService "github.com/s77rt/rdpcloud/server/go/services/shell"
+	sysinfoService "github.com/s77rt/rdpcloud/server/go/services/sysinfo"
 	termservService "github.com/s77rt/rdpcloud/server/go/services/termserv"
 )
 
@@ -65,6 +69,8 @@ func main() {
 	secauthzServicePb.RegisterSecauthzServer(s, &secauthzService.Server{})
 	fileioServicePb.RegisterFileioServer(s, &fileioService.Server{})
 	termservServicePb.RegisterTermservServer(s, &termservService.Server{})
+	shellServicePb.RegisterShellServer(s, &shellService.Server{})
+	sysinfoServicePb.RegisterSysinfoServer(s, &sysinfoService.Server{})
 
 	// Register reflection service
 	reflection.Register(s)

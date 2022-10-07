@@ -29,6 +29,7 @@ class App extends React.Component {
 			appName: "RDPCloud",
 
 			services: {},
+			accessLevel: {}, // will be populated by window.AccessLevel
 
 			showLogin: true,
 			showRequestBuilder: false,
@@ -47,7 +48,7 @@ class App extends React.Component {
 			login_error: null,
 
 			token: null,
-			user: undefined
+			user: undefined,
 		}
 	}
 
@@ -122,10 +123,13 @@ class App extends React.Component {
 							...previousState.services[service].methods,
 							[method]: {
 								label: method.replace(/([A-Z])/g, " $1").trim(),
-								key: method
+								key: method,
+								disabled: true,
+								style: {display: "none"}
 							}
 						},
-						children: []
+						children: [],
+						style: {display: "none"}
 					}
 				}
 			}), () => {
@@ -142,16 +146,31 @@ class App extends React.Component {
 		});
 	}
 
+	RebuildMenuBasedOnAccessLevel() {
+		this.setState(previousState => {
+			let services = { ...previousState.services };
+			for (let service of Object.keys(services)) {
+				for (let method of Object.keys(services[service].methods)) {
+					services[service].methods[method].disabled = !(previousState.user?.privilege >= previousState.accessLevel[`/${service}/${method}`]);
+					services[service].methods[method].style = {display: services[service].methods[method].disabled ? "none" : "block"}
+				}
+				services[service].children = Object.values(services[service].methods);
+				services[service].style = {display: services[service].children.reduce((acc, cur) => cur.disabled === false ? ++acc : acc, 0) === 0 ? "none" : "list-item"}
+			}
+			return { services };
+		});
+	}
+
 	SetSelectingService(selecting) {
 		this.setState({
 			selecting_service: selecting,
-		})
+		});
 	}
 
 	SetSelectingMethod(selecting) {
 		this.setState({
 			selecting_method: selecting,
-		})
+		});
 	}
 
 	SelectService(key) {
@@ -167,15 +186,17 @@ class App extends React.Component {
 	SetInvokeLoading(loading) {
 		this.setState({
 			invoke_isLoading: loading,
-		})
+		});
 	}
 
-	InvokeResponseCallback(data, error, error_msg) {
+	InvokeResponseCallback(service, method, data, error, error_msg) {
 		if (error || error_msg) {
 			this.setState({
 				response_error: {
+					service: service,
+					method: method,
 					error: error || "",
-					error_msg: error_msg || "",
+					error_msg: error_msg || ""
 				}
 			})
 			return;
@@ -190,6 +211,8 @@ class App extends React.Component {
 
 		this.setState({
 			response_data: {
+				service: service,
+				method: method,
 				data: data
 			}
 		});
@@ -225,15 +248,17 @@ class App extends React.Component {
 	SetLoginLoading(loading) {
 		this.setState({
 			login_isLoading: loading,
-		})
+		});
 	}
 
-	LoginResponseCallback(data, error, error_msg) {
+	LoginResponseCallback(service, method, data, error, error_msg) {
 		if (error || error_msg) {
 			this.setState({
 				login_error: {
+					service: service,
+					method: method,
 					error: error || "",
-					error_msg: error_msg || "",
+					error_msg: error_msg || ""
 				}
 			})
 			return;
@@ -258,7 +283,12 @@ class App extends React.Component {
 		this.setState({
 			showLogin: false,
 			token: data.token,
-			user: {preferred_username: jwt.preferred_username}
+			user: {
+				preferred_username: jwt.preferred_username,
+				privilege: jwt.privilege
+			},
+		}, () => {
+			this.RebuildMenuBasedOnAccessLevel();
 		});
 	}
 
@@ -276,7 +306,9 @@ class App extends React.Component {
 			showRequestBuilder: false,
 			selectedKeysMenu: [],
 			token: null,
-			user: undefined
+			user: undefined,
+		}, () => {
+			this.RebuildMenuBasedOnAccessLevel();
 		});
 	}
 
@@ -293,6 +325,8 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+		if (typeof window.AccessLevel === "object")
+			this.setState({ accessLevel: window.AccessLevel });
 		if (typeof window.InitApp === "function")
 			window.InitApp(this); // async function
 	}
@@ -324,18 +358,17 @@ class App extends React.Component {
 							left: 0,
 							top: "64px",
 							bottom: 0,
-							cursor: (this.state.selecting_service || this.state.selecting_method) ? "not-allowed" : "auto"
+							cursor: (this.state.selecting_service || this.state.selecting_method || this.state.invoke_isLoading) ? "not-allowed" : "auto"
 						}}
 					>
 						<Menu
-							selectable={!(this.state.selecting_service || this.state.selecting_method)}
+							selectable={!(this.state.selecting_service || this.state.selecting_method || this.state.invoke_isLoading)}
 							onSelect={this.onSelectMenu}
 							selectedKeys={this.state.selectedKeysMenu}
 							mode="vertical"
 							style={{
 								height: "100%",
-								borderRight: 0,
-								pointerEvents: (this.state.selecting_service || this.state.selecting_method) ? "none" : "auto"
+								pointerEvents: (this.state.selecting_service || this.state.selecting_method || this.state.invoke_isLoading) ? "none" : "auto"
 							}}
 							items={Object.values(this.state.services)}
 						/>
@@ -436,7 +469,7 @@ class App extends React.Component {
 												subTitle={this.state.response_error.error_msg}
 											/>
 										) : (this.state.response_data ? (
-											buildResponseFromResponseData(this.state.response_data.data)
+											buildResponseFromResponseData(this.state.response_data)
 										) : null
 										)}
 									</div>

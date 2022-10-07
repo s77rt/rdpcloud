@@ -14,6 +14,7 @@
 			"Services\\Netmgmt\\": "lib/proto/Services/Netmgmt", 
 			"Services\\Secauthz\\": "lib/proto/Services/Secauthz", 
 			"Services\\Fileio\\": "lib/proto/Services/Fileio", 
+			"Services\\Shell\\": "lib/proto/Services/Shell", 
 			"GPBMetadata\\Models\\Secauthn\\": "lib/proto/GPBMetadata/Models/Secauthn", 
 			"GPBMetadata\\Models\\Termserv\\": "lib/proto/GPBMetadata/Models/Termserv", 
 			"GPBMetadata\\Models\\Netmgmt\\": "lib/proto/GPBMetadata/Models/Netmgmt", 
@@ -22,7 +23,8 @@
 			"GPBMetadata\\Services\\Termserv\\": "lib/proto/GPBMetadata/Services/Termserv", 
 			"GPBMetadata\\Services\\Netmgmt\\": "lib/proto/GPBMetadata/Services/Netmgmt", 
 			"GPBMetadata\\Services\\Secauthz\\": "lib/proto/GPBMetadata/Services/Secauthz", 
-			"GPBMetadata\\Services\\Fileio\\": "lib/proto/GPBMetadata/Services/Fileio"
+			"GPBMetadata\\Services\\Fileio\\": "lib/proto/GPBMetadata/Services/Fileio", 
+			"GPBMetadata\\Services\\Shell\\": "lib/proto/GPBMetadata/Services/Shell"
 		}
 	}
 }

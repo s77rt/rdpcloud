@@ -16,13 +16,18 @@
   cursor: pointer;
 }
 
-.ant-layout-sider, .ant-layout-sider-trigger, .ant-layout-sider-zero-width-trigger {
+.ant-layout-sider {
+  background: #ffffff;
+}
+
+.ant-layout-sider-trigger, .ant-layout-sider-zero-width-trigger {
   background: #00c292;
 }
 
 .content-box {
   padding: 24px;
-  background: #fff;
+  background: #fdfdfd;
+  border: 1px solid #cdcdcd;
   overflow: auto;
 }
 
@@ -91,4 +96,9 @@
 }
 .login-form-container .input-icon {
   color: rgba(0, 0, 0, 0.25);
+}
+
+.code-block-wrapper code {
+  display: block;
+  white-space: pre-wrap;
 }

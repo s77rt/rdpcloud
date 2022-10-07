@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/sysinfo";
+
+package services.sysinfo;
+
+import "services/sysinfo/time.proto";
+
+service Sysinfo {
+	rpc GetUptime(GetUptimeRequest) returns (GetUptimeResponse) {}
+}
