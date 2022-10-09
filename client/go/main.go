@@ -2,14 +2,17 @@ package main
 
 import (
 	"context"
+	"crypto/x509"
 	"embed"
+	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net"
 	"net/http"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 
 	"github.com/fullstorydev/grpcui/standalone"
 )
@@ -17,24 +20,39 @@ import (
 var (
 	Version string = "dev"
 
-	DisplayName string = "RDPCloud"
+	ServerName string
+	ServerIP   string
 )
+
+//go:embed cert
+var c embed.FS
 
 //go:embed frontend
 var f embed.FS
 
 func main() {
+	var port int
+	flag.IntVar(&port, "port", 5027, "port on which the server is listening")
+	flag.Parse()
+
 	log.Printf("Running RDPCloud Client (Version: %s)", Version)
+	log.Printf("Associated to %s (%s)", ServerName, ServerIP)
 
-	addr := "51.89.161.169:5027"
+	addr := fmt.Sprintf("%s:%d", ServerIP, port)
+	target := ServerName
 
-	// target is used for display purposes
-	// it's meant to be for the addr, but we have no use in displaying the addr
-	// instead we use this variable to display a custom app name
-	target := DisplayName
+	serverCert, err := c.ReadFile("cert/server-cert.pem")
+	if err != nil {
+		log.Fatalf("Failed to read server-cert pem file: %v", err)
+	}
+
+	certPool := x509.NewCertPool()
+	if !certPool.AppendCertsFromPEM(serverCert) {
+		log.Fatalf("Failed to add server certificate")
+	}
 
 	grpcOpts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(certPool, "")),
 	}
 
 	conn, err := grpc.Dial(addr, grpcOpts...)

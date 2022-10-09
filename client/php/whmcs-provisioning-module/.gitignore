@@ -1,3 +1,10 @@
 composer.phar
-vendor/
-dist/
+
+vendor/*
+!vendor/.keep
+
+dist/*
+!dist/.keep
+
+# Cert files
+*.pem

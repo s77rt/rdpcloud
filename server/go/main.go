@@ -4,6 +4,8 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"embed"
 	"flag"
 	"fmt"
 	"log"
@@ -12,6 +14,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
@@ -38,20 +41,56 @@ import (
 
 var (
 	Version string = "dev"
+
+	ServerName string
+	ServerIP   string
 )
+
+func init() {
+	// Check IP
+	conn, err := net.Dial("udp4", "8.8.8.8:80")
+	if err != nil {
+		log.Fatalf("Failed to dial udp4: %v", err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	if !(localAddr.IP.Equal(net.ParseIP(ServerIP))) {
+		log.Fatalf("Server IP does not match; expected %s, got %s", ServerIP, localAddr.IP)
+	}
+}
+
+//go:embed cert
+var c embed.FS
 
 func main() {
 	var port int
-	flag.IntVar(&port, "port", 5027, "port on which server will listen")
+	flag.IntVar(&port, "port", 5027, "port on which the server will listen")
 	flag.Parse()
 
 	log.Printf("Running RDPCloud Server (Version: %s)", Version)
+	log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	lis, err := net.Listen("tcp4", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 	log.Printf("Listening at %v", lis.Addr())
+
+	serverCert, err := c.ReadFile("cert/server-cert.pem")
+	if err != nil {
+		log.Fatalf("Failed to read server-cert pem file: %v", err)
+	}
+	serverKey, err := c.ReadFile("cert/server-key.pem")
+	if err != nil {
+		log.Fatalf("Failed to read server-key pem file: %v", err)
+	}
+
+	cert, err := tls.X509KeyPair(serverCert, serverKey)
+	if err != nil {
+		log.Fatalf("Failed to load tls key pair: %v", err)
+	}
 
 	grpcOpts := []grpc.ServerOption{
 		// The following grpc.ServerOption adds an interceptor for all unary
@@ -60,7 +99,7 @@ func main() {
 		grpc.UnaryInterceptor(ensureValidToken), // Currently we only use unary RPCs
 
 		// Enable TLS for all incoming connections
-		// grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 	}
 
 	s := grpc.NewServer(grpcOpts...)

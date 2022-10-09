@@ -1,52 +1,78 @@
 GIT_TAG = "$(shell git describe --tags --always)"
-DISPLAY_NAME ?= RDPCloud
 
-SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)'"
-CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.DisplayName=$(DISPLAY_NAME)'"
+export SERVER_NAME
+export SERVER_IP
 
-all: gen-go gen-php build-server-go-windows build-client-frontend-react build-client-go-linux build-client-php-whmcs-provisioning-module
+ifndef SERVER_NAME
+$(error SERVER_NAME is not set)
+endif
+
+ifndef SERVER_IP
+$(error SERVER_IP is not set)
+endif
+
+SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)'"
+CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)'"
+
+all: info gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module
+
+info:
+	@echo "Server Name: $(SERVER_NAME)"
+	@echo "Server IP: $(SERVER_IP)"
+
+gen-cert:
+	cd cert && bash gen.sh
 
 gen-go:
-	rm -rf proto/go && mkdir proto/go
+	rm -rf proto/go && mkdir -p proto/go && touch proto/go/.keep
 	cd proto/go && go mod init github.com/s77rt/rdpcloud/proto/go
 	protoc --proto_path=proto/proto --go_out=proto/go --go_opt=paths=source_relative --go-grpc_out=proto/go --go-grpc_opt=paths=source_relative proto/proto/*/*/*.proto
 
 gen-php:
-	rm -rf proto/php && mkdir proto/php
+	rm -rf proto/php && mkdir -p proto/php && touch proto/php/.keep
 	protoc --proto_path=proto/proto --php_out=proto/php --grpc_out=proto/php --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin proto/proto/*/*/*.proto
 
-build-server-go-windows:
-	rm -rf server/go/bin/windows && mkdir -p server/go/bin/windows
-	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags $(SERVER_LD_FLAGS) -o bin/windows/rdpcloud_server.exe
-	cd server/go/bin/windows && 7za -y a rdpcloud_server_windows.7z rdpcloud_server.exe
-
-build-client-go-linux:
-	cp client-frontend/react/rdpcloud-client/build/static/js/main.*.js client/go/frontend/static/assets/js/app/main.js
-	cp client-frontend/react/rdpcloud-client/build/static/js/*.chunk.js client/go/frontend/static/assets/js/app/chunk.js
-	cp client-frontend/react/rdpcloud-client/build/static/css/main.*.css client/go/frontend/static/assets/css/app/main.css
-	rm -rf client/go/bin/linux && mkdir -p client/go/bin/linux
-	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags $(CLIENT_LD_FLAGS) -o bin/linux/rdpcloud_client
-	cd client/go/bin/linux && 7za -y a rdpcloud_client_linux.7z rdpcloud_client
+build-server-go:
+	rm -rf server/go/bin && mkdir -p server/go/bin && touch server/go/bin/.keep
+	rm -rf server/go/cert && mkdir -p server/go/cert && touch server/go/cert/.keep
+	cp cert/server-cert.pem server/go/cert/
+	cp cert/server-key.pem server/go/cert/
+	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags $(SERVER_LD_FLAGS) -o bin/rdpcloud-server-windows.exe
+	cd server/go/bin && 7za -y a rdpcloud-server-windows.7z rdpcloud-server-windows.exe
 
 build-client-frontend-react:
 	npm --prefix client-frontend/react/rdpcloud-client install
 	npm --prefix client-frontend/react/rdpcloud-client run build
 
+build-client-go:
+	rm -rf client/go/bin && mkdir -p client/go/bin && touch client/go/bin/.keep
+	rm -rf client/go/cert && mkdir -p client/go/cert && touch client/go/cert/.keep
+	cp cert/server-cert.pem client/go/cert/
+	cp client-frontend/react/rdpcloud-client/build/static/js/main.*.js client/go/frontend/static/assets/js/app/main.js
+	cp client-frontend/react/rdpcloud-client/build/static/js/*.chunk.js client/go/frontend/static/assets/js/app/chunk.js
+	cp client-frontend/react/rdpcloud-client/build/static/css/main.*.css client/go/frontend/static/assets/css/app/main.css
+	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags $(CLIENT_LD_FLAGS) -o bin/rdpcloud-client-linux
+	cd client/go/bin && 7za -y a rdpcloud-client-linux.7z rdpcloud-client-linux
+
 build-client-php-whmcs-provisioning-module:
-	# prepare src
-	rm -rf client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto && mkdir -p client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto
+	# src
+	rm -rf client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto && mkdir -p client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto && touch client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto/.keep
 	cp -r proto/php/* client/php/whmcs-provisioning-module/src/rdpcloud/lib/proto
 	cd client/php/whmcs-provisioning-module && bash init_composer.sh
-	# prepare dist
-	rm -rf client/php/whmcs-provisioning-module/dist && mkdir -p client/php/whmcs-provisioning-module/dist
+	rm -rf client/php/whmcs-provisioning-module/src/rdpcloud/vendor && mkdir -p client/php/whmcs-provisioning-module/src/rdpcloud/vendor && touch client/php/whmcs-provisioning-module/src/rdpcloud/vendor/.keep
+	rm -rf client/php/whmcs-provisioning-module/src/rdpcloud/cert && mkdir -p client/php/whmcs-provisioning-module/src/rdpcloud/cert && touch client/php/whmcs-provisioning-module/src/rdpcloud/cert/.keep
+	cp cert/server-cert.pem client/php/whmcs-provisioning-module/src/rdpcloud/cert/
+	# dist
+	rm -rf client/php/whmcs-provisioning-module/dist && mkdir -p client/php/whmcs-provisioning-module/dist && touch client/php/whmcs-provisioning-module/dist/.keep
 	cd client/php/whmcs-provisioning-module/src/rdpcloud && composer install --no-dev --optimize-autoloader
 	cd client/php/whmcs-provisioning-module && mkdir -p dist/rdpcloud
 	cd client/php/whmcs-provisioning-module && cp README.md dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp src/htaccess/.htaccess dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/lib/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/vendor/ dist/rdpcloud/
+	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/cert/ dist/rdpcloud/
+	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/lib/proto/.keep
+	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/vendor/.keep
+	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/cert/.keep
 	cd client/php/whmcs-provisioning-module && cp src/rdpcloud/rdpcloud.php dist/rdpcloud/
-	cd client/php/whmcs-provisioning-module && cp src/htaccess/.htaccess dist/rdpcloud/lib/
-	cd client/php/whmcs-provisioning-module && cp src/htaccess/.htaccess dist/rdpcloud/vendor/
-	# build dist
-	cd client/php/whmcs-provisioning-module/dist && zip -r rdpcloud.zip . && rm -rf rdpcloud/
+	cd client/php/whmcs-provisioning-module/dist && zip -r rdpcloud.zip rdpcloud

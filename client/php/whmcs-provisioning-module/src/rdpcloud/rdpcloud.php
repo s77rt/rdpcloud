@@ -8,7 +8,7 @@ require dirname(__FILE__) . '/vendor/autoload.php';
 
 function getOpts() {
 	return [
-		"credentials" => Grpc\ChannelCredentials::createInsecure(),
+		"credentials" => Grpc\ChannelCredentials::createSsl(file_get_contents(dirname(__FILE__) . '/cert/server-cert.pem')),
 	];
 }
 

@@ -20,5 +20,9 @@
 # Go workspace file
 go.work
 
-# Binaries directories
-bin/
+# Binaries
+bin/*
+!bin/.keep
+
+# Cert files
+*.pem

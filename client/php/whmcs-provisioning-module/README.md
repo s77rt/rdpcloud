@@ -11,3 +11,8 @@ Recommended to only set the quota on the volume where the user profiles exist
 Make sure the quota is enabled (enforced)
 
 This module is expected to work on case insensitive file systems (That's normally the default behaviour in Windows)
+
+## Multiple Servers
+To use the RDPCloud module with multiple servers you have to concatenate all the servers certificates into one single file. Example: `cat server-cert-1.pem server-cert-2.pem server-cert-3.pem > server-cert.pem`
+
+The certificate file should be placed at `cert/server-cert.pem`
