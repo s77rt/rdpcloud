@@ -1,7 +1,7 @@
 composer.phar
 
-vendor/*
-!vendor/.keep
+src/rdpcloud/vendor/*
+!src/rdpcloud/vendor/.keep
 
 dist/*
 !dist/.keep
