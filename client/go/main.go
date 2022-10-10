@@ -22,6 +22,8 @@ var (
 
 	ServerName string
 	ServerIP   string
+
+	LicenseExpDate string // YYYY-MM-DD format
 )
 
 //go:embed cert
@@ -36,7 +38,12 @@ func main() {
 	flag.Parse()
 
 	log.Printf("Running RDPCloud Client (Version: %s)", Version)
-	log.Printf("Associated to %s (%s)", ServerName, ServerIP)
+
+	if LicenseExpDate == "" {
+		log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
+	} else {
+		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", ServerName, ServerIP, LicenseExpDate)
+	}
 
 	addr := fmt.Sprintf("%s:%d", ServerIP, port)
 	target := ServerName

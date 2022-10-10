@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -19,6 +20,8 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 
+	"github.com/beevik/ntp"
+	"github.com/go-co-op/gocron"
 	"github.com/golang-jwt/jwt/v4"
 
 	fileioServicePb "github.com/s77rt/rdpcloud/proto/go/services/fileio"
@@ -44,10 +47,12 @@ var (
 
 	ServerName string
 	ServerIP   string
+
+	LicenseExpDate string // YYYY-MM-DD format
 )
 
 func init() {
-	// Check IP
+	// Check Server IP
 	conn, err := net.Dial("udp4", "8.8.8.8:80")
 	if err != nil {
 		log.Fatalf("Failed to dial udp4: %v", err)
@@ -58,6 +63,27 @@ func init() {
 
 	if !(localAddr.IP.Equal(net.ParseIP(ServerIP))) {
 		log.Fatalf("Server IP does not match; expected %s, got %s", ServerIP, localAddr.IP)
+	}
+
+	// Check License Exp. Date
+	if LicenseExpDate != "" {
+		s := gocron.NewScheduler(time.UTC)
+		s.Every(1).Day().Do(func() {
+			timeNow, err := ntp.Time("time.google.com")
+			if err != nil {
+				log.Fatalf("Failed to read time: %v", err)
+			}
+
+			timeExp, err := time.Parse("2006-01-02", LicenseExpDate)
+			if err != nil {
+				log.Fatalf("Failed to read exp time: %v", err)
+			}
+
+			if timeNow.After(timeExp) {
+				log.Fatalf("License expired on %s", timeExp)
+			}
+		})
+		s.StartAsync()
 	}
 }
 
@@ -70,7 +96,12 @@ func main() {
 	flag.Parse()
 
 	log.Printf("Running RDPCloud Server (Version: %s)", Version)
-	log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
+
+	if LicenseExpDate == "" {
+		log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
+	} else {
+		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", ServerName, ServerIP, LicenseExpDate)
+	}
 
 	lis, err := net.Listen("tcp4", fmt.Sprintf(":%d", port))
 	if err != nil {

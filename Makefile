@@ -2,23 +2,39 @@ GIT_TAG = "$(shell git describe --tags --always)"
 
 export SERVER_NAME
 export SERVER_IP
+export IS_FREE_TRIAL
+export FREE_TRIAL_DURATION = 30
 
 ifndef SERVER_NAME
 $(error SERVER_NAME is not set)
 endif
-
 ifndef SERVER_IP
 $(error SERVER_IP is not set)
 endif
+ifndef IS_FREE_TRIAL
+$(error IS_FREE_TRIAL is not set)
+endif
 
-SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)'"
-CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)'"
+ifeq ($(IS_FREE_TRIAL), FALSE)
+	LICENSE_EXP_DATE = ""
+else
+ifeq ($(IS_FREE_TRIAL), TRUE)
+	LICENSE_EXP_DATE = "$(shell date -d '+$(FREE_TRIAL_DURATION) day' '+%Y-%m-%d')"
+else
+$(error IS_FREE_TRIAL can either be TRUE or FALSE)
+endif
+endif
 
-all: info gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module
+SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)' -X 'main.LicenseExpDate=$(LICENSE_EXP_DATE)'"
+CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)' -X 'main.LicenseExpDate=$(LICENSE_EXP_DATE)'"
+
+all: info gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module info
 
 info:
-	@echo "Server Name: $(SERVER_NAME)"
-	@echo "Server IP: $(SERVER_IP)"
+	@echo "SERVER_NAME: $(SERVER_NAME)"
+	@echo "SERVER_IP: $(SERVER_IP)"
+	@echo "IS_FREE_TRIAL: $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)"
+	@echo "LICENSE_EXP_DATE: $(LICENSE_EXP_DATE)"
 
 gen-cert:
 	cd cert && bash gen.sh
