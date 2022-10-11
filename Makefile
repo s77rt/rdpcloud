@@ -1,4 +1,4 @@
-GIT_TAG = "$(shell git describe --tags --always)"
+GIT_TAG := $(shell git describe --tags --always)
 
 export SERVER_NAME
 export SERVER_IP
@@ -16,25 +16,36 @@ $(error IS_FREE_TRIAL is not set)
 endif
 
 ifeq ($(IS_FREE_TRIAL), FALSE)
-	LICENSE_EXP_DATE = ""
+	EXP_DATE :=
 else
 ifeq ($(IS_FREE_TRIAL), TRUE)
-	LICENSE_EXP_DATE = "$(shell date -d '+$(FREE_TRIAL_DURATION) day' '+%Y-%m-%d')"
+	EXP_DATE := $(shell date -d '+$(FREE_TRIAL_DURATION) day' '+%Y-%m-%d')
 else
 $(error IS_FREE_TRIAL can either be TRUE or FALSE)
 endif
 endif
 
-SERVER_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)' -X 'main.LicenseExpDate=$(LICENSE_EXP_DATE)'"
-CLIENT_LD_FLAGS = "-X 'main.Version=$(GIT_TAG)' -X 'main.ServerName=$(SERVER_NAME)' -X 'main.ServerIP=$(SERVER_IP)' -X 'main.LicenseExpDate=$(LICENSE_EXP_DATE)'"
+ENCRYPTION_KEY := $(shell openssl rand 128 | base64 -w 0)
+ENCRYPTION_KEY_X :=  $(shell xor '$(ENCRYPTION_KEY)' 'RDPCloud' | base64 -w 0)
+ENCRYPTED_SERVER_NAME := $(shell xor '$(SERVER_NAME)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+ENCRYPTED_SERVER_IP := $(shell xor '$(SERVER_IP)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+ENCRYPTED_EXP_DATE := $(shell xor '$(EXP_DATE)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+SIGNATURE := $(shell xor '$(ENCRYPTED_SERVER_NAME)$(ENCRYPTED_SERVER_IP)$(ENCRYPTED_EXP_DATE)SIGNATURE' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
 
-all: info gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module info
+SERVER_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/server/go/license.Signature=$(SIGNATURE)'
+CLIENT_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/client/go/license.Signature=$(SIGNATURE)'
+
+all: info dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module info
 
 info:
-	@echo "SERVER_NAME: $(SERVER_NAME)"
-	@echo "SERVER_IP: $(SERVER_IP)"
-	@echo "IS_FREE_TRIAL: $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)"
-	@echo "LICENSE_EXP_DATE: $(LICENSE_EXP_DATE)"
+	@echo 'SERVER_NAME: $(SERVER_NAME)'
+	@echo 'SERVER_IP: $(SERVER_IP)'
+	@echo 'IS_FREE_TRIAL: $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
+	@echo 'EXP_DATE: $(EXP_DATE)'
+
+dep:
+	go install mvdan.cc/garble@latest
+	go install github.com/s77rt/xor/cmd/xor@latest
 
 gen-cert:
 	cd cert && bash gen.sh
@@ -53,7 +64,7 @@ build-server-go:
 	rm -rf server/go/cert && mkdir -p server/go/cert && touch server/go/cert/.keep
 	cp cert/server-cert.pem server/go/cert/
 	cp cert/server-key.pem server/go/cert/
-	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags $(SERVER_LD_FLAGS) -o bin/rdpcloud-server-windows.exe
+	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(SERVER_GO_LDFLAGS)' -o bin/rdpcloud-server-windows.exe
 	cd server/go/bin && 7za -y a rdpcloud-server-windows.7z rdpcloud-server-windows.exe
 
 build-client-frontend-react:
@@ -67,7 +78,7 @@ build-client-go:
 	cp client-frontend/react/rdpcloud-client/build/static/js/main.*.js client/go/frontend/static/assets/js/app/main.js
 	cp client-frontend/react/rdpcloud-client/build/static/js/*.chunk.js client/go/frontend/static/assets/js/app/chunk.js
 	cp client-frontend/react/rdpcloud-client/build/static/css/main.*.css client/go/frontend/static/assets/css/app/main.css
-	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags $(CLIENT_LD_FLAGS) -o bin/rdpcloud-client-linux
+	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-linux
 	cd client/go/bin && 7za -y a rdpcloud-client-linux.7z rdpcloud-client-linux
 
 build-client-php-whmcs-provisioning-module:

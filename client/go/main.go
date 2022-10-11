@@ -15,16 +15,24 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"github.com/fullstorydev/grpcui/standalone"
+
+	"github.com/s77rt/rdpcloud/client/go/license"
 )
 
 var (
 	Version string = "dev"
 
-	ServerName string
-	ServerIP   string
-
-	LicenseExpDate string // YYYY-MM-DD format
+	licenseInfo *license.License
 )
+
+func init() {
+	// Read License
+	var err error
+	licenseInfo, err = license.Read()
+	if err != nil {
+		log.Fatalf("Failed to read license: %v", err)
+	}
+}
 
 //go:embed cert
 var c embed.FS
@@ -34,19 +42,21 @@ var f embed.FS
 
 func main() {
 	var port int
+	var webport int
 	flag.IntVar(&port, "port", 5027, "port on which the server is listening")
+	flag.IntVar(&webport, "webport", 5028, "port on which the web server will listen")
 	flag.Parse()
 
 	log.Printf("Running RDPCloud Client (Version: %s)", Version)
 
-	if LicenseExpDate == "" {
-		log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
+	if licenseInfo.ExpDate.IsZero() {
+		log.Printf("Licensed to %s (%s)", licenseInfo.ServerName, licenseInfo.ServerIP)
 	} else {
-		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", ServerName, ServerIP, LicenseExpDate)
+		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerIP, licenseInfo.ExpDate)
 	}
 
-	addr := fmt.Sprintf("%s:%d", ServerIP, port)
-	target := ServerName
+	addr := fmt.Sprintf("%s:%d", licenseInfo.ServerIP, port)
+	target := licenseInfo.ServerName
 
 	serverCert, err := c.ReadFile("cert/server-cert.pem")
 	if err != nil {
@@ -127,7 +137,7 @@ func main() {
 	serveMux := http.NewServeMux()
 	serveMux.Handle("/", h)
 
-	lis, err := net.Listen("tcp", ":8080")
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", webport))
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}

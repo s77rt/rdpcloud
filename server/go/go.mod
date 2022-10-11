@@ -9,6 +9,7 @@ require (
 	github.com/go-co-op/gocron v1.17.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/s77rt/rdpcloud/proto/go v0.0.0-00010101000000-000000000000
+	github.com/s77rt/xor v0.0.0-20221010224322-0f0d4971e11f
 	golang.org/x/sys v0.0.0-20220906165534-d0df966e6959
 	google.golang.org/grpc v1.49.0
 )

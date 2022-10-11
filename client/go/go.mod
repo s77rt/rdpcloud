@@ -6,6 +6,7 @@ replace github.com/s77rt/rdpcloud/proto/go => ../../proto/go
 
 require (
 	github.com/fullstorydev/grpcui v1.3.1
+	github.com/s77rt/xor v0.0.0-20221010224322-0f0d4971e11f
 	google.golang.org/grpc v1.49.0
 )
 

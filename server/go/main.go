@@ -33,6 +33,7 @@ import (
 	termservServicePb "github.com/s77rt/rdpcloud/proto/go/services/termserv"
 	"github.com/s77rt/rdpcloud/server/go/config"
 	customJWT "github.com/s77rt/rdpcloud/server/go/jwt"
+	"github.com/s77rt/rdpcloud/server/go/license"
 	fileioService "github.com/s77rt/rdpcloud/server/go/services/fileio"
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
@@ -45,14 +46,18 @@ import (
 var (
 	Version string = "dev"
 
-	ServerName string
-	ServerIP   string
-
-	LicenseExpDate string // YYYY-MM-DD format
+	licenseInfo *license.License
 )
 
 func init() {
-	// Check Server IP
+	// Read License
+	var err error
+	licenseInfo, err = license.Read()
+	if err != nil {
+		log.Fatalf("Failed to read license: %v", err)
+	}
+
+	// Check License Server IP
 	conn, err := net.Dial("udp4", "8.8.8.8:80")
 	if err != nil {
 		log.Fatalf("Failed to dial udp4: %v", err)
@@ -61,12 +66,12 @@ func init() {
 
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 
-	if !(localAddr.IP.Equal(net.ParseIP(ServerIP))) {
-		log.Fatalf("Server IP does not match; expected %s, got %s", ServerIP, localAddr.IP)
+	if !(localAddr.IP.Equal(licenseInfo.ServerIP)) {
+		log.Fatalf("Server IP does not match; expected %s, got %s", licenseInfo.ServerIP, localAddr.IP)
 	}
 
 	// Check License Exp. Date
-	if LicenseExpDate != "" {
+	if !licenseInfo.ExpDate.IsZero() {
 		s := gocron.NewScheduler(time.UTC)
 		s.Every(1).Day().Do(func() {
 			timeNow, err := ntp.Time("time.google.com")
@@ -74,13 +79,8 @@ func init() {
 				log.Fatalf("Failed to read time: %v", err)
 			}
 
-			timeExp, err := time.Parse("2006-01-02", LicenseExpDate)
-			if err != nil {
-				log.Fatalf("Failed to read exp time: %v", err)
-			}
-
-			if timeNow.After(timeExp) {
-				log.Fatalf("License expired on %s", timeExp)
+			if timeNow.After(licenseInfo.ExpDate) {
+				log.Fatalf("License expired on %s", licenseInfo.ExpDate)
 			}
 		})
 		s.StartAsync()
@@ -97,10 +97,10 @@ func main() {
 
 	log.Printf("Running RDPCloud Server (Version: %s)", Version)
 
-	if LicenseExpDate == "" {
-		log.Printf("Licensed to %s (%s)", ServerName, ServerIP)
+	if licenseInfo.ExpDate.IsZero() {
+		log.Printf("Licensed to %s (%s)", licenseInfo.ServerName, licenseInfo.ServerIP)
 	} else {
-		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", ServerName, ServerIP, LicenseExpDate)
+		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerIP, licenseInfo.ExpDate)
 	}
 
 	lis, err := net.Listen("tcp4", fmt.Sprintf(":%d", port))
