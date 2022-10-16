@@ -28,6 +28,7 @@ type FileioClient interface {
 	SetDefaultQuota(ctx context.Context, in *SetDefaultQuotaRequest, opts ...grpc.CallOption) (*SetDefaultQuotaResponse, error)
 	GetUsersQuotaEntries(ctx context.Context, in *GetUsersQuotaEntriesRequest, opts ...grpc.CallOption) (*GetUsersQuotaEntriesResponse, error)
 	GetUserQuotaEntry(ctx context.Context, in *GetUserQuotaEntryRequest, opts ...grpc.CallOption) (*GetUserQuotaEntryResponse, error)
+	GetMyUserQuotaEntry(ctx context.Context, in *GetMyUserQuotaEntryRequest, opts ...grpc.CallOption) (*GetMyUserQuotaEntryResponse, error)
 	SetUserQuotaEntry(ctx context.Context, in *SetUserQuotaEntryRequest, opts ...grpc.CallOption) (*SetUserQuotaEntryResponse, error)
 	DeleteUserQuotaEntry(ctx context.Context, in *DeleteUserQuotaEntryRequest, opts ...grpc.CallOption) (*DeleteUserQuotaEntryResponse, error)
 	GetVolumes(ctx context.Context, in *GetVolumesRequest, opts ...grpc.CallOption) (*GetVolumesResponse, error)
@@ -95,6 +96,15 @@ func (c *fileioClient) GetUserQuotaEntry(ctx context.Context, in *GetUserQuotaEn
 	return out, nil
 }
 
+func (c *fileioClient) GetMyUserQuotaEntry(ctx context.Context, in *GetMyUserQuotaEntryRequest, opts ...grpc.CallOption) (*GetMyUserQuotaEntryResponse, error) {
+	out := new(GetMyUserQuotaEntryResponse)
+	err := c.cc.Invoke(ctx, "/services.fileio.Fileio/GetMyUserQuotaEntry", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *fileioClient) SetUserQuotaEntry(ctx context.Context, in *SetUserQuotaEntryRequest, opts ...grpc.CallOption) (*SetUserQuotaEntryResponse, error) {
 	out := new(SetUserQuotaEntryResponse)
 	err := c.cc.Invoke(ctx, "/services.fileio.Fileio/SetUserQuotaEntry", in, out, opts...)
@@ -132,6 +142,7 @@ type FileioServer interface {
 	SetDefaultQuota(context.Context, *SetDefaultQuotaRequest) (*SetDefaultQuotaResponse, error)
 	GetUsersQuotaEntries(context.Context, *GetUsersQuotaEntriesRequest) (*GetUsersQuotaEntriesResponse, error)
 	GetUserQuotaEntry(context.Context, *GetUserQuotaEntryRequest) (*GetUserQuotaEntryResponse, error)
+	GetMyUserQuotaEntry(context.Context, *GetMyUserQuotaEntryRequest) (*GetMyUserQuotaEntryResponse, error)
 	SetUserQuotaEntry(context.Context, *SetUserQuotaEntryRequest) (*SetUserQuotaEntryResponse, error)
 	DeleteUserQuotaEntry(context.Context, *DeleteUserQuotaEntryRequest) (*DeleteUserQuotaEntryResponse, error)
 	GetVolumes(context.Context, *GetVolumesRequest) (*GetVolumesResponse, error)
@@ -159,6 +170,9 @@ func (UnimplementedFileioServer) GetUsersQuotaEntries(context.Context, *GetUsers
 }
 func (UnimplementedFileioServer) GetUserQuotaEntry(context.Context, *GetUserQuotaEntryRequest) (*GetUserQuotaEntryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserQuotaEntry not implemented")
+}
+func (UnimplementedFileioServer) GetMyUserQuotaEntry(context.Context, *GetMyUserQuotaEntryRequest) (*GetMyUserQuotaEntryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyUserQuotaEntry not implemented")
 }
 func (UnimplementedFileioServer) SetUserQuotaEntry(context.Context, *SetUserQuotaEntryRequest) (*SetUserQuotaEntryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetUserQuotaEntry not implemented")
@@ -290,6 +304,24 @@ func _Fileio_GetUserQuotaEntry_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Fileio_GetMyUserQuotaEntry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyUserQuotaEntryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileioServer).GetMyUserQuotaEntry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.fileio.Fileio/GetMyUserQuotaEntry",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileioServer).GetMyUserQuotaEntry(ctx, req.(*GetMyUserQuotaEntryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Fileio_SetUserQuotaEntry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetUserQuotaEntryRequest)
 	if err := dec(in); err != nil {
@@ -374,6 +406,10 @@ var Fileio_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserQuotaEntry",
 			Handler:    _Fileio_GetUserQuotaEntry_Handler,
+		},
+		{
+			MethodName: "GetMyUserQuotaEntry",
+			Handler:    _Fileio_GetMyUserQuotaEntry_Handler,
 		},
 		{
 			MethodName: "SetUserQuotaEntry",

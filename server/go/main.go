@@ -3,26 +3,23 @@
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"embed"
 	"flag"
 	"fmt"
 	"log"
 	"net"
-	"strings"
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
-	"google.golang.org/grpc/status"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 
 	"github.com/beevik/ntp"
 	"github.com/go-co-op/gocron"
-	"github.com/golang-jwt/jwt/v4"
 
 	fileioServicePb "github.com/s77rt/rdpcloud/proto/go/services/fileio"
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
@@ -31,8 +28,7 @@ import (
 	shellServicePb "github.com/s77rt/rdpcloud/proto/go/services/shell"
 	sysinfoServicePb "github.com/s77rt/rdpcloud/proto/go/services/sysinfo"
 	termservServicePb "github.com/s77rt/rdpcloud/proto/go/services/termserv"
-	"github.com/s77rt/rdpcloud/server/go/config"
-	customJWT "github.com/s77rt/rdpcloud/server/go/jwt"
+	"github.com/s77rt/rdpcloud/server/go/auth"
 	"github.com/s77rt/rdpcloud/server/go/license"
 	fileioService "github.com/s77rt/rdpcloud/server/go/services/fileio"
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
@@ -124,10 +120,17 @@ func main() {
 	}
 
 	grpcOpts := []grpc.ServerOption{
-		// The following grpc.ServerOption adds an interceptor for all unary
-		// RPCs. To configure an interceptor for streaming RPCs, see:
-		// https://godoc.org/google.golang.org/grpc#StreamInterceptor
-		grpc.UnaryInterceptor(ensureValidToken), // Currently we only use unary RPCs
+		// Unary interceptors
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			auth.UnaryServerInterceptor(),
+			grpc_recovery.UnaryServerInterceptor(),
+		)),
+
+		// Stream interceptors
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			auth.StreamServerInterceptor(),
+			grpc_recovery.StreamServerInterceptor(),
+		)),
 
 		// Enable TLS for all incoming connections
 		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
@@ -148,55 +151,4 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
-}
-
-func ensureValidToken(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	accessLevel, found := config.AceessLevel[info.FullMethod]
-	if !found {
-		return nil, status.Errorf(codes.PermissionDenied, "You don't have permission to execute the specified operation")
-	}
-
-	if accessLevel == 0 {
-		// Skip authentication
-		return handler(ctx, req)
-	}
-
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.InvalidArgument, "Missing metadata")
-	}
-
-	authorization := md["authorization"]
-	if len(authorization) < 1 {
-		return nil, status.Errorf(codes.Unauthenticated, "Invalid token")
-	}
-
-	tokenString := strings.TrimPrefix(authorization[0], "Bearer ")
-	token, err := jwt.ParseWithClaims(tokenString, &customJWT.UserClaims{}, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect
-
-		signingMethod, ok := token.Method.(*jwt.SigningMethodHMAC)
-		if !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-		if signingMethod != jwt.SigningMethodHS256 {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-
-		return config.Secret, nil
-	})
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "Invalid token (%s)", err.Error())
-	}
-
-	if claims, ok := token.Claims.(*customJWT.UserClaims); ok && token.Valid {
-		if claims.Privilege < accessLevel {
-			return nil, status.Errorf(codes.PermissionDenied, "You don't have permission to execute the specified operation")
-		}
-	} else {
-		return nil, status.Errorf(codes.Unauthenticated, "Invalid token")
-	}
-
-	// Continue execution of handler after ensuring a valid token
-	return handler(ctx, req)
 }

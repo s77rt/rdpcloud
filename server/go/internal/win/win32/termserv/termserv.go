@@ -2,8 +2,10 @@
 
 package termserv
 
-import "syscall"
+import (
+	"golang.org/x/sys/windows"
+)
 
 var (
-	modwtsapi32 = syscall.NewLazyDLL("wtsapi32.dll")
+	modwtsapi32 = windows.NewLazySystemDLL("wtsapi32.dll")
 )

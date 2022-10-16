@@ -2,8 +2,10 @@
 
 package com
 
-import "syscall"
+import (
+	"golang.org/x/sys/windows"
+)
 
 var (
-	modole32 = syscall.NewLazyDLL("ole32.dll")
+	modole32 = windows.NewLazySystemDLL("ole32.dll")
 )

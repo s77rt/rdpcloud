@@ -26,10 +26,10 @@ class App extends React.Component {
 		this.onSelectMenu = this.onSelectMenu.bind(this);
 
 		this.state = {
-			appName: "RDPCloud",
+			brandName: "RDPCloud",
 
 			services: {},
-			accessLevel: {}, // will be populated by window.AccessLevel
+			accessLevel: {}, // will be populated from window.AccessLevel
 
 			showLogin: true,
 			showRequestBuilder: false,
@@ -90,9 +90,9 @@ class App extends React.Component {
 		});
 	}
 
-	SetAppName(name) {
+	SetBrandName(name) {
 		this.setState({
-			appName: name
+			brandName: name
 		});
 	}
 
@@ -334,8 +334,8 @@ class App extends React.Component {
 	render() {
 		return (
 			<Layout style={{ minHeight: "100vh" }}>
-				<Header className="header" style={{ display: "flex", justifyContent: "space-between", position: "fixed", zIndex: 1, width: "100%", whiteSpace: "nowrap", overflow: "auto" }}>
-					<strong className="brand" onClick={this.onClickBrand}>{this.state.appName + " Web Client"}</strong>
+				<Header className="header" style={{ display: "flex", justifyContent: "space-between", position: "fixed", zIndex: 1000, width: "100%", gap: "1rem", whiteSpace: "nowrap", overflow: "auto" }}>
+					<strong className="brand" onClick={this.onClickBrand}>{this.state.brandName + " - RDP Control Panel"}</strong>
 					{this.state.user &&
 						<Space size="middle">
 							<span>Logged in as <strong>{this.state.user.preferred_username}</strong></span>
@@ -486,8 +486,8 @@ class App extends React.Component {
 						</Content>
 						<Footer style={{ textAlign: "center" }}>
 							<Space direction="vertical" size="small">
-								<Link href="https://rdpcloud.io">Powered by RDPCloud.io</Link>
-								{"Copyright © " + new Date().getFullYear() + " " + this.state.appName + ". All Rights Reserved"}
+								<Link href="https://rdpcloud.io" target="_blank">Powered by RDPCloud.io</Link>
+								{"Copyright © " + new Date().getFullYear() + " " + this.state.brandName + ". All Rights Reserved"}
 							</Space>
 						</Footer>
 					</Layout>

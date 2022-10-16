@@ -26,8 +26,11 @@ type NetmgmtClient interface {
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error)
 	GetUserLocalGroups(ctx context.Context, in *GetUserLocalGroupsRequest, opts ...grpc.CallOption) (*GetUserLocalGroupsResponse, error)
+	GetMyUserLocalGroups(ctx context.Context, in *GetMyUserLocalGroupsRequest, opts ...grpc.CallOption) (*GetMyUserLocalGroupsResponse, error)
 	ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...grpc.CallOption) (*ChangeUserPasswordResponse, error)
+	ChangeMyUserPassword(ctx context.Context, in *ChangeMyUserPasswordRequest, opts ...grpc.CallOption) (*ChangeMyUserPasswordResponse, error)
 	EnableUser(ctx context.Context, in *EnableUserRequest, opts ...grpc.CallOption) (*EnableUserResponse, error)
 	DisableUser(ctx context.Context, in *DisableUserRequest, opts ...grpc.CallOption) (*DisableUserResponse, error)
 	AddUserToLocalGroup(ctx context.Context, in *AddUserToLocalGroupRequest, opts ...grpc.CallOption) (*AddUserToLocalGroupResponse, error)
@@ -80,6 +83,15 @@ func (c *netmgmtClient) GetUser(ctx context.Context, in *GetUserRequest, opts ..
 	return out, nil
 }
 
+func (c *netmgmtClient) GetMyUser(ctx context.Context, in *GetMyUserRequest, opts ...grpc.CallOption) (*GetMyUserResponse, error) {
+	out := new(GetMyUserResponse)
+	err := c.cc.Invoke(ctx, "/services.netmgmt.Netmgmt/GetMyUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *netmgmtClient) GetUserLocalGroups(ctx context.Context, in *GetUserLocalGroupsRequest, opts ...grpc.CallOption) (*GetUserLocalGroupsResponse, error) {
 	out := new(GetUserLocalGroupsResponse)
 	err := c.cc.Invoke(ctx, "/services.netmgmt.Netmgmt/GetUserLocalGroups", in, out, opts...)
@@ -89,9 +101,27 @@ func (c *netmgmtClient) GetUserLocalGroups(ctx context.Context, in *GetUserLocal
 	return out, nil
 }
 
+func (c *netmgmtClient) GetMyUserLocalGroups(ctx context.Context, in *GetMyUserLocalGroupsRequest, opts ...grpc.CallOption) (*GetMyUserLocalGroupsResponse, error) {
+	out := new(GetMyUserLocalGroupsResponse)
+	err := c.cc.Invoke(ctx, "/services.netmgmt.Netmgmt/GetMyUserLocalGroups", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *netmgmtClient) ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...grpc.CallOption) (*ChangeUserPasswordResponse, error) {
 	out := new(ChangeUserPasswordResponse)
 	err := c.cc.Invoke(ctx, "/services.netmgmt.Netmgmt/ChangeUserPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *netmgmtClient) ChangeMyUserPassword(ctx context.Context, in *ChangeMyUserPasswordRequest, opts ...grpc.CallOption) (*ChangeMyUserPasswordResponse, error) {
+	out := new(ChangeMyUserPasswordResponse)
+	err := c.cc.Invoke(ctx, "/services.netmgmt.Netmgmt/ChangeMyUserPassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -160,8 +190,11 @@ type NetmgmtServer interface {
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error)
 	GetUserLocalGroups(context.Context, *GetUserLocalGroupsRequest) (*GetUserLocalGroupsResponse, error)
+	GetMyUserLocalGroups(context.Context, *GetMyUserLocalGroupsRequest) (*GetMyUserLocalGroupsResponse, error)
 	ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error)
+	ChangeMyUserPassword(context.Context, *ChangeMyUserPasswordRequest) (*ChangeMyUserPasswordResponse, error)
 	EnableUser(context.Context, *EnableUserRequest) (*EnableUserResponse, error)
 	DisableUser(context.Context, *DisableUserRequest) (*DisableUserResponse, error)
 	AddUserToLocalGroup(context.Context, *AddUserToLocalGroupRequest) (*AddUserToLocalGroupResponse, error)
@@ -187,11 +220,20 @@ func (UnimplementedNetmgmtServer) GetUsers(context.Context, *GetUsersRequest) (*
 func (UnimplementedNetmgmtServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
+func (UnimplementedNetmgmtServer) GetMyUser(context.Context, *GetMyUserRequest) (*GetMyUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyUser not implemented")
+}
 func (UnimplementedNetmgmtServer) GetUserLocalGroups(context.Context, *GetUserLocalGroupsRequest) (*GetUserLocalGroupsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserLocalGroups not implemented")
 }
+func (UnimplementedNetmgmtServer) GetMyUserLocalGroups(context.Context, *GetMyUserLocalGroupsRequest) (*GetMyUserLocalGroupsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyUserLocalGroups not implemented")
+}
 func (UnimplementedNetmgmtServer) ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPassword not implemented")
+}
+func (UnimplementedNetmgmtServer) ChangeMyUserPassword(context.Context, *ChangeMyUserPasswordRequest) (*ChangeMyUserPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeMyUserPassword not implemented")
 }
 func (UnimplementedNetmgmtServer) EnableUser(context.Context, *EnableUserRequest) (*EnableUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EnableUser not implemented")
@@ -296,6 +338,24 @@ func _Netmgmt_GetUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Netmgmt_GetMyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetmgmtServer).GetMyUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.netmgmt.Netmgmt/GetMyUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetmgmtServer).GetMyUser(ctx, req.(*GetMyUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Netmgmt_GetUserLocalGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserLocalGroupsRequest)
 	if err := dec(in); err != nil {
@@ -314,6 +374,24 @@ func _Netmgmt_GetUserLocalGroups_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Netmgmt_GetMyUserLocalGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyUserLocalGroupsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetmgmtServer).GetMyUserLocalGroups(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.netmgmt.Netmgmt/GetMyUserLocalGroups",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetmgmtServer).GetMyUserLocalGroups(ctx, req.(*GetMyUserLocalGroupsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Netmgmt_ChangeUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangeUserPasswordRequest)
 	if err := dec(in); err != nil {
@@ -328,6 +406,24 @@ func _Netmgmt_ChangeUserPassword_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NetmgmtServer).ChangeUserPassword(ctx, req.(*ChangeUserPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Netmgmt_ChangeMyUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeMyUserPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetmgmtServer).ChangeMyUserPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.netmgmt.Netmgmt/ChangeMyUserPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetmgmtServer).ChangeMyUserPassword(ctx, req.(*ChangeMyUserPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -464,12 +560,24 @@ var Netmgmt_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Netmgmt_GetUser_Handler,
 		},
 		{
+			MethodName: "GetMyUser",
+			Handler:    _Netmgmt_GetMyUser_Handler,
+		},
+		{
 			MethodName: "GetUserLocalGroups",
 			Handler:    _Netmgmt_GetUserLocalGroups_Handler,
 		},
 		{
+			MethodName: "GetMyUserLocalGroups",
+			Handler:    _Netmgmt_GetMyUserLocalGroups_Handler,
+		},
+		{
 			MethodName: "ChangeUserPassword",
 			Handler:    _Netmgmt_ChangeUserPassword_Handler,
+		},
+		{
+			MethodName: "ChangeMyUserPassword",
+			Handler:    _Netmgmt_ChangeMyUserPassword_Handler,
 		},
 		{
 			MethodName: "EnableUser",

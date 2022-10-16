@@ -14,6 +14,7 @@ service Fileio {
 	rpc SetDefaultQuota(SetDefaultQuotaRequest) returns (SetDefaultQuotaResponse) {}
 	rpc GetUsersQuotaEntries(GetUsersQuotaEntriesRequest) returns (GetUsersQuotaEntriesResponse) {}
 	rpc GetUserQuotaEntry(GetUserQuotaEntryRequest) returns (GetUserQuotaEntryResponse) {}
+	rpc GetMyUserQuotaEntry(GetMyUserQuotaEntryRequest) returns (GetMyUserQuotaEntryResponse) {}
 	rpc SetUserQuotaEntry(SetUserQuotaEntryRequest) returns (SetUserQuotaEntryResponse) {}
 	rpc DeleteUserQuotaEntry(DeleteUserQuotaEntryRequest) returns (DeleteUserQuotaEntryResponse) {}
 

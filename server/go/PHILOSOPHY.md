@@ -10,3 +10,6 @@ pllThreshold is a pointer to llThreshold
 However this is not true in this code, variable names means nothing but a name
 There are many cases where pllThreshold is just a regular value and it's pointer is defined by &pllThreshold
 such variables naming was only so the coding is easier to write given that a lot of a code was a copy/paste from MSDN
+
+
+Authentication is based on the user SID (auth package)

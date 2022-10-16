@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TermservClient interface {
 	LogoffUser(ctx context.Context, in *LogoffUserRequest, opts ...grpc.CallOption) (*LogoffUserResponse, error)
+	LogoffMyUser(ctx context.Context, in *LogoffMyUserRequest, opts ...grpc.CallOption) (*LogoffMyUserResponse, error)
 }
 
 type termservClient struct {
@@ -42,11 +43,21 @@ func (c *termservClient) LogoffUser(ctx context.Context, in *LogoffUserRequest, 
 	return out, nil
 }
 
+func (c *termservClient) LogoffMyUser(ctx context.Context, in *LogoffMyUserRequest, opts ...grpc.CallOption) (*LogoffMyUserResponse, error) {
+	out := new(LogoffMyUserResponse)
+	err := c.cc.Invoke(ctx, "/services.termserv.Termserv/LogoffMyUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TermservServer is the server API for Termserv service.
 // All implementations must embed UnimplementedTermservServer
 // for forward compatibility
 type TermservServer interface {
 	LogoffUser(context.Context, *LogoffUserRequest) (*LogoffUserResponse, error)
+	LogoffMyUser(context.Context, *LogoffMyUserRequest) (*LogoffMyUserResponse, error)
 	mustEmbedUnimplementedTermservServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedTermservServer struct {
 
 func (UnimplementedTermservServer) LogoffUser(context.Context, *LogoffUserRequest) (*LogoffUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogoffUser not implemented")
+}
+func (UnimplementedTermservServer) LogoffMyUser(context.Context, *LogoffMyUserRequest) (*LogoffMyUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogoffMyUser not implemented")
 }
 func (UnimplementedTermservServer) mustEmbedUnimplementedTermservServer() {}
 
@@ -88,6 +102,24 @@ func _Termserv_LogoffUser_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Termserv_LogoffMyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoffMyUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TermservServer).LogoffMyUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/services.termserv.Termserv/LogoffMyUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TermservServer).LogoffMyUser(ctx, req.(*LogoffMyUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Termserv_ServiceDesc is the grpc.ServiceDesc for Termserv service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var Termserv_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LogoffUser",
 			Handler:    _Termserv_LogoffUser_Handler,
+		},
+		{
+			MethodName: "LogoffMyUser",
+			Handler:    _Termserv_LogoffMyUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

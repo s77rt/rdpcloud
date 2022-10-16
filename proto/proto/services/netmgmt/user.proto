@@ -19,11 +19,20 @@ message GetUsersResponse { repeated models.netmgmt.User users = 1; }
 message GetUserRequest { models.netmgmt.User_1 user = 1; }
 message GetUserResponse { models.netmgmt.User user = 1; }
 
+message GetMyUserRequest {}
+message GetMyUserResponse { models.netmgmt.User user = 1; }
+
 message GetUserLocalGroupsRequest { models.netmgmt.User_1 user = 1; }
 message GetUserLocalGroupsResponse { repeated models.netmgmt.LocalGroup_1 local_groups = 1; }
 
+message GetMyUserLocalGroupsRequest {}
+message GetMyUserLocalGroupsResponse { repeated models.netmgmt.LocalGroup_1 local_groups = 1; }
+
 message ChangeUserPasswordRequest { models.netmgmt.User_3 user = 1; }
 message ChangeUserPasswordResponse {}
+
+message ChangeMyUserPasswordRequest { models.netmgmt.User_2 user = 1; }
+message ChangeMyUserPasswordResponse {}
 
 message EnableUserRequest { models.netmgmt.User_1 user = 1; }
 message EnableUserResponse {}

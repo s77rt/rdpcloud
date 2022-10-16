@@ -2,8 +2,10 @@
 
 package fileio
 
-import "syscall"
+import (
+	"golang.org/x/sys/windows"
+)
 
 var (
-	modkernel32 = syscall.NewLazyDLL("kernel32.dll")
+	modkernel32 = windows.NewLazySystemDLL("kernel32.dll")
 )

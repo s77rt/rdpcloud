@@ -145,6 +145,21 @@ const builderMap = {
 				title: v.replace(/_/g, " ").toUpperCase().trim(),
 				dataIndex: v,
 				align: v === "active" ? "center" : "left",
+				sorter: (() => {
+					let sorterFunc;
+					switch (v) {
+						case "username":
+						case "privilege":
+							sorterFunc = (a, b) => { return a[v].localeCompare(b[v], 'en', { numeric: true }) };
+							break;
+						case "active":
+							sorterFunc = (a, b) => { return a[v].props["data-value"] - b[v].props["data-value"] };
+							break;
+						default:
+							sorterFunc = undefined;
+					}
+					return sorterFunc;
+				})(),
 				key: v
 			}
 			columns.push(column);
@@ -155,7 +170,7 @@ const builderMap = {
 			let record = {
 				...v,
 				"privilege": userPrivMeaning[v.privilege],
-				"active": (v.flags & UF_ACCOUNTDISABLE) === 0 ? <CheckCircleOutlined style={{color: green[6]}} /> : <CloseCircleOutlined style={{color: red[6]}} />,
+				"active": (v.flags & UF_ACCOUNTDISABLE) === 0 ? <CheckCircleOutlined data-value={true} style={{color: green[6]}} /> : <CloseCircleOutlined data-value={false} style={{color: red[6]}} />,
 				key: i
 			}
 			delete record.password;
@@ -201,6 +216,9 @@ const builderMap = {
 				))}
 			</Row>
 		);
+	},
+	"/services.netmgmt.Netmgmt/GetMyUser": function (data) {
+		return this["/services.netmgmt.Netmgmt/GetUser"](data);
 	},
 	"/services.fileio.Fileio/GetQuotaState": (data) => {
 		const DISKQUOTA_STATE_DISABLED = 0x00000000;
@@ -296,6 +314,23 @@ const builderMap = {
 			let column = {
 				title: v.replace(/_/g, " ").toUpperCase().trim(),
 				dataIndex: v,
+				sorter: (() => {
+					let sorterFunc;
+					switch (v) {
+						case "username":
+							sorterFunc = (a, b) => { return a[v].localeCompare(b[v], 'en', { numeric: true }) };
+							break;
+						case "account_status":
+						case "quota_threshold":
+						case "quota_limit":
+						case "quota_used":
+							sorterFunc = (a, b) => { return a[v].props["data-value"] - b[v].props["data-value"] };
+							break;
+						default:
+							sorterFunc = undefined;
+					}
+					return sorterFunc;
+				})(),
 				key: v
 			}
 			columns.push(column);
@@ -305,10 +340,10 @@ const builderMap = {
 		records.forEach(function (v, i) {
 			let record = {
 				...v,
-				"account_status": <Badge status={accountStatusMeaning_Status[v.account_status]} text={accountStatusMeaning[v.account_status]} />,
-				"quota_threshold": prettyBytes(Number(v.quota_threshold), {binary: true}),
-				"quota_limit": prettyBytes(Number(v.quota_limit), {binary: true}),
-				"quota_used": prettyBytes(Number(v.quota_used), {binary: true}),
+				"account_status": <Badge data-value={v.account_status} status={accountStatusMeaning_Status[v.account_status]} text={accountStatusMeaning[v.account_status]} />,
+				"quota_threshold": <span data-value={Number(v.quota_threshold)}>{prettyBytes(Number(v.quota_threshold), {binary: true})}</span>,
+				"quota_limit": <span data-value={Number(v.quota_limit)}>{prettyBytes(Number(v.quota_limit), {binary: true})}</span>,
+				"quota_used": <span data-value={Number(v.quota_used)}>{prettyBytes(Number(v.quota_used), {binary: true})}</span>,
 				key: i
 			}
 			dataSource.push(record);
@@ -356,6 +391,9 @@ const builderMap = {
 				))}
 			</Row>
 		);
+	},
+	"/services.fileio.Fileio/GetMyUserQuotaEntry": function (data) {
+		return this["/services.fileio.Fileio/GetUserQuotaEntry"](data);
 	},
 	"/services.fileio.Fileio/GetVolumes": (data) => {
 		const keys = Object.keys(data);

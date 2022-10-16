@@ -3,12 +3,13 @@
 package shell
 
 import (
-	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
 )
 
 var (
-	moduserenv = syscall.NewLazyDLL("userenv.dll")
+	moduserenv = windows.NewLazySystemDLL("userenv.dll")
 
 	procDeleteProfileW = moduserenv.NewProc("DeleteProfileW")
 )

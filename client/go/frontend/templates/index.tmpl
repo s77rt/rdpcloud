@@ -2,12 +2,14 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="robots" content="noindex, nofollow">
+		<meta name="robots" content="none">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<title>RDPCloud Web Client</title>
+		<meta name="theme-color" content="#00c292">
 
-		<link rel="shortcut icon" type="image/png" href="favicon.png" />
+		<title>RDPCloud - RDP Control Panel</title>
+
+		<link rel="shortcut icon" type="image/png" href="s/favicon.png" />
 		<link rel="stylesheet" href="s/jquery-ui.min.css" />
 		<link rel="stylesheet" href="s/grpc-web-form.css" />
 
@@ -100,7 +102,7 @@
 
 		<script>
 			// TODO: Find a better way to get methods access levels. Currently they are HARD-CODED
-			window.AccessLevel = {"/services.fileio.Fileio/DeleteUserQuotaEntry":2,"/services.fileio.Fileio/GetDefaultQuota":2,"/services.fileio.Fileio/GetQuotaState":2,"/services.fileio.Fileio/GetUserQuotaEntry":2,"/services.fileio.Fileio/GetUsersQuotaEntries":2,"/services.fileio.Fileio/GetVolumes":2,"/services.fileio.Fileio/SetDefaultQuota":2,"/services.fileio.Fileio/SetQuotaState":2,"/services.fileio.Fileio/SetUserQuotaEntry":2,"/services.netmgmt.Netmgmt/AddUser":2,"/services.netmgmt.Netmgmt/AddUserToLocalGroup":2,"/services.netmgmt.Netmgmt/ChangeUserPassword":2,"/services.netmgmt.Netmgmt/DeleteUser":2,"/services.netmgmt.Netmgmt/DisableUser":2,"/services.netmgmt.Netmgmt/EnableUser":2,"/services.netmgmt.Netmgmt/GetLocalGroups":2,"/services.netmgmt.Netmgmt/GetUser":2,"/services.netmgmt.Netmgmt/GetUserLocalGroups":2,"/services.netmgmt.Netmgmt/GetUsers":2,"/services.netmgmt.Netmgmt/GetUsersInLocalGroup":2,"/services.netmgmt.Netmgmt/RemoveUserFromLocalGroup":2,"/services.secauthn.Secauthn/LogonUser":0,"/services.secauthz.Secauthz/LookupAccountSidByUsername":2,"/services.secauthz.Secauthz/LookupAccountUsernameBySid":2,"/services.shell.Shell/DeleteProfile":2,"/services.sysinfo.Sysinfo/GetUptime":2,"/services.termserv.Termserv/LogoffUser":2};
+			window.AccessLevel = {"/services.fileio.Fileio/DeleteUserQuotaEntry":2,"/services.fileio.Fileio/GetDefaultQuota":2,"/services.fileio.Fileio/GetMyUserQuotaEntry":1,"/services.fileio.Fileio/GetQuotaState":2,"/services.fileio.Fileio/GetUserQuotaEntry":2,"/services.fileio.Fileio/GetUsersQuotaEntries":2,"/services.fileio.Fileio/GetVolumes":2,"/services.fileio.Fileio/SetDefaultQuota":2,"/services.fileio.Fileio/SetQuotaState":2,"/services.fileio.Fileio/SetUserQuotaEntry":2,"/services.netmgmt.Netmgmt/AddUser":2,"/services.netmgmt.Netmgmt/AddUserToLocalGroup":2,"/services.netmgmt.Netmgmt/ChangeMyUserPassword":1,"/services.netmgmt.Netmgmt/ChangeUserPassword":2,"/services.netmgmt.Netmgmt/DeleteUser":2,"/services.netmgmt.Netmgmt/DisableUser":2,"/services.netmgmt.Netmgmt/EnableUser":2,"/services.netmgmt.Netmgmt/GetLocalGroups":2,"/services.netmgmt.Netmgmt/GetMyUser":1,"/services.netmgmt.Netmgmt/GetMyUserLocalGroups":1,"/services.netmgmt.Netmgmt/GetUser":2,"/services.netmgmt.Netmgmt/GetUserLocalGroups":2,"/services.netmgmt.Netmgmt/GetUsers":2,"/services.netmgmt.Netmgmt/GetUsersInLocalGroup":2,"/services.netmgmt.Netmgmt/RemoveUserFromLocalGroup":2,"/services.secauthn.Secauthn/LogonUser":0,"/services.secauthz.Secauthz/LookupAccountSidByUsername":2,"/services.secauthz.Secauthz/LookupAccountUsernameBySid":2,"/services.shell.Shell/DeleteProfile":2,"/services.sysinfo.Sysinfo/GetUptime":1,"/services.termserv.Termserv/LogoffMyUser":1,"/services.termserv.Termserv/LogoffUser":2};
 		</script>
 
 		<script>
@@ -217,8 +219,10 @@
 					App.SetSelectingMethod(false);
 				});
 
-				// Set app name
-				App.SetAppName($(".target").text());
+				// Brand name
+				const brandName = $(".target").text();
+				document.title = brandName + " - RDP Control Panel";
+				App.SetBrandName(brandName);
 
 				// Move the grpc request form to our app
 				// since it's too hard to be imitated or even duplicated

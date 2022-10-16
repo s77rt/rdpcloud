@@ -5,8 +5,14 @@ package netmgmt
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	netmgmtModelsPb "github.com/s77rt/rdpcloud/proto/go/models/netmgmt"
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
 	netmgmtApi "github.com/s77rt/rdpcloud/server/go/api/netmgmt"
+	secauthzApi "github.com/s77rt/rdpcloud/server/go/api/secauthz"
+	"github.com/s77rt/rdpcloud/server/go/auth"
 )
 
 func (s *Server) AddUser(ctx context.Context, in *netmgmtServicePb.AddUserRequest) (*netmgmtServicePb.AddUserResponse, error) {
@@ -47,6 +53,27 @@ func (s *Server) GetUser(ctx context.Context, in *netmgmtServicePb.GetUserReques
 	}, nil
 }
 
+func (s *Server) GetMyUser(ctx context.Context, in *netmgmtServicePb.GetMyUserRequest) (*netmgmtServicePb.GetMyUserResponse, error) {
+	userClaims, err := auth.UserClaimsFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Invalid context user claims (%s)", err.Error())
+	}
+
+	username, err := secauthzApi.LookupAccountUsernameBySid(userClaims.UserSID)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := netmgmtApi.GetUser(&netmgmtModelsPb.User_1{Username: username})
+	if err != nil {
+		return nil, err
+	}
+
+	return &netmgmtServicePb.GetMyUserResponse{
+		User: user,
+	}, nil
+}
+
 func (s *Server) GetUserLocalGroups(ctx context.Context, in *netmgmtServicePb.GetUserLocalGroupsRequest) (*netmgmtServicePb.GetUserLocalGroupsResponse, error) {
 	localGroups, err := netmgmtApi.GetUserLocalGroups(in.GetUser())
 	if err != nil {
@@ -58,12 +85,56 @@ func (s *Server) GetUserLocalGroups(ctx context.Context, in *netmgmtServicePb.Ge
 	}, nil
 }
 
+func (s *Server) GetMyUserLocalGroups(ctx context.Context, in *netmgmtServicePb.GetMyUserLocalGroupsRequest) (*netmgmtServicePb.GetMyUserLocalGroupsResponse, error) {
+	userClaims, err := auth.UserClaimsFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Invalid context user claims (%s)", err.Error())
+	}
+
+	username, err := secauthzApi.LookupAccountUsernameBySid(userClaims.UserSID)
+	if err != nil {
+		return nil, err
+	}
+
+	localGroups, err := netmgmtApi.GetUserLocalGroups(&netmgmtModelsPb.User_1{Username: username})
+	if err != nil {
+		return nil, err
+	}
+
+	return &netmgmtServicePb.GetMyUserLocalGroupsResponse{
+		LocalGroups: localGroups,
+	}, nil
+}
+
 func (s *Server) ChangeUserPassword(ctx context.Context, in *netmgmtServicePb.ChangeUserPasswordRequest) (*netmgmtServicePb.ChangeUserPasswordResponse, error) {
 	if err := netmgmtApi.ChangeUserPassword(in.GetUser()); err != nil {
 		return nil, err
 	}
 
 	return &netmgmtServicePb.ChangeUserPasswordResponse{}, nil
+}
+
+func (s *Server) ChangeMyUserPassword(ctx context.Context, in *netmgmtServicePb.ChangeMyUserPasswordRequest) (*netmgmtServicePb.ChangeMyUserPasswordResponse, error) {
+	userClaims, err := auth.UserClaimsFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Invalid context user claims (%s)", err.Error())
+	}
+
+	username, err := secauthzApi.LookupAccountUsernameBySid(userClaims.UserSID)
+	if err != nil {
+		return nil, err
+	}
+
+	user := &netmgmtModelsPb.User_3{
+		Username: username,
+		Password: in.GetUser().GetPassword(),
+	}
+
+	if err := netmgmtApi.ChangeUserPassword(user); err != nil {
+		return nil, err
+	}
+
+	return &netmgmtServicePb.ChangeMyUserPasswordResponse{}, nil
 }
 
 func (s *Server) EnableUser(ctx context.Context, in *netmgmtServicePb.EnableUserRequest) (*netmgmtServicePb.EnableUserResponse, error) {

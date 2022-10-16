@@ -370,6 +370,91 @@ func (x *GetUserResponse) GetUser() *netmgmt.User {
 	return nil
 }
 
+type GetMyUserRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetMyUserRequest) Reset() {
+	*x = GetMyUserRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserRequest) ProtoMessage() {}
+
+func (x *GetMyUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserRequest.ProtoReflect.Descriptor instead.
+func (*GetMyUserRequest) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{8}
+}
+
+type GetMyUserResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	User *netmgmt.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+}
+
+func (x *GetMyUserResponse) Reset() {
+	*x = GetMyUserResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserResponse) ProtoMessage() {}
+
+func (x *GetMyUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserResponse.ProtoReflect.Descriptor instead.
+func (*GetMyUserResponse) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetMyUserResponse) GetUser() *netmgmt.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 type GetUserLocalGroupsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -381,7 +466,7 @@ type GetUserLocalGroupsRequest struct {
 func (x *GetUserLocalGroupsRequest) Reset() {
 	*x = GetUserLocalGroupsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[8]
+		mi := &file_services_netmgmt_user_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -394,7 +479,7 @@ func (x *GetUserLocalGroupsRequest) String() string {
 func (*GetUserLocalGroupsRequest) ProtoMessage() {}
 
 func (x *GetUserLocalGroupsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[8]
+	mi := &file_services_netmgmt_user_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -407,7 +492,7 @@ func (x *GetUserLocalGroupsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserLocalGroupsRequest.ProtoReflect.Descriptor instead.
 func (*GetUserLocalGroupsRequest) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{8}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetUserLocalGroupsRequest) GetUser() *netmgmt.User_1 {
@@ -428,7 +513,7 @@ type GetUserLocalGroupsResponse struct {
 func (x *GetUserLocalGroupsResponse) Reset() {
 	*x = GetUserLocalGroupsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[9]
+		mi := &file_services_netmgmt_user_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -441,7 +526,7 @@ func (x *GetUserLocalGroupsResponse) String() string {
 func (*GetUserLocalGroupsResponse) ProtoMessage() {}
 
 func (x *GetUserLocalGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[9]
+	mi := &file_services_netmgmt_user_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -454,10 +539,95 @@ func (x *GetUserLocalGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserLocalGroupsResponse.ProtoReflect.Descriptor instead.
 func (*GetUserLocalGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{9}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetUserLocalGroupsResponse) GetLocalGroups() []*netmgmt.LocalGroup_1 {
+	if x != nil {
+		return x.LocalGroups
+	}
+	return nil
+}
+
+type GetMyUserLocalGroupsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetMyUserLocalGroupsRequest) Reset() {
+	*x = GetMyUserLocalGroupsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserLocalGroupsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserLocalGroupsRequest) ProtoMessage() {}
+
+func (x *GetMyUserLocalGroupsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserLocalGroupsRequest.ProtoReflect.Descriptor instead.
+func (*GetMyUserLocalGroupsRequest) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{12}
+}
+
+type GetMyUserLocalGroupsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	LocalGroups []*netmgmt.LocalGroup_1 `protobuf:"bytes,1,rep,name=local_groups,json=localGroups,proto3" json:"local_groups,omitempty"`
+}
+
+func (x *GetMyUserLocalGroupsResponse) Reset() {
+	*x = GetMyUserLocalGroupsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserLocalGroupsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserLocalGroupsResponse) ProtoMessage() {}
+
+func (x *GetMyUserLocalGroupsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserLocalGroupsResponse.ProtoReflect.Descriptor instead.
+func (*GetMyUserLocalGroupsResponse) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetMyUserLocalGroupsResponse) GetLocalGroups() []*netmgmt.LocalGroup_1 {
 	if x != nil {
 		return x.LocalGroups
 	}
@@ -475,7 +645,7 @@ type ChangeUserPasswordRequest struct {
 func (x *ChangeUserPasswordRequest) Reset() {
 	*x = ChangeUserPasswordRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[10]
+		mi := &file_services_netmgmt_user_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -488,7 +658,7 @@ func (x *ChangeUserPasswordRequest) String() string {
 func (*ChangeUserPasswordRequest) ProtoMessage() {}
 
 func (x *ChangeUserPasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[10]
+	mi := &file_services_netmgmt_user_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -501,7 +671,7 @@ func (x *ChangeUserPasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeUserPasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangeUserPasswordRequest) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{10}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ChangeUserPasswordRequest) GetUser() *netmgmt.User_3 {
@@ -520,7 +690,7 @@ type ChangeUserPasswordResponse struct {
 func (x *ChangeUserPasswordResponse) Reset() {
 	*x = ChangeUserPasswordResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[11]
+		mi := &file_services_netmgmt_user_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -533,7 +703,7 @@ func (x *ChangeUserPasswordResponse) String() string {
 func (*ChangeUserPasswordResponse) ProtoMessage() {}
 
 func (x *ChangeUserPasswordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[11]
+	mi := &file_services_netmgmt_user_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -546,7 +716,92 @@ func (x *ChangeUserPasswordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeUserPasswordResponse.ProtoReflect.Descriptor instead.
 func (*ChangeUserPasswordResponse) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{11}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{15}
+}
+
+type ChangeMyUserPasswordRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	User *netmgmt.User_2 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+}
+
+func (x *ChangeMyUserPasswordRequest) Reset() {
+	*x = ChangeMyUserPasswordRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangeMyUserPasswordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeMyUserPasswordRequest) ProtoMessage() {}
+
+func (x *ChangeMyUserPasswordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeMyUserPasswordRequest.ProtoReflect.Descriptor instead.
+func (*ChangeMyUserPasswordRequest) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *ChangeMyUserPasswordRequest) GetUser() *netmgmt.User_2 {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+type ChangeMyUserPasswordResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ChangeMyUserPasswordResponse) Reset() {
+	*x = ChangeMyUserPasswordResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_netmgmt_user_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangeMyUserPasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeMyUserPasswordResponse) ProtoMessage() {}
+
+func (x *ChangeMyUserPasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_netmgmt_user_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeMyUserPasswordResponse.ProtoReflect.Descriptor instead.
+func (*ChangeMyUserPasswordResponse) Descriptor() ([]byte, []int) {
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{17}
 }
 
 type EnableUserRequest struct {
@@ -560,7 +815,7 @@ type EnableUserRequest struct {
 func (x *EnableUserRequest) Reset() {
 	*x = EnableUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[12]
+		mi := &file_services_netmgmt_user_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -573,7 +828,7 @@ func (x *EnableUserRequest) String() string {
 func (*EnableUserRequest) ProtoMessage() {}
 
 func (x *EnableUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[12]
+	mi := &file_services_netmgmt_user_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -586,7 +841,7 @@ func (x *EnableUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnableUserRequest.ProtoReflect.Descriptor instead.
 func (*EnableUserRequest) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{12}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *EnableUserRequest) GetUser() *netmgmt.User_1 {
@@ -605,7 +860,7 @@ type EnableUserResponse struct {
 func (x *EnableUserResponse) Reset() {
 	*x = EnableUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[13]
+		mi := &file_services_netmgmt_user_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -618,7 +873,7 @@ func (x *EnableUserResponse) String() string {
 func (*EnableUserResponse) ProtoMessage() {}
 
 func (x *EnableUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[13]
+	mi := &file_services_netmgmt_user_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -631,7 +886,7 @@ func (x *EnableUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnableUserResponse.ProtoReflect.Descriptor instead.
 func (*EnableUserResponse) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{13}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{19}
 }
 
 type DisableUserRequest struct {
@@ -645,7 +900,7 @@ type DisableUserRequest struct {
 func (x *DisableUserRequest) Reset() {
 	*x = DisableUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[14]
+		mi := &file_services_netmgmt_user_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -658,7 +913,7 @@ func (x *DisableUserRequest) String() string {
 func (*DisableUserRequest) ProtoMessage() {}
 
 func (x *DisableUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[14]
+	mi := &file_services_netmgmt_user_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -671,7 +926,7 @@ func (x *DisableUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableUserRequest.ProtoReflect.Descriptor instead.
 func (*DisableUserRequest) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{14}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DisableUserRequest) GetUser() *netmgmt.User_1 {
@@ -690,7 +945,7 @@ type DisableUserResponse struct {
 func (x *DisableUserResponse) Reset() {
 	*x = DisableUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_netmgmt_user_proto_msgTypes[15]
+		mi := &file_services_netmgmt_user_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -703,7 +958,7 @@ func (x *DisableUserResponse) String() string {
 func (*DisableUserResponse) ProtoMessage() {}
 
 func (x *DisableUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_netmgmt_user_proto_msgTypes[15]
+	mi := &file_services_netmgmt_user_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -716,7 +971,7 @@ func (x *DisableUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableUserResponse.ProtoReflect.Descriptor instead.
 func (*DisableUserResponse) Descriptor() ([]byte, []int) {
-	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{15}
+	return file_services_netmgmt_user_proto_rawDescGZIP(), []int{21}
 }
 
 var File_services_netmgmt_user_proto protoreflect.FileDescriptor
@@ -752,38 +1007,58 @@ var file_services_netmgmt_user_proto_rawDesc = []byte{
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e,
 	0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73,
-	0x65, 0x72, 0x22, 0x47, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x63,
-	0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e,
-	0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55,
-	0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x5d, 0x0a, 0x1a, 0x47,
-	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3f, 0x0a, 0x0c, 0x6c, 0x6f, 0x63,
-	0x61, 0x6c, 0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
-	0x1c, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74,
-	0x2e, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x31, 0x52, 0x0b, 0x6c,
-	0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x22, 0x47, 0x0a, 0x19, 0x43, 0x68,
-	0x61, 0x6e, 0x67, 0x65, 0x55, 0x73, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e,
-	0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x33, 0x52, 0x04, 0x75,
-	0x73, 0x65, 0x72, 0x22, 0x1c, 0x0a, 0x1a, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x55, 0x73, 0x65,
-	0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x3f, 0x0a, 0x11, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65,
-	0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73,
-	0x65, 0x72, 0x22, 0x14, 0x0a, 0x12, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x40, 0x0a, 0x12, 0x44, 0x69, 0x73, 0x61,
-	0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a,
-	0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d,
-	0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73,
-	0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x69,
-	0x73, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x42, 0x35, 0x5a, 0x33, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
-	0x73, 0x37, 0x37, 0x72, 0x74, 0x2f, 0x72, 0x64, 0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73,
-	0x2f, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x72, 0x22, 0x12, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x3d, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x4d, 0x79, 0x55,
+	0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x75,
+	0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x6d, 0x6f, 0x64, 0x65,
+	0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x47, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72,
+	0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d,
+	0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x5d,
+	0x0a, 0x1a, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72,
+	0x6f, 0x75, 0x70, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3f, 0x0a, 0x0c,
+	0x6c, 0x6f, 0x63, 0x61, 0x6c, 0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d,
+	0x67, 0x6d, 0x74, 0x2e, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x31,
+	0x52, 0x0b, 0x6c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x22, 0x1d, 0x0a,
+	0x1b, 0x47, 0x65, 0x74, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47,
+	0x72, 0x6f, 0x75, 0x70, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x5f, 0x0a, 0x1c,
+	0x47, 0x65, 0x74, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72,
+	0x6f, 0x75, 0x70, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3f, 0x0a, 0x0c,
+	0x6c, 0x6f, 0x63, 0x61, 0x6c, 0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d,
+	0x67, 0x6d, 0x74, 0x2e, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x31,
+	0x52, 0x0b, 0x6c, 0x6f, 0x63, 0x61, 0x6c, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x22, 0x47, 0x0a,
+	0x19, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x55, 0x73, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77,
+	0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73,
+	0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c,
+	0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x33,
+	0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x1c, 0x0a, 0x1a, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65,
+	0x55, 0x73, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x49, 0x0a, 0x1b, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x4d, 0x79,
+	0x55, 0x73, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67,
+	0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x32, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22,
+	0x1e, 0x0a, 0x1c, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x50,
+	0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x3f, 0x0a, 0x11, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d,
+	0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72,
+	0x22, 0x14, 0x0a, 0x12, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x40, 0x0a, 0x12, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c,
+	0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x04,
+	0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x6f, 0x64,
+	0x65, 0x6c, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72,
+	0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x69, 0x73, 0x61,
+	0x62, 0x6c, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42,
+	0x35, 0x5a, 0x33, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x37,
+	0x37, 0x72, 0x74, 0x2f, 0x72, 0x64, 0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2f, 0x6e,
+	0x65, 0x74, 0x6d, 0x67, 0x6d, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -798,45 +1073,55 @@ func file_services_netmgmt_user_proto_rawDescGZIP() []byte {
 	return file_services_netmgmt_user_proto_rawDescData
 }
 
-var file_services_netmgmt_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_services_netmgmt_user_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_services_netmgmt_user_proto_goTypes = []interface{}{
-	(*AddUserRequest)(nil),             // 0: services.netmgmt.AddUserRequest
-	(*AddUserResponse)(nil),            // 1: services.netmgmt.AddUserResponse
-	(*DeleteUserRequest)(nil),          // 2: services.netmgmt.DeleteUserRequest
-	(*DeleteUserResponse)(nil),         // 3: services.netmgmt.DeleteUserResponse
-	(*GetUsersRequest)(nil),            // 4: services.netmgmt.GetUsersRequest
-	(*GetUsersResponse)(nil),           // 5: services.netmgmt.GetUsersResponse
-	(*GetUserRequest)(nil),             // 6: services.netmgmt.GetUserRequest
-	(*GetUserResponse)(nil),            // 7: services.netmgmt.GetUserResponse
-	(*GetUserLocalGroupsRequest)(nil),  // 8: services.netmgmt.GetUserLocalGroupsRequest
-	(*GetUserLocalGroupsResponse)(nil), // 9: services.netmgmt.GetUserLocalGroupsResponse
-	(*ChangeUserPasswordRequest)(nil),  // 10: services.netmgmt.ChangeUserPasswordRequest
-	(*ChangeUserPasswordResponse)(nil), // 11: services.netmgmt.ChangeUserPasswordResponse
-	(*EnableUserRequest)(nil),          // 12: services.netmgmt.EnableUserRequest
-	(*EnableUserResponse)(nil),         // 13: services.netmgmt.EnableUserResponse
-	(*DisableUserRequest)(nil),         // 14: services.netmgmt.DisableUserRequest
-	(*DisableUserResponse)(nil),        // 15: services.netmgmt.DisableUserResponse
-	(*netmgmt.User_3)(nil),             // 16: models.netmgmt.User_3
-	(*netmgmt.User_1)(nil),             // 17: models.netmgmt.User_1
-	(*netmgmt.User)(nil),               // 18: models.netmgmt.User
-	(*netmgmt.LocalGroup_1)(nil),       // 19: models.netmgmt.LocalGroup_1
+	(*AddUserRequest)(nil),               // 0: services.netmgmt.AddUserRequest
+	(*AddUserResponse)(nil),              // 1: services.netmgmt.AddUserResponse
+	(*DeleteUserRequest)(nil),            // 2: services.netmgmt.DeleteUserRequest
+	(*DeleteUserResponse)(nil),           // 3: services.netmgmt.DeleteUserResponse
+	(*GetUsersRequest)(nil),              // 4: services.netmgmt.GetUsersRequest
+	(*GetUsersResponse)(nil),             // 5: services.netmgmt.GetUsersResponse
+	(*GetUserRequest)(nil),               // 6: services.netmgmt.GetUserRequest
+	(*GetUserResponse)(nil),              // 7: services.netmgmt.GetUserResponse
+	(*GetMyUserRequest)(nil),             // 8: services.netmgmt.GetMyUserRequest
+	(*GetMyUserResponse)(nil),            // 9: services.netmgmt.GetMyUserResponse
+	(*GetUserLocalGroupsRequest)(nil),    // 10: services.netmgmt.GetUserLocalGroupsRequest
+	(*GetUserLocalGroupsResponse)(nil),   // 11: services.netmgmt.GetUserLocalGroupsResponse
+	(*GetMyUserLocalGroupsRequest)(nil),  // 12: services.netmgmt.GetMyUserLocalGroupsRequest
+	(*GetMyUserLocalGroupsResponse)(nil), // 13: services.netmgmt.GetMyUserLocalGroupsResponse
+	(*ChangeUserPasswordRequest)(nil),    // 14: services.netmgmt.ChangeUserPasswordRequest
+	(*ChangeUserPasswordResponse)(nil),   // 15: services.netmgmt.ChangeUserPasswordResponse
+	(*ChangeMyUserPasswordRequest)(nil),  // 16: services.netmgmt.ChangeMyUserPasswordRequest
+	(*ChangeMyUserPasswordResponse)(nil), // 17: services.netmgmt.ChangeMyUserPasswordResponse
+	(*EnableUserRequest)(nil),            // 18: services.netmgmt.EnableUserRequest
+	(*EnableUserResponse)(nil),           // 19: services.netmgmt.EnableUserResponse
+	(*DisableUserRequest)(nil),           // 20: services.netmgmt.DisableUserRequest
+	(*DisableUserResponse)(nil),          // 21: services.netmgmt.DisableUserResponse
+	(*netmgmt.User_3)(nil),               // 22: models.netmgmt.User_3
+	(*netmgmt.User_1)(nil),               // 23: models.netmgmt.User_1
+	(*netmgmt.User)(nil),                 // 24: models.netmgmt.User
+	(*netmgmt.LocalGroup_1)(nil),         // 25: models.netmgmt.LocalGroup_1
+	(*netmgmt.User_2)(nil),               // 26: models.netmgmt.User_2
 }
 var file_services_netmgmt_user_proto_depIdxs = []int32{
-	16, // 0: services.netmgmt.AddUserRequest.user:type_name -> models.netmgmt.User_3
-	17, // 1: services.netmgmt.DeleteUserRequest.user:type_name -> models.netmgmt.User_1
-	18, // 2: services.netmgmt.GetUsersResponse.users:type_name -> models.netmgmt.User
-	17, // 3: services.netmgmt.GetUserRequest.user:type_name -> models.netmgmt.User_1
-	18, // 4: services.netmgmt.GetUserResponse.user:type_name -> models.netmgmt.User
-	17, // 5: services.netmgmt.GetUserLocalGroupsRequest.user:type_name -> models.netmgmt.User_1
-	19, // 6: services.netmgmt.GetUserLocalGroupsResponse.local_groups:type_name -> models.netmgmt.LocalGroup_1
-	16, // 7: services.netmgmt.ChangeUserPasswordRequest.user:type_name -> models.netmgmt.User_3
-	17, // 8: services.netmgmt.EnableUserRequest.user:type_name -> models.netmgmt.User_1
-	17, // 9: services.netmgmt.DisableUserRequest.user:type_name -> models.netmgmt.User_1
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	22, // 0: services.netmgmt.AddUserRequest.user:type_name -> models.netmgmt.User_3
+	23, // 1: services.netmgmt.DeleteUserRequest.user:type_name -> models.netmgmt.User_1
+	24, // 2: services.netmgmt.GetUsersResponse.users:type_name -> models.netmgmt.User
+	23, // 3: services.netmgmt.GetUserRequest.user:type_name -> models.netmgmt.User_1
+	24, // 4: services.netmgmt.GetUserResponse.user:type_name -> models.netmgmt.User
+	24, // 5: services.netmgmt.GetMyUserResponse.user:type_name -> models.netmgmt.User
+	23, // 6: services.netmgmt.GetUserLocalGroupsRequest.user:type_name -> models.netmgmt.User_1
+	25, // 7: services.netmgmt.GetUserLocalGroupsResponse.local_groups:type_name -> models.netmgmt.LocalGroup_1
+	25, // 8: services.netmgmt.GetMyUserLocalGroupsResponse.local_groups:type_name -> models.netmgmt.LocalGroup_1
+	22, // 9: services.netmgmt.ChangeUserPasswordRequest.user:type_name -> models.netmgmt.User_3
+	26, // 10: services.netmgmt.ChangeMyUserPasswordRequest.user:type_name -> models.netmgmt.User_2
+	23, // 11: services.netmgmt.EnableUserRequest.user:type_name -> models.netmgmt.User_1
+	23, // 12: services.netmgmt.DisableUserRequest.user:type_name -> models.netmgmt.User_1
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_services_netmgmt_user_proto_init() }
@@ -942,7 +1227,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserLocalGroupsRequest); i {
+			switch v := v.(*GetMyUserRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -954,7 +1239,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserLocalGroupsResponse); i {
+			switch v := v.(*GetMyUserResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -966,7 +1251,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeUserPasswordRequest); i {
+			switch v := v.(*GetUserLocalGroupsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -978,7 +1263,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChangeUserPasswordResponse); i {
+			switch v := v.(*GetUserLocalGroupsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -990,7 +1275,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EnableUserRequest); i {
+			switch v := v.(*GetMyUserLocalGroupsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1002,7 +1287,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EnableUserResponse); i {
+			switch v := v.(*GetMyUserLocalGroupsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1014,7 +1299,7 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DisableUserRequest); i {
+			switch v := v.(*ChangeUserPasswordRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1026,6 +1311,78 @@ func file_services_netmgmt_user_proto_init() {
 			}
 		}
 		file_services_netmgmt_user_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeUserPasswordResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeMyUserPasswordRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ChangeMyUserPasswordResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnableUserRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EnableUserResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DisableUserRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_netmgmt_user_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DisableUserResponse); i {
 			case 0:
 				return &v.state
@@ -1044,7 +1401,7 @@ func file_services_netmgmt_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_services_netmgmt_user_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

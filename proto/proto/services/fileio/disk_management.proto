@@ -25,6 +25,9 @@ message GetUsersQuotaEntriesResponse { repeated models.fileio.QuotaEntry quota_e
 message GetUserQuotaEntryRequest { string volume_path = 1; models.fileio.User_1 user = 2; }
 message GetUserQuotaEntryResponse { models.fileio.QuotaEntry_30 quota_entry = 1; }
 
+message GetMyUserQuotaEntryRequest { string volume_path = 1; }
+message GetMyUserQuotaEntryResponse { models.fileio.QuotaEntry_30 quota_entry = 1; }
+
 message SetUserQuotaEntryRequest { string volume_path = 1; models.fileio.User_1 user = 2; models.fileio.QuotaEntry_6 quota_entry = 3; }
 message SetUserQuotaEntryResponse {}
 

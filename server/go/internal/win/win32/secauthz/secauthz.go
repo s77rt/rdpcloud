@@ -2,8 +2,10 @@
 
 package secauthz
 
-import "syscall"
+import (
+	"golang.org/x/sys/windows"
+)
 
 var (
-	modadvapi32 = syscall.NewLazyDLL("advapi32.dll")
+	modadvapi32 = windows.NewLazySystemDLL("advapi32.dll")
 )

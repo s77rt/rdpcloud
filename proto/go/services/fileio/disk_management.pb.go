@@ -591,6 +591,100 @@ func (x *GetUserQuotaEntryResponse) GetQuotaEntry() *fileio.QuotaEntry_30 {
 	return nil
 }
 
+type GetMyUserQuotaEntryRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	VolumePath string `protobuf:"bytes,1,opt,name=volume_path,json=volumePath,proto3" json:"volume_path,omitempty"`
+}
+
+func (x *GetMyUserQuotaEntryRequest) Reset() {
+	*x = GetMyUserQuotaEntryRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_fileio_disk_management_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserQuotaEntryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserQuotaEntryRequest) ProtoMessage() {}
+
+func (x *GetMyUserQuotaEntryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_fileio_disk_management_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserQuotaEntryRequest.ProtoReflect.Descriptor instead.
+func (*GetMyUserQuotaEntryRequest) Descriptor() ([]byte, []int) {
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetMyUserQuotaEntryRequest) GetVolumePath() string {
+	if x != nil {
+		return x.VolumePath
+	}
+	return ""
+}
+
+type GetMyUserQuotaEntryResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	QuotaEntry *fileio.QuotaEntry_30 `protobuf:"bytes,1,opt,name=quota_entry,json=quotaEntry,proto3" json:"quota_entry,omitempty"`
+}
+
+func (x *GetMyUserQuotaEntryResponse) Reset() {
+	*x = GetMyUserQuotaEntryResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_services_fileio_disk_management_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMyUserQuotaEntryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyUserQuotaEntryResponse) ProtoMessage() {}
+
+func (x *GetMyUserQuotaEntryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_fileio_disk_management_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyUserQuotaEntryResponse.ProtoReflect.Descriptor instead.
+func (*GetMyUserQuotaEntryResponse) Descriptor() ([]byte, []int) {
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetMyUserQuotaEntryResponse) GetQuotaEntry() *fileio.QuotaEntry_30 {
+	if x != nil {
+		return x.QuotaEntry
+	}
+	return nil
+}
+
 type SetUserQuotaEntryRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -604,7 +698,7 @@ type SetUserQuotaEntryRequest struct {
 func (x *SetUserQuotaEntryRequest) Reset() {
 	*x = SetUserQuotaEntryRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_fileio_disk_management_proto_msgTypes[12]
+		mi := &file_services_fileio_disk_management_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -617,7 +711,7 @@ func (x *SetUserQuotaEntryRequest) String() string {
 func (*SetUserQuotaEntryRequest) ProtoMessage() {}
 
 func (x *SetUserQuotaEntryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_fileio_disk_management_proto_msgTypes[12]
+	mi := &file_services_fileio_disk_management_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +724,7 @@ func (x *SetUserQuotaEntryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserQuotaEntryRequest.ProtoReflect.Descriptor instead.
 func (*SetUserQuotaEntryRequest) Descriptor() ([]byte, []int) {
-	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{12}
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SetUserQuotaEntryRequest) GetVolumePath() string {
@@ -663,7 +757,7 @@ type SetUserQuotaEntryResponse struct {
 func (x *SetUserQuotaEntryResponse) Reset() {
 	*x = SetUserQuotaEntryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_fileio_disk_management_proto_msgTypes[13]
+		mi := &file_services_fileio_disk_management_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -676,7 +770,7 @@ func (x *SetUserQuotaEntryResponse) String() string {
 func (*SetUserQuotaEntryResponse) ProtoMessage() {}
 
 func (x *SetUserQuotaEntryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_fileio_disk_management_proto_msgTypes[13]
+	mi := &file_services_fileio_disk_management_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -689,7 +783,7 @@ func (x *SetUserQuotaEntryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetUserQuotaEntryResponse.ProtoReflect.Descriptor instead.
 func (*SetUserQuotaEntryResponse) Descriptor() ([]byte, []int) {
-	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{13}
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{15}
 }
 
 type DeleteUserQuotaEntryRequest struct {
@@ -704,7 +798,7 @@ type DeleteUserQuotaEntryRequest struct {
 func (x *DeleteUserQuotaEntryRequest) Reset() {
 	*x = DeleteUserQuotaEntryRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_fileio_disk_management_proto_msgTypes[14]
+		mi := &file_services_fileio_disk_management_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -717,7 +811,7 @@ func (x *DeleteUserQuotaEntryRequest) String() string {
 func (*DeleteUserQuotaEntryRequest) ProtoMessage() {}
 
 func (x *DeleteUserQuotaEntryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_fileio_disk_management_proto_msgTypes[14]
+	mi := &file_services_fileio_disk_management_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -730,7 +824,7 @@ func (x *DeleteUserQuotaEntryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserQuotaEntryRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserQuotaEntryRequest) Descriptor() ([]byte, []int) {
-	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{14}
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteUserQuotaEntryRequest) GetVolumePath() string {
@@ -756,7 +850,7 @@ type DeleteUserQuotaEntryResponse struct {
 func (x *DeleteUserQuotaEntryResponse) Reset() {
 	*x = DeleteUserQuotaEntryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_services_fileio_disk_management_proto_msgTypes[15]
+		mi := &file_services_fileio_disk_management_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -769,7 +863,7 @@ func (x *DeleteUserQuotaEntryResponse) String() string {
 func (*DeleteUserQuotaEntryResponse) ProtoMessage() {}
 
 func (x *DeleteUserQuotaEntryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_fileio_disk_management_proto_msgTypes[15]
+	mi := &file_services_fileio_disk_management_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -782,7 +876,7 @@ func (x *DeleteUserQuotaEntryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserQuotaEntryResponse.ProtoReflect.Descriptor instead.
 func (*DeleteUserQuotaEntryResponse) Descriptor() ([]byte, []int) {
-	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{15}
+	return file_services_fileio_disk_management_proto_rawDescGZIP(), []int{17}
 }
 
 var File_services_fileio_disk_management_proto protoreflect.FileDescriptor
@@ -850,32 +944,42 @@ var file_services_fileio_disk_management_proto_rawDesc = []byte{
 	0x0a, 0x0b, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x5f, 0x65, 0x6e, 0x74, 0x72, 0x79, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c,
 	0x65, 0x69, 0x6f, 0x2e, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x5f, 0x33,
-	0x30, 0x52, 0x0a, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x22, 0xa4, 0x01,
-	0x0a, 0x18, 0x53, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e,
-	0x74, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x76, 0x6f,
-	0x6c, 0x75, 0x6d, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0a, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x29, 0x0a, 0x04, 0x75,
-	0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d, 0x6f, 0x64, 0x65,
-	0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31,
-	0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x12, 0x3c, 0x0a, 0x0b, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x5f,
-	0x65, 0x6e, 0x74, 0x72, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x6d, 0x6f,
-	0x64, 0x65, 0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e, 0x51, 0x75, 0x6f, 0x74,
-	0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x5f, 0x36, 0x52, 0x0a, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x45,
-	0x6e, 0x74, 0x72, 0x79, 0x22, 0x1b, 0x0a, 0x19, 0x53, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x51,
-	0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x69, 0x0a, 0x1b, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x51,
-	0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x1f, 0x0a, 0x0b, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x61, 0x74,
-	0x68, 0x12, 0x29, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x15, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e,
-	0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x1e, 0x0a, 0x1c,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45,
-	0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x34, 0x5a, 0x32,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x37, 0x37, 0x72, 0x74,
-	0x2f, 0x72, 0x64, 0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
-	0x67, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2f, 0x66, 0x69, 0x6c, 0x65,
-	0x69, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x30, 0x52, 0x0a, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x22, 0x3d, 0x0a,
+	0x1a, 0x47, 0x65, 0x74, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x76,
+	0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0a, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x61, 0x74, 0x68, 0x22, 0x5c, 0x0a, 0x1b,
+	0x47, 0x65, 0x74, 0x4d, 0x79, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e,
+	0x74, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3d, 0x0a, 0x0b, 0x71,
+	0x75, 0x6f, 0x74, 0x61, 0x5f, 0x65, 0x6e, 0x74, 0x72, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x1c, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f,
+	0x2e, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x5f, 0x33, 0x30, 0x52, 0x0a,
+	0x71, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x22, 0xa4, 0x01, 0x0a, 0x18, 0x53,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72, 0x79,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x76, 0x6f, 0x6c, 0x75, 0x6d,
+	0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x76, 0x6f,
+	0x6c, 0x75, 0x6d, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x29, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e,
+	0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x5f, 0x31, 0x52, 0x04, 0x75,
+	0x73, 0x65, 0x72, 0x12, 0x3c, 0x0a, 0x0b, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x5f, 0x65, 0x6e, 0x74,
+	0x72, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x6d, 0x6f, 0x64, 0x65, 0x6c,
+	0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e,
+	0x74, 0x72, 0x79, 0x5f, 0x36, 0x52, 0x0a, 0x71, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72,
+	0x79, 0x22, 0x1b, 0x0a, 0x19, 0x53, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74,
+	0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x69,
+	0x0a, 0x1b, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74,
+	0x61, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a,
+	0x0b, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0a, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x50, 0x61, 0x74, 0x68, 0x12, 0x29,
+	0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d,
+	0x6f, 0x64, 0x65, 0x6c, 0x73, 0x2e, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x2e, 0x55, 0x73, 0x65,
+	0x72, 0x5f, 0x31, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x1e, 0x0a, 0x1c, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x51, 0x75, 0x6f, 0x74, 0x61, 0x45, 0x6e, 0x74, 0x72,
+	0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74,
+	0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x37, 0x37, 0x72, 0x74, 0x2f, 0x72, 0x64,
+	0x70, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2f, 0x66, 0x69, 0x6c, 0x65, 0x69, 0x6f, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -890,7 +994,7 @@ func file_services_fileio_disk_management_proto_rawDescGZIP() []byte {
 	return file_services_fileio_disk_management_proto_rawDescData
 }
 
-var file_services_fileio_disk_management_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_services_fileio_disk_management_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_services_fileio_disk_management_proto_goTypes = []interface{}{
 	(*GetQuotaStateRequest)(nil),         // 0: services.fileio.GetQuotaStateRequest
 	(*GetQuotaStateResponse)(nil),        // 1: services.fileio.GetQuotaStateResponse
@@ -904,29 +1008,32 @@ var file_services_fileio_disk_management_proto_goTypes = []interface{}{
 	(*GetUsersQuotaEntriesResponse)(nil), // 9: services.fileio.GetUsersQuotaEntriesResponse
 	(*GetUserQuotaEntryRequest)(nil),     // 10: services.fileio.GetUserQuotaEntryRequest
 	(*GetUserQuotaEntryResponse)(nil),    // 11: services.fileio.GetUserQuotaEntryResponse
-	(*SetUserQuotaEntryRequest)(nil),     // 12: services.fileio.SetUserQuotaEntryRequest
-	(*SetUserQuotaEntryResponse)(nil),    // 13: services.fileio.SetUserQuotaEntryResponse
-	(*DeleteUserQuotaEntryRequest)(nil),  // 14: services.fileio.DeleteUserQuotaEntryRequest
-	(*DeleteUserQuotaEntryResponse)(nil), // 15: services.fileio.DeleteUserQuotaEntryResponse
-	(*fileio.QuotaEntry_6)(nil),          // 16: models.fileio.QuotaEntry_6
-	(*fileio.QuotaEntry)(nil),            // 17: models.fileio.QuotaEntry
-	(*fileio.User_1)(nil),                // 18: models.fileio.User_1
-	(*fileio.QuotaEntry_30)(nil),         // 19: models.fileio.QuotaEntry_30
+	(*GetMyUserQuotaEntryRequest)(nil),   // 12: services.fileio.GetMyUserQuotaEntryRequest
+	(*GetMyUserQuotaEntryResponse)(nil),  // 13: services.fileio.GetMyUserQuotaEntryResponse
+	(*SetUserQuotaEntryRequest)(nil),     // 14: services.fileio.SetUserQuotaEntryRequest
+	(*SetUserQuotaEntryResponse)(nil),    // 15: services.fileio.SetUserQuotaEntryResponse
+	(*DeleteUserQuotaEntryRequest)(nil),  // 16: services.fileio.DeleteUserQuotaEntryRequest
+	(*DeleteUserQuotaEntryResponse)(nil), // 17: services.fileio.DeleteUserQuotaEntryResponse
+	(*fileio.QuotaEntry_6)(nil),          // 18: models.fileio.QuotaEntry_6
+	(*fileio.QuotaEntry)(nil),            // 19: models.fileio.QuotaEntry
+	(*fileio.User_1)(nil),                // 20: models.fileio.User_1
+	(*fileio.QuotaEntry_30)(nil),         // 21: models.fileio.QuotaEntry_30
 }
 var file_services_fileio_disk_management_proto_depIdxs = []int32{
-	16, // 0: services.fileio.GetDefaultQuotaResponse.default_quota:type_name -> models.fileio.QuotaEntry_6
-	16, // 1: services.fileio.SetDefaultQuotaRequest.default_quota:type_name -> models.fileio.QuotaEntry_6
-	17, // 2: services.fileio.GetUsersQuotaEntriesResponse.quota_entries:type_name -> models.fileio.QuotaEntry
-	18, // 3: services.fileio.GetUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
-	19, // 4: services.fileio.GetUserQuotaEntryResponse.quota_entry:type_name -> models.fileio.QuotaEntry_30
-	18, // 5: services.fileio.SetUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
-	16, // 6: services.fileio.SetUserQuotaEntryRequest.quota_entry:type_name -> models.fileio.QuotaEntry_6
-	18, // 7: services.fileio.DeleteUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	18, // 0: services.fileio.GetDefaultQuotaResponse.default_quota:type_name -> models.fileio.QuotaEntry_6
+	18, // 1: services.fileio.SetDefaultQuotaRequest.default_quota:type_name -> models.fileio.QuotaEntry_6
+	19, // 2: services.fileio.GetUsersQuotaEntriesResponse.quota_entries:type_name -> models.fileio.QuotaEntry
+	20, // 3: services.fileio.GetUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
+	21, // 4: services.fileio.GetUserQuotaEntryResponse.quota_entry:type_name -> models.fileio.QuotaEntry_30
+	21, // 5: services.fileio.GetMyUserQuotaEntryResponse.quota_entry:type_name -> models.fileio.QuotaEntry_30
+	20, // 6: services.fileio.SetUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
+	18, // 7: services.fileio.SetUserQuotaEntryRequest.quota_entry:type_name -> models.fileio.QuotaEntry_6
+	20, // 8: services.fileio.DeleteUserQuotaEntryRequest.user:type_name -> models.fileio.User_1
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_services_fileio_disk_management_proto_init() }
@@ -1080,7 +1187,7 @@ func file_services_fileio_disk_management_proto_init() {
 			}
 		}
 		file_services_fileio_disk_management_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetUserQuotaEntryRequest); i {
+			switch v := v.(*GetMyUserQuotaEntryRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1092,7 +1199,7 @@ func file_services_fileio_disk_management_proto_init() {
 			}
 		}
 		file_services_fileio_disk_management_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetUserQuotaEntryResponse); i {
+			switch v := v.(*GetMyUserQuotaEntryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1104,7 +1211,7 @@ func file_services_fileio_disk_management_proto_init() {
 			}
 		}
 		file_services_fileio_disk_management_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteUserQuotaEntryRequest); i {
+			switch v := v.(*SetUserQuotaEntryRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1116,6 +1223,30 @@ func file_services_fileio_disk_management_proto_init() {
 			}
 		}
 		file_services_fileio_disk_management_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SetUserQuotaEntryResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_fileio_disk_management_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteUserQuotaEntryRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_services_fileio_disk_management_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteUserQuotaEntryResponse); i {
 			case 0:
 				return &v.state
@@ -1134,7 +1265,7 @@ func file_services_fileio_disk_management_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_services_fileio_disk_management_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

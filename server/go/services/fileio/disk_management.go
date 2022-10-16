@@ -5,8 +5,14 @@ package fileio
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	fileioModelsPb "github.com/s77rt/rdpcloud/proto/go/models/fileio"
 	fileioServicePb "github.com/s77rt/rdpcloud/proto/go/services/fileio"
 	fileioApi "github.com/s77rt/rdpcloud/server/go/api/fileio"
+	secauthzApi "github.com/s77rt/rdpcloud/server/go/api/secauthz"
+	"github.com/s77rt/rdpcloud/server/go/auth"
 )
 
 func (s *Server) GetQuotaState(ctx context.Context, in *fileioServicePb.GetQuotaStateRequest) (*fileioServicePb.GetQuotaStateResponse, error) {
@@ -65,6 +71,27 @@ func (s *Server) GetUserQuotaEntry(ctx context.Context, in *fileioServicePb.GetU
 	}
 
 	return &fileioServicePb.GetUserQuotaEntryResponse{
+		QuotaEntry: quotaEntry,
+	}, nil
+}
+
+func (s *Server) GetMyUserQuotaEntry(ctx context.Context, in *fileioServicePb.GetMyUserQuotaEntryRequest) (*fileioServicePb.GetMyUserQuotaEntryResponse, error) {
+	userClaims, err := auth.UserClaimsFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Invalid context user claims (%s)", err.Error())
+	}
+
+	username, err := secauthzApi.LookupAccountUsernameBySid(userClaims.UserSID)
+	if err != nil {
+		return nil, err
+	}
+
+	quotaEntry, err := fileioApi.GetUserQuotaEntry(in.GetVolumePath(), &fileioModelsPb.User_1{Username: username})
+	if err != nil {
+		return nil, err
+	}
+
+	return &fileioServicePb.GetMyUserQuotaEntryResponse{
 		QuotaEntry: quotaEntry,
 	}, nil
 }

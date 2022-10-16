@@ -3,12 +3,12 @@
 package netmgmt
 
 import (
-	"syscall"
+	"golang.org/x/sys/windows"
 )
 
 const MAX_PREFERRED_LENGTH = 0xFFFFFFFF
 const TIMEQ_FOREVER = 0xFFFFFFFF
 
 var (
-	modnetapi32 = syscall.NewLazyDLL("netapi32.dll")
+	modnetapi32 = windows.NewLazySystemDLL("netapi32.dll")
 )
