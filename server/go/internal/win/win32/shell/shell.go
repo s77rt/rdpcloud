@@ -3,22 +3,9 @@
 package shell
 
 import (
-	"unsafe"
-
 	"golang.org/x/sys/windows"
 )
 
 var (
 	moduserenv = windows.NewLazySystemDLL("userenv.dll")
-
-	procDeleteProfileW = moduserenv.NewProc("DeleteProfileW")
 )
-
-func DeleteProfileW(lpSidString *uint16, lpProfilePath *uint16, lpComputerName *uint16) (r1, r2 uintptr, lastErr error) {
-	r1, r2, lastErr = procDeleteProfileW.Call(
-		uintptr(unsafe.Pointer(lpSidString)),
-		uintptr(unsafe.Pointer(lpProfilePath)),
-		uintptr(unsafe.Pointer(lpComputerName)),
-	)
-	return
-}

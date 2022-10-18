@@ -26,6 +26,7 @@ import (
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	secauthzServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthz"
 	shellServicePb "github.com/s77rt/rdpcloud/proto/go/services/shell"
+	shutdownServicePb "github.com/s77rt/rdpcloud/proto/go/services/shutdown"
 	sysinfoServicePb "github.com/s77rt/rdpcloud/proto/go/services/sysinfo"
 	termservServicePb "github.com/s77rt/rdpcloud/proto/go/services/termserv"
 	"github.com/s77rt/rdpcloud/server/go/auth"
@@ -35,6 +36,7 @@ import (
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
 	secauthzService "github.com/s77rt/rdpcloud/server/go/services/secauthz"
 	shellService "github.com/s77rt/rdpcloud/server/go/services/shell"
+	shutdownService "github.com/s77rt/rdpcloud/server/go/services/shutdown"
 	sysinfoService "github.com/s77rt/rdpcloud/server/go/services/sysinfo"
 	termservService "github.com/s77rt/rdpcloud/server/go/services/termserv"
 )
@@ -144,6 +146,7 @@ func main() {
 	termservServicePb.RegisterTermservServer(s, &termservService.Server{})
 	shellServicePb.RegisterShellServer(s, &shellService.Server{})
 	sysinfoServicePb.RegisterSysinfoServer(s, &sysinfoService.Server{})
+	shutdownServicePb.RegisterShutdownServer(s, &shutdownService.Server{})
 
 	// Register reflection service
 	reflection.Register(s)

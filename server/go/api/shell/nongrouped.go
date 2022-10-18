@@ -27,7 +27,7 @@ func DeleteProfile(sidString string) error {
 	)
 
 	if ret != 1 {
-		return status.Errorf(codes.Unknown, "Failed to delete profile (error: 0x%x)", lastErr)
+		return status.Errorf(codes.Unknown, "Failed to delete profile (error: %v)", lastErr)
 	}
 
 	return nil

@@ -101,6 +101,20 @@ class FileioClient extends \Grpc\BaseStub {
     }
 
     /**
+     * @param \Services\Fileio\GetMyUserQuotaEntryRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function GetMyUserQuotaEntry(\Services\Fileio\GetMyUserQuotaEntryRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/services.fileio.Fileio/GetMyUserQuotaEntry',
+        $argument,
+        ['\Services\Fileio\GetMyUserQuotaEntryResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
      * @param \Services\Fileio\SetUserQuotaEntryRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options

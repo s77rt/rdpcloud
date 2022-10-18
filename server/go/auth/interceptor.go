@@ -16,7 +16,7 @@ import (
 
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-		accessLevel, found := config.AceessLevel[info.FullMethod]
+		accessLevel, found := config.AccessLevel[info.FullMethod]
 		if !found {
 			return nil, status.Errorf(codes.PermissionDenied, "You don't have permission to execute the specified operation")
 		}

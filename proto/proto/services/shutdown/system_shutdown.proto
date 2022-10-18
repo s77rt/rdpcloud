@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/shutdown";
+
+package services.shutdown;
+
+message InitiateSystemShutdownRequest { string message = 1; uint32 timeout = 2; bool force = 3; bool reboot = 4; uint32 reason = 5; }
+message InitiateSystemShutdownResponse {}
+
+message AbortSystemShutdownRequest {}
+message AbortSystemShutdownResponse {}

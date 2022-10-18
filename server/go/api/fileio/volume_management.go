@@ -27,7 +27,7 @@ func getVolumesGuids() ([]string, error) {
 		cchBufferLength,
 	)
 	if hFindVolume == win.INVALID_HANDLE_VALUE {
-		return nil, status.Errorf(codes.Unknown, "Failed to get volumes guids (FindFirstVolumeW) (error: 0x%x)", lastErr)
+		return nil, status.Errorf(codes.Unknown, "Failed to get volumes guids (FindFirstVolumeW) (error: %v)", lastErr)
 	}
 	defer func() { fileio.FindVolumeClose(hFindVolume); hFindVolume = 0 }()
 
@@ -45,7 +45,7 @@ func getVolumesGuids() ([]string, error) {
 			)
 			if ret == 0 {
 				if lastErr != windows.ERROR_NO_MORE_FILES {
-					return nil, status.Errorf(codes.Unknown, "Failed to get volumes guids (FindNextVolumeW) (error: 0x%x)", lastErr)
+					return nil, status.Errorf(codes.Unknown, "Failed to get volumes guids (FindNextVolumeW) (error: %v)", lastErr)
 				}
 				break
 			}
@@ -76,7 +76,7 @@ func getVolumePaths(volumeGuid string) ([]string, error) {
 		&lpcchReturnLength,
 	)
 	if ret == 0 && lastErr != windows.ERROR_MORE_DATA {
-		return nil, status.Errorf(codes.Unknown, "Failed to get volume paths (1) (error: 0x%x)", lastErr)
+		return nil, status.Errorf(codes.Unknown, "Failed to get volume paths (1) (error: %v)", lastErr)
 	} else if ret != 0 {
 		// No assigned paths
 		return volumePaths, nil
@@ -92,7 +92,7 @@ func getVolumePaths(volumeGuid string) ([]string, error) {
 		&lpcchReturnLength,
 	)
 	if ret == 0 {
-		return nil, status.Errorf(codes.Unknown, "Failed to get volume paths (2) (error: 0x%x)", lastErr)
+		return nil, status.Errorf(codes.Unknown, "Failed to get volume paths (2) (error: %v)", lastErr)
 	}
 
 	offset := 0

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/shutdown";
+
+package services.shutdown;
+
+import "services/shutdown/system_shutdown.proto";
+
+service Shutdown {
+	rpc InitiateSystemShutdown(InitiateSystemShutdownRequest) returns (InitiateSystemShutdownResponse) {}
+	rpc AbortSystemShutdown(AbortSystemShutdownRequest) returns (AbortSystemShutdownResponse) {}
+}

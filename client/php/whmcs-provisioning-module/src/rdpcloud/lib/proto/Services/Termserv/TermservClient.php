@@ -30,4 +30,18 @@ class TermservClient extends \Grpc\BaseStub {
         $metadata, $options);
     }
 
+    /**
+     * @param \Services\Termserv\LogoffMyUserRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function LogoffMyUser(\Services\Termserv\LogoffMyUserRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/services.termserv.Termserv/LogoffMyUser',
+        $argument,
+        ['\Services\Termserv\LogoffMyUserResponse', 'decode'],
+        $metadata, $options);
+    }
+
 }

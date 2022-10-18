@@ -18,7 +18,7 @@ class User
         \GPBMetadata\Models\Netmgmt\LocalGroup::initOnce();
         $pool->internalAddGeneratedFile(
             '
-Å
+¶	
 services/netmgmt/user.protoservices.netmgmt models/netmgmt/local_group.proto"6
 AddUserRequest$
 user (2.models.netmgmt.User_3"
@@ -32,14 +32,23 @@ class User
 GetUserRequest$
 user (2.models.netmgmt.User_1"5
 GetUserResponse"
+user (2.models.netmgmt.User"
+GetMyUserRequest"7
+GetMyUserResponse"
 user (2.models.netmgmt.User"A
 GetUserLocalGroupsRequest$
 user (2.models.netmgmt.User_1"P
 GetUserLocalGroupsResponse2
+local_groups (2.models.netmgmt.LocalGroup_1"
+GetMyUserLocalGroupsRequest"R
+GetMyUserLocalGroupsResponse2
 local_groups (2.models.netmgmt.LocalGroup_1"A
 ChangeUserPasswordRequest$
 user (2.models.netmgmt.User_3"
-ChangeUserPasswordResponse"9
+ChangeUserPasswordResponse"C
+ChangeMyUserPasswordRequest$
+user (2.models.netmgmt.User_2"
+ChangeMyUserPasswordResponse"9
 EnableUserRequest$
 user (2.models.netmgmt.User_1"
 EnableUserResponse":

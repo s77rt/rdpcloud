@@ -18,14 +18,14 @@ var (
 
 const TokenLifetime = 60 * 60 // in seconds
 
-// AceessLevel is a map where the key is the full rpc method
+// AccessLevel is a map where the key is the full rpc method
 // and the value is the minimum required level
 // the required level is an analogy of the Windows User Privilege (0, 1, 2 for GUEST, USER, ADMIN resp)
 // 0 => All
 // 1 => Users
 // 2 => Admins
 // If a rpc method does not have a defined access level, you are expected to deny access for all as a security fallback
-var AceessLevel = map[string]uint32{
+var AccessLevel = map[string]uint32{
 	"/services.secauthn.Secauthn/LogonUser": 0,
 
 	"/services.fileio.Fileio/GetMyUserQuotaEntry":    1,
@@ -59,5 +59,7 @@ var AceessLevel = map[string]uint32{
 	"/services.secauthz.Secauthz/LookupAccountSidByUsername": 2,
 	"/services.secauthz.Secauthz/LookupAccountUsernameBySid": 2,
 	"/services.shell.Shell/DeleteProfile":                    2,
+	"/services.shutdown.Shutdown/AbortSystemShutdown":        2,
+	"/services.shutdown.Shutdown/InitiateSystemShutdown":     2,
 	"/services.termserv.Termserv/LogoffUser":                 2,
 }

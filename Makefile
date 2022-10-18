@@ -35,7 +35,7 @@ SIGNATURE := $(shell xor '$(ENCRYPTED_SERVER_NAME)$(ENCRYPTED_SERVER_IP)$(ENCRYP
 SERVER_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/server/go/license.Signature=$(SIGNATURE)'
 CLIENT_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/client/go/license.Signature=$(SIGNATURE)'
 
-all: info dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module info
+all: info dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module build-bundle info
 
 info:
 	@echo 'SERVER_NAME: $(SERVER_NAME)'
@@ -80,6 +80,10 @@ build-client-go:
 	cp client-frontend/react/rdpcloud-client/build/static/css/main.*.css client/go/frontend/static/assets/css/app/main.css
 	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-linux
 	cd client/go/bin && 7za -y a rdpcloud-client-linux.7z rdpcloud-client-linux
+	cd client/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-windows.exe
+	cd client/go/bin && 7za -y a rdpcloud-client-windows.7z rdpcloud-client-windows.exe
+	cd client/go && CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-darwin
+	cd client/go/bin && 7za -y a rdpcloud-client-darwin.7z rdpcloud-client-darwin
 
 build-client-php-whmcs-provisioning-module:
 	# src
@@ -98,8 +102,23 @@ build-client-php-whmcs-provisioning-module:
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/lib/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/vendor/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/cert/ dist/rdpcloud/
+	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/templates/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/lib/proto/.keep
 	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/vendor/.keep
 	cd client/php/whmcs-provisioning-module && rm dist/rdpcloud/cert/.keep
 	cd client/php/whmcs-provisioning-module && cp src/rdpcloud/rdpcloud.php dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module/dist && zip -r rdpcloud.zip rdpcloud
+
+build-bundle:
+	rm -rf bundle && mkdir bundle && touch bundle/.keep
+	cp -r docs/ bundle/
+	mkdir bundle/server
+	cp server/go/bin/*.7z bundle/server/
+	mkdir bundle/client
+	cp client/go/bin/*.7z bundle/client/
+	mkdir -p bundle/integration/whmcs-provisioning-module
+	cp client/php/whmcs-provisioning-module/dist/*.zip  bundle/integration/whmcs-provisioning-module/
+	mkdir bundle/development
+	cp -r proto/ bundle/development/
+	mkdir bundle/development/cert
+	cp cert/server-cert.pem bundle/development/cert/

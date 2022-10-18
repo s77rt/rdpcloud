@@ -53,7 +53,7 @@ func LookupAccountSidByUsername(username string) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (1) (error: 0x%x)", lastErr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (1) (error: %v)", lastErr)
 		}
 	}
 
@@ -77,7 +77,7 @@ func LookupAccountSidByUsername(username string) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (2) (error: 0x%x)", lastErr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (2) (error: %v)", lastErr)
 		}
 	}
 
@@ -94,7 +94,7 @@ func LookupAccountSidByUsername(username string) (string, error) {
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (ConvertSidToStringSidW) (error: 0x%x)", lastErr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (ConvertSidToStringSidW) (error: %v)", lastErr)
 	}
 
 	sidString := encode.UTF16PtrToString(StringSid)
@@ -123,7 +123,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 	)
 
 	if ret == 0 {
-		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (ConvertStringSidToSidW) (error: 0x%x)", lastErr)
+		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (ConvertStringSidToSidW) (error: %v)", lastErr)
 	}
 
 	defer func() { memoryInternalApi.LocalFree(uintptr(unsafe.Pointer(Sid))); Sid = nil }()
@@ -149,7 +149,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (1) (error: 0x%x)", lastErr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (1) (error: %v)", lastErr)
 		}
 	}
 
@@ -173,7 +173,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 		case windows.ERROR_NONE_MAPPED:
 			return "", status.Errorf(codes.NotFound, "User not found")
 		default:
-			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (2) (error: 0x%x)", lastErr)
+			return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (2) (error: %v)", lastErr)
 		}
 	}
 

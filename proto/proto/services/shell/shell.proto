@@ -4,8 +4,7 @@ option go_package = "github.com/s77rt/rdpcloud/proto/go/services/shell";
 
 package services.shell;
 
-message DeleteProfileRequest { string sid = 1; }
-message DeleteProfileResponse {}
+import "services/shell/nongrouped.proto";
 
 service Shell {
 	rpc DeleteProfile(DeleteProfileRequest) returns (DeleteProfileResponse) {}

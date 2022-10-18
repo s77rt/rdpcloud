@@ -16,7 +16,7 @@ class User
         }
         $pool->internalAddGeneratedFile(
             '
-€
+œ
 models/netmgmt/user.protomodels.netmgmt"L
 User
 username (	
@@ -24,7 +24,9 @@ class User
 	privilege (
 flags ("
 User_1
-username (	",
+username (	"
+User_2
+password (	",
 User_3
 username (	
 password (	B3Z1github.com/s77rt/rdpcloud/proto/go/models/netmgmtbproto3'

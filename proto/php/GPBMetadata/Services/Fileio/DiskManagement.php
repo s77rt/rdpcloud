@@ -18,7 +18,8 @@ class DiskManagement
         \GPBMetadata\Models\Fileio\User::initOnce();
         $pool->internalAddGeneratedFile(
             '
-ç	
+í
+
 %services/fileio/disk_management.protoservices.fileiomodels/fileio/user.proto"+
 GetQuotaStateRequest
 volume_path (	",
@@ -44,6 +45,10 @@ class DiskManagement
 volume_path (	#
 user (2.models.fileio.User_1"N
 GetUserQuotaEntryResponse1
+quota_entry (2.models.fileio.QuotaEntry_30"1
+GetMyUserQuotaEntryRequest
+volume_path (	"P
+GetMyUserQuotaEntryResponse1
 quota_entry (2.models.fileio.QuotaEntry_30"Ü
 SetUserQuotaEntryRequest
 volume_path (	#

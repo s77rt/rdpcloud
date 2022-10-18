@@ -60,7 +60,7 @@ func LogonUser(user *secauthnModelsPb.User_3) error {
 		case windows.ERROR_LOGON_FAILURE:
 			return status.Errorf(codes.Unauthenticated, "Login failure")
 		default:
-			return status.Errorf(codes.Unknown, "Failed to logon user (error: 0x%x)", lastErr)
+			return status.Errorf(codes.Unknown, "Failed to logon user (error: %v)", lastErr)
 		}
 	}
 

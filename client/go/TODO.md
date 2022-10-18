@@ -1,2 +1,2 @@
-Find a better way to get methods access levels. Currently they are HARD-CODED
-grpcui forms use textarea for password fields. Find a solution to make the password hidden
+- Find a better way to get methods access levels. Currently they are HARD-CODED
+- grpcui forms use textarea for password fields. Find a solution to make the password hidden

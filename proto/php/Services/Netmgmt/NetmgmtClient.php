@@ -73,6 +73,20 @@ class NetmgmtClient extends \Grpc\BaseStub {
     }
 
     /**
+     * @param \Services\Netmgmt\GetMyUserRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function GetMyUser(\Services\Netmgmt\GetMyUserRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/services.netmgmt.Netmgmt/GetMyUser',
+        $argument,
+        ['\Services\Netmgmt\GetMyUserResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
      * @param \Services\Netmgmt\GetUserLocalGroupsRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -87,6 +101,20 @@ class NetmgmtClient extends \Grpc\BaseStub {
     }
 
     /**
+     * @param \Services\Netmgmt\GetMyUserLocalGroupsRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function GetMyUserLocalGroups(\Services\Netmgmt\GetMyUserLocalGroupsRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/services.netmgmt.Netmgmt/GetMyUserLocalGroups',
+        $argument,
+        ['\Services\Netmgmt\GetMyUserLocalGroupsResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
      * @param \Services\Netmgmt\ChangeUserPasswordRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
@@ -97,6 +125,20 @@ class NetmgmtClient extends \Grpc\BaseStub {
         return $this->_simpleRequest('/services.netmgmt.Netmgmt/ChangeUserPassword',
         $argument,
         ['\Services\Netmgmt\ChangeUserPasswordResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * @param \Services\Netmgmt\ChangeMyUserPasswordRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function ChangeMyUserPassword(\Services\Netmgmt\ChangeMyUserPasswordRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/services.netmgmt.Netmgmt/ChangeMyUserPassword',
+        $argument,
+        ['\Services\Netmgmt\ChangeMyUserPasswordResponse', 'decode'],
         $metadata, $options);
     }
 
