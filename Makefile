@@ -97,7 +97,6 @@ build-client-php-whmcs-provisioning-module:
 	rm -rf client/php/whmcs-provisioning-module/dist && mkdir -p client/php/whmcs-provisioning-module/dist && touch client/php/whmcs-provisioning-module/dist/.keep
 	cd client/php/whmcs-provisioning-module/src/rdpcloud && composer install --no-dev --optimize-autoloader
 	cd client/php/whmcs-provisioning-module && mkdir -p dist/rdpcloud
-	cd client/php/whmcs-provisioning-module && cp README.md dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp src/htaccess/.htaccess dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/lib/ dist/rdpcloud/
 	cd client/php/whmcs-provisioning-module && cp -r src/rdpcloud/vendor/ dist/rdpcloud/
@@ -111,14 +110,21 @@ build-client-php-whmcs-provisioning-module:
 
 build-bundle:
 	rm -rf bundle && mkdir bundle && touch bundle/.keep
+	cp docs/EULA.md bundle/
 	cp -r docs/ bundle/
 	mkdir bundle/server
 	cp server/go/bin/*.7z bundle/server/
+	cp server/go/README.md bundle/server/
 	mkdir bundle/client
 	cp client/go/bin/*.7z bundle/client/
+	cp client/go/README.md bundle/client/
 	mkdir -p bundle/integration/whmcs-provisioning-module
 	cp client/php/whmcs-provisioning-module/dist/*.zip  bundle/integration/whmcs-provisioning-module/
+	cp client/php/whmcs-provisioning-module/README.md bundle/integration/whmcs-provisioning-module/
 	mkdir bundle/development
 	cp -r proto/ bundle/development/
 	mkdir bundle/development/cert
 	cp cert/server-cert.pem bundle/development/cert/
+	cd bundle && echo "${SERVER_NAME} (${SERVER_IP})" > LICENSEE.md
+	cd bundle && echo "Read the docs inside the /docs folder" > README.md
+	cd bundle && 7za -y a -x!.keep rdpcloud-bundle.7z .
