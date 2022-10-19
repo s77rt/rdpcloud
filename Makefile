@@ -35,13 +35,7 @@ SIGNATURE := $(shell xor '$(ENCRYPTED_SERVER_NAME)$(ENCRYPTED_SERVER_IP)$(ENCRYP
 SERVER_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/server/go/license.Signature=$(SIGNATURE)'
 CLIENT_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/client/go/license.Signature=$(SIGNATURE)'
 
-all: info dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module build-bundle info
-
-info:
-	@echo 'SERVER_NAME: $(SERVER_NAME)'
-	@echo 'SERVER_IP: $(SERVER_IP)'
-	@echo 'IS_FREE_TRIAL: $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
-	@echo 'EXP_DATE: $(EXP_DATE)'
+all: dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module build-bundle info
 
 dep:
 	go install mvdan.cc/garble@latest
@@ -128,3 +122,11 @@ build-bundle:
 	cd bundle && echo "${SERVER_NAME} (${SERVER_IP})" > LICENSEE.md
 	cd bundle && echo "Read the docs inside the /docs folder" > README.md
 	cd bundle && 7za -y a -x!.keep rdpcloud-bundle.7z .
+
+info:
+	@echo '########################################'
+	@echo 'SERVER_NAME:     $(SERVER_NAME)'
+	@echo 'SERVER_IP:       $(SERVER_IP)'
+	@echo 'IS_FREE_TRIAL:   $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
+	@echo 'EXP_DATE:        $(EXP_DATE)'
+	@echo '########################################'
