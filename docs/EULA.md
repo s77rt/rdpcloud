@@ -118,5 +118,5 @@ Each covenant and agreement in this EULA agreement shall be construed for all pu
 ## 19. CONTACT INFORMATION
 If you have any questions about this EULA agreement, please contact us by email or via Telegram instant messaging service:
 
-Email: admin@abdelhafidh.com
+Email: admin@abdelhafidh.com  
 Telegram: @s77rt
