@@ -13,6 +13,7 @@
 ## Notes
 - The files should be placed in a protected location (where other users do not have access to)
 - You may want to restrict access to Users (prevent users from writing directly to C:\\, etc.)
+- You may want to delete/disable $RECYCLE.BIN folder(s) to avoid quota issues
 - You may want to enable quota (enforced) and set default quotas (can be done using the RDPCloud Client)
 - Ratelimit can be done using a reverse proxy (envoy, nginx, etc.)
 
