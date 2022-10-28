@@ -481,7 +481,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 		logonName_splitted := strings.Split(logonName, "\\")
 		if len(logonName_splitted) == 2 {
 			domain := logonName_splitted[0]
-			if domain == hostname {
+			if strings.EqualFold(domain, hostname) {
 				username := logonName_splitted[1]
 
 				var quotaEntry = &fileioModelsPb.QuotaEntry{

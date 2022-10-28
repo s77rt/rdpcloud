@@ -242,7 +242,7 @@ func GetUsersInLocalGroup(localGroup *netmgmtModelsPb.LocalGroup_1) ([]*netmgmtM
 				}
 
 				domain := domainandname_splitted[0]
-				if domain != hostname {
+				if !strings.EqualFold(domain, hostname) {
 					continue
 				}
 

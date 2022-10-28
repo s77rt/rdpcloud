@@ -4,6 +4,7 @@ package termserv
 
 import (
 	"os"
+	"strings"
 	"unsafe"
 
 	"google.golang.org/grpc/codes"
@@ -56,7 +57,7 @@ func LogoffUser(user *termservModelsPb.User_1) error {
 	for i := uint32(0); i < pCount; i++ {
 		var bufData = (*termservInternalApi.WTS_SESSION_INFO_1W)(unsafe.Pointer(uintptr(bufPtr) + uintptr(i)*unsafe.Sizeof(bufDataSample)))
 		if bufData.PUserName != nil && bufData.PDomainName != nil {
-			if username == encode.UTF16PtrToString(bufData.PUserName) && hostname == encode.UTF16PtrToString(bufData.PDomainName) {
+			if strings.EqualFold(username, encode.UTF16PtrToString(bufData.PUserName)) && strings.EqualFold(hostname, encode.UTF16PtrToString(bufData.PDomainName)) {
 				SessionIds = append(SessionIds, bufData.SessionId)
 			}
 		}

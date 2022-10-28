@@ -5,6 +5,7 @@ package secauthz
 import (
 	"fmt"
 	"os"
+	"strings"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -82,7 +83,7 @@ func LookupAccountSidByUsername(username string) (string, error) {
 	}
 
 	domain := encode.UTF16ToString(ReferencedDomainName)
-	if domain != hostname {
+	if !strings.EqualFold(domain, hostname) {
 		return "", status.Errorf(codes.Unknown, "Failed to lookup account SID by name (domain mismatch)")
 	}
 
@@ -183,7 +184,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 	}
 
 	domain := encode.UTF16ToString(ReferencedDomainName)
-	if domain != hostname {
+	if !strings.EqualFold(domain, hostname) {
 		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (domain mismatch)")
 	}
 
