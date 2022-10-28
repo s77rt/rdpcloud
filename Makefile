@@ -125,6 +125,7 @@ build-bundle:
 
 info:
 	@echo '########################################'
+	@echo 'VERSION:         $(GIT_TAG)'
 	@echo 'SERVER_NAME:     $(SERVER_NAME)'
 	@echo 'SERVER_IP:       $(SERVER_IP)'
 	@echo 'IS_FREE_TRIAL:   $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
