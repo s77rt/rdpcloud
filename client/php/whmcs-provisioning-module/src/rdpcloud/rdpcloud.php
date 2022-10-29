@@ -80,33 +80,38 @@ function genUsernameAndPassword(array $params, int $username_level = 0) {
 			$emailname = ucfirst(preg_replace("/[^a-zA-Z0-9]+/", "", $emailname));
 		}
 
+		// Username min and max length without the extra digits
 		$USERNAME_MIN_LENGTH = 7;
-		$USERNAME_MAX_LENGTH = 17;
+		$USERNAME_MAX_LENGTH = 15;
+
+		$USERNAME_EXTRA_DIGITS = 2;
 
 		$username = "";
 
-		if ($username_level <= 3) {
-			if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 1) {
-				$username = $firstname . $username;
-			}
-			if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 2) {
-				$username = $lastname . $username;
-			}
-			if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 3) {
-				$username = $emailname . $username;
-			}
-
-			if (strlen($username) < $USERNAME_MIN_LENGTH) {
-				$missing_length = $USERNAME_MIN_LENGTH - strlen($username);
-				$username .= random_int(pow(10, $missing_length - 1), pow(10, $missing_length) - 1);
-			}
-
-			$username = substr($username, 0, $USERNAME_MAX_LENGTH - 2) . random_int(10, 99);
-		} else {
-			$username = "User" . random_int(1000, 9999);
+		if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 1) {
+			$username .= $firstname;
+		}
+		if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 2) {
+			$username .= $lastname;
+		}
+		if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 3) {
+			$username .= $emailname;
+		}
+		if (strlen($username) < $USERNAME_MIN_LENGTH || $username_level >= 4) {
+			$username = "User";
 		}
 
+		// Min Length Check
+		$missing_length = $USERNAME_MIN_LENGTH - strlen($username);
+		if ($missing_length > 0) {
+			$username .= random_int(pow(10, $missing_length - 1), pow(10, $missing_length) - 1);
+		}
+
+		// Max Length Check
 		$username = substr($username, 0, $USERNAME_MAX_LENGTH);
+
+		// Append extra digits
+		$username .= random_int(pow(10, $USERNAME_EXTRA_DIGITS - 1), pow(10, $USERNAME_EXTRA_DIGITS) - 1);
 	}
 
 	$old_password = $params["password"];
