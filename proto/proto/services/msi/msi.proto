@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/msi";
+
+package services.msi;
+
+import "services/msi/system_status.proto";
+
+service Msi {
+	rpc GetProducts(GetProductsRequest) returns (GetProductsResponse) {}
+}

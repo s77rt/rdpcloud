@@ -411,5 +411,56 @@ const builderMap = {
 		return (
 			<Tree treeData={treeData} />
 		);
+	},
+	"/services.msi.Msi/GetProducts": (data) => {
+		const keys = Object.keys(data);
+		const records = data[keys[0]];
+
+		if (records.length === 0) {
+			return (
+				<Empty />
+			)
+		}
+		var first_record = records[0];
+
+		var columns = [];
+		for (let v of Object.keys(first_record)) {
+			if (["guid"].indexOf(v) >= 0)
+				continue;
+			let column = {
+				title: v.replace(/_/g, " ").toUpperCase().trim(),
+				dataIndex: v,
+				sorter: (() => {
+					let sorterFunc;
+					switch (v) {
+						case "name":
+						case "version":
+						case "publisher":
+						case "install_date":
+							sorterFunc = (a, b) => { return a[v].localeCompare(b[v], 'en', { numeric: true }) };
+							break;
+						default:
+							sorterFunc = undefined;
+					}
+					return sorterFunc;
+				})(),
+				key: v
+			}
+			columns.push(column);
+		}
+
+		var dataSource = [];
+		records.forEach(function (v, i) {
+			let record = {
+				...v,
+				key: i
+			}
+			delete record.guid;
+			dataSource.push(record);
+		});
+
+		return (
+			<Table dataSource={dataSource} columns={columns} />
+		);
 	}
 };

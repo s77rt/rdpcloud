@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/services/msi";
+
+package services.msi;
+
+import "models/msi/product.proto";
+
+message GetProductsRequest {}
+message GetProductsResponse { repeated models.msi.Product products = 1; }

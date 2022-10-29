@@ -188,7 +188,7 @@ func LookupAccountUsernameBySid(sidString string) (string, error) {
 		return "", status.Errorf(codes.Unknown, "Failed to lookup account name by SID (domain mismatch)")
 	}
 
-	username := encode.UTF16PtrToString(&Name[0])
+	username := encode.UTF16ToString(Name)
 
 	return username, nil
 }

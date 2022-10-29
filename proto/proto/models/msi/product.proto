@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/s77rt/rdpcloud/proto/go/models/msi";
+
+package models.msi;
+
+import "google/protobuf/timestamp.proto";
+
+message Product {
+	string guid = 1;
+	string name = 2;
+	string version = 3;
+	string publisher = 4;
+	google.protobuf.Timestamp install_date = 5;
+}

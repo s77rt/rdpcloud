@@ -31,7 +31,7 @@ func getVolumesGuids() ([]string, error) {
 	}
 	defer func() { fileio.FindVolumeClose(hFindVolume); hFindVolume = 0 }()
 
-	volumesGuids = append(volumesGuids, encode.UTF16PtrToString(&lpszVolumeName[0])[11:47])
+	volumesGuids = append(volumesGuids, encode.UTF16ToString(lpszVolumeName)[11:47])
 
 	if lastErr == windows.ERROR_MORE_DATA {
 		for {
@@ -50,7 +50,7 @@ func getVolumesGuids() ([]string, error) {
 				break
 			}
 
-			volumesGuids = append(volumesGuids, encode.UTF16PtrToString(&lpszVolumeName[0])[11:47])
+			volumesGuids = append(volumesGuids, encode.UTF16ToString(lpszVolumeName)[11:47])
 		}
 	}
 

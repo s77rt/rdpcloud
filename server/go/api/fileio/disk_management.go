@@ -16,8 +16,8 @@ import (
 	fileioModelsPb "github.com/s77rt/rdpcloud/proto/go/models/fileio"
 	"github.com/s77rt/rdpcloud/server/go/internal/encode"
 	"github.com/s77rt/rdpcloud/server/go/internal/win"
-	"github.com/s77rt/rdpcloud/server/go/internal/win/win32/com"
-	"github.com/s77rt/rdpcloud/server/go/internal/win/win32/fileio"
+	comInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/com"
+	fileioInternalApi "github.com/s77rt/rdpcloud/server/go/internal/win/win32/fileio"
 )
 
 func getQuotaState(wg *sync.WaitGroup, volumePath string, pdwState *uint32, err *error) {
@@ -26,22 +26,22 @@ func getQuotaState(wg *sync.WaitGroup, volumePath string, pdwState *uint32, err 
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to get quota state (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -49,7 +49,7 @@ func getQuotaState(wg *sync.WaitGroup, volumePath string, pdwState *uint32, err 
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -109,22 +109,22 @@ func setQuotaState(wg *sync.WaitGroup, volumePath string, dwState uint32, err *e
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to set quota state (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -132,7 +132,7 @@ func setQuotaState(wg *sync.WaitGroup, volumePath string, dwState uint32, err *e
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -191,22 +191,22 @@ func getDefaultQuota(wg *sync.WaitGroup, volumePath string, defaultQuota **filei
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to get default quota (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -214,7 +214,7 @@ func getDefaultQuota(wg *sync.WaitGroup, volumePath string, defaultQuota **filei
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -287,22 +287,22 @@ func setDefaultQuota(wg *sync.WaitGroup, volumePath string, defaultQuota *fileio
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to set default quota (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -310,7 +310,7 @@ func setDefaultQuota(wg *sync.WaitGroup, volumePath string, defaultQuota *fileio
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -386,22 +386,22 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to get users quota entries (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -409,7 +409,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -436,11 +436,11 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 		return
 	}
 
-	ppEnum := &fileio.IEnumDiskQuotaUsers{}
+	ppEnum := &fileioInternalApi.IEnumDiskQuotaUsers{}
 	ret, _, _ = diskQuotaControl.CreateEnumUsers(
 		nil, // no specific SIDs => all
 		0,   // size of the SIDs array
-		fileio.DISKQUOTA_USERNAME_RESOLVE_SYNC,
+		fileioInternalApi.DISKQUOTA_USERNAME_RESOLVE_SYNC,
 		&ppEnum,
 	)
 	if ret != win.S_OK {
@@ -456,7 +456,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 	}
 
 	for {
-		ppUser := &fileio.IDiskQuotaUser{}
+		ppUser := &fileioInternalApi.IDiskQuotaUser{}
 		ret, _, _ = ppEnum.Next(
 			1, // requesting one user at a time
 			&ppUser,
@@ -477,7 +477,7 @@ func getUsersQuotaEntries(wg *sync.WaitGroup, volumePath string, quotaEntries *[
 		var pdwStatus uint32
 		ppUser.GetAccountStatus(&pdwStatus)
 
-		logonName := encode.UTF16PtrToString(&pszLogonName[0])
+		logonName := encode.UTF16ToString(pszLogonName)
 		logonName_splitted := strings.Split(logonName, "\\")
 		if len(logonName_splitted) == 2 {
 			domain := logonName_splitted[0]
@@ -526,22 +526,22 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to get user quota entry (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -549,7 +549,7 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -588,7 +588,7 @@ func getUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 		return
 	}
 
-	ppUser := &fileio.IDiskQuotaUser{}
+	ppUser := &fileioInternalApi.IDiskQuotaUser{}
 	ret, _, _ = diskQuotaControl.FindUserName(
 		pszLogonName,
 		&ppUser,
@@ -670,22 +670,22 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to set user quota entry (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -693,7 +693,7 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -732,10 +732,10 @@ func setUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioModels
 		return
 	}
 
-	ppUser := &fileio.IDiskQuotaUser{}
+	ppUser := &fileioInternalApi.IDiskQuotaUser{}
 	ret, _, _ = diskQuotaControl.AddUserName(
 		pszLogonName,
-		fileio.DISKQUOTA_USERNAME_RESOLVE_NONE,
+		fileioInternalApi.DISKQUOTA_USERNAME_RESOLVE_NONE,
 		&ppUser,
 	)
 	if ret != win.S_OK && ret != win.S_FALSE {
@@ -797,22 +797,22 @@ func deleteUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioMod
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	ret, _, _ := com.CoInitializeEx(
+	ret, _, _ := comInternalApi.CoInitializeEx(
 		0, // must be NULL
-		com.COINIT_APARTMENTTHREADED,
+		comInternalApi.COINIT_APARTMENTTHREADED,
 	)
 	if ret != win.S_OK {
 		*err = status.Errorf(codes.Unknown, "Failed to delete user quota entry (CoInitializeEx) (error: 0x%x)", ret)
 		return
 	}
-	defer com.CoUninitialize()
+	defer comInternalApi.CoUninitialize()
 
 	var ppv uintptr
-	ret, _, _ = com.CoCreateInstance(
-		fileio.CLSID_DiskQuotaControl,
+	ret, _, _ = comInternalApi.CoCreateInstance(
+		fileioInternalApi.CLSID_DiskQuotaControl,
 		nil,
-		com.CLSCTX_INPROC_SERVER,
-		fileio.IID_IDiskQuotaControl,
+		comInternalApi.CLSCTX_INPROC_SERVER,
+		fileioInternalApi.IID_IDiskQuotaControl,
 		&ppv,
 	)
 	if ret != win.S_OK {
@@ -820,7 +820,7 @@ func deleteUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioMod
 		return
 	}
 
-	diskQuotaControl := (*fileio.IDiskQuotaControl)(unsafe.Pointer(ppv))
+	diskQuotaControl := (*fileioInternalApi.IDiskQuotaControl)(unsafe.Pointer(ppv))
 	defer func() { diskQuotaControl.Release(); diskQuotaControl = nil }()
 
 	pszPath, rerr := encode.UTF16PtrFromString(volumePath)
@@ -874,10 +874,10 @@ func deleteUserQuotaEntry(wg *sync.WaitGroup, volumePath string, user *fileioMod
 	// 2: AddUserName->DeleteUser (User had a quota entry in the volume but not anymore) => OK
 	// 3: AddUserName->DeleteUser (User never had a quota entry in the volume) => OK
 
-	ppUser := &fileio.IDiskQuotaUser{}
+	ppUser := &fileioInternalApi.IDiskQuotaUser{}
 	ret, _, _ = diskQuotaControl.AddUserName(
 		pszLogonName,
-		fileio.DISKQUOTA_USERNAME_RESOLVE_NONE,
+		fileioInternalApi.DISKQUOTA_USERNAME_RESOLVE_NONE,
 		&ppUser,
 	)
 	if ret != win.S_OK && ret != win.S_FALSE {

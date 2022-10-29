@@ -19,9 +19,11 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 
 	"github.com/beevik/ntp"
+	externalip "github.com/glendc/go-external-ip"
 	"github.com/go-co-op/gocron"
 
 	fileioServicePb "github.com/s77rt/rdpcloud/proto/go/services/fileio"
+	msiServicePb "github.com/s77rt/rdpcloud/proto/go/services/msi"
 	netmgmtServicePb "github.com/s77rt/rdpcloud/proto/go/services/netmgmt"
 	secauthnServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthn"
 	secauthzServicePb "github.com/s77rt/rdpcloud/proto/go/services/secauthz"
@@ -32,6 +34,7 @@ import (
 	"github.com/s77rt/rdpcloud/server/go/auth"
 	"github.com/s77rt/rdpcloud/server/go/license"
 	fileioService "github.com/s77rt/rdpcloud/server/go/services/fileio"
+	msiService "github.com/s77rt/rdpcloud/server/go/services/msi"
 	netmgmtService "github.com/s77rt/rdpcloud/server/go/services/netmgmt"
 	secauthnService "github.com/s77rt/rdpcloud/server/go/services/secauthn"
 	secauthzService "github.com/s77rt/rdpcloud/server/go/services/secauthz"
@@ -55,8 +58,8 @@ func init() {
 		log.Fatalf("Failed to read license: %v", err)
 	}
 
-	// Check License Server IP
-	conn, err := net.Dial("udp4", "8.8.8.8:80")
+	// Check License Server IP (Against Local IP)
+	conn, err := net.Dial("udp4", "8.8.8.8:53")
 	if err != nil {
 		log.Fatalf("Failed to dial udp4: %v", err)
 	}
@@ -66,6 +69,19 @@ func init() {
 
 	if !(localAddr.IP.Equal(licenseInfo.ServerIP)) {
 		log.Fatalf("Server IP does not match; expected %s, got %s", licenseInfo.ServerIP, localAddr.IP)
+	}
+
+	// Check License Server IP (Against Public IP)
+	consensus := externalip.DefaultConsensus(nil, nil)
+	consensus.UseIPProtocol(4)
+
+	publicIP, err := consensus.ExternalIP()
+	if err != nil {
+		log.Fatalf("Failed to read public IP: %v", err)
+	}
+
+	if !(publicIP.Equal(licenseInfo.ServerIP)) {
+		log.Fatalf("Server IP does not match; expected %s, got %s", licenseInfo.ServerIP, publicIP)
 	}
 
 	// Check License Exp. Date
@@ -147,6 +163,7 @@ func main() {
 	shellServicePb.RegisterShellServer(s, &shellService.Server{})
 	sysinfoServicePb.RegisterSysinfoServer(s, &sysinfoService.Server{})
 	shutdownServicePb.RegisterShutdownServer(s, &shutdownService.Server{})
+	msiServicePb.RegisterMsiServer(s, &msiService.Server{})
 
 	// Register reflection service
 	reflection.Register(s)

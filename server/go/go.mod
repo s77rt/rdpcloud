@@ -6,6 +6,7 @@ replace github.com/s77rt/rdpcloud/proto/go => ../../proto/go
 
 require (
 	github.com/beevik/ntp v0.3.0
+	github.com/glendc/go-external-ip v0.1.0
 	github.com/go-co-op/gocron v1.17.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
@@ -13,6 +14,7 @@ require (
 	github.com/s77rt/xor v0.0.0-20221010224322-0f0d4971e11f
 	golang.org/x/sys v0.0.0-20220906165534-d0df966e6959
 	google.golang.org/grpc v1.49.0
+	google.golang.org/protobuf v1.28.1
 )
 
 require (
@@ -22,5 +24,4 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/text v0.3.3 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
 )

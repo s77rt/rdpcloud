@@ -6,6 +6,10 @@ All notable changes to this project (rdpcloud) will be documented in this file.
 ### Changed:
  - Enhanced WHMCS username generation algorithm
 
+### Added:
+ - MSI Service
+ - MSI Service Method: Get Products
+
 ## [0.1.1] - 28/10/2022
 ### Changed:
  - Updated the docs
