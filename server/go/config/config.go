@@ -29,6 +29,7 @@ var AccessLevel = map[string]uint32{
 	"/services.secauthn.Secauthn/LogonUser": 0,
 
 	"/services.fileio.Fileio/GetMyUserQuotaEntry":    1,
+	"/services.msi.Msi/GetProducts":                  1,
 	"/services.netmgmt.Netmgmt/ChangeMyUserPassword": 1,
 	"/services.netmgmt.Netmgmt/GetMyUser":            1,
 	"/services.netmgmt.Netmgmt/GetMyUserLocalGroups": 1,
@@ -44,7 +45,6 @@ var AccessLevel = map[string]uint32{
 	"/services.fileio.Fileio/SetDefaultQuota":                2,
 	"/services.fileio.Fileio/SetQuotaState":                  2,
 	"/services.fileio.Fileio/SetUserQuotaEntry":              2,
-	"/services.msi.Msi/GetProducts":                          2,
 	"/services.netmgmt.Netmgmt/AddUser":                      2,
 	"/services.netmgmt.Netmgmt/AddUserToLocalGroup":          2,
 	"/services.netmgmt.Netmgmt/ChangeUserPassword":           2,
