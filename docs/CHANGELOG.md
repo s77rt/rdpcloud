@@ -2,7 +2,7 @@
 
 All notable changes to this project (rdpcloud) will be documented in this file.
 
-## [dev] - DD/MM/YYYY
+## [0.1.2] - 30/10/2022
 ### Added:
  - MSI Service
  - MSI Service Method: Get Products
