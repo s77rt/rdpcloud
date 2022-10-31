@@ -3,6 +3,8 @@
 All notable changes to this project (rdpcloud) will be documented in this file.
 
 ## [dev] - DD/MM/YYYY
+### Fixed:
+ - Missing trace info in case of a panic
 
 ## [0.1.2] - 30/10/2022
 ### Added:
