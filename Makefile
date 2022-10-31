@@ -58,7 +58,7 @@ build-server-go:
 	rm -rf server/go/cert && mkdir -p server/go/cert && touch server/go/cert/.keep
 	cp cert/server-cert.pem server/go/cert/
 	cp cert/server-key.pem server/go/cert/
-	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(SERVER_GO_LDFLAGS)' -o bin/rdpcloud-server-windows.exe
+	cd server/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -seed=random build -ldflags '$(SERVER_GO_LDFLAGS)' -o bin/rdpcloud-server-windows.exe
 	cd server/go/bin && 7za -y a rdpcloud-server-windows.7z rdpcloud-server-windows.exe
 
 build-client-frontend-react:
@@ -72,11 +72,11 @@ build-client-go:
 	cp client-frontend/react/rdpcloud-client/build/static/js/main.*.js client/go/frontend/static/assets/js/app/main.js
 	cp client-frontend/react/rdpcloud-client/build/static/js/*.chunk.js client/go/frontend/static/assets/js/app/chunk.js
 	cp client-frontend/react/rdpcloud-client/build/static/css/main.*.css client/go/frontend/static/assets/css/app/main.css
-	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-linux
+	cd client/go && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 garble -literals -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-linux
 	cd client/go/bin && 7za -y a rdpcloud-client-linux.7z rdpcloud-client-linux
-	cd client/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-windows.exe
+	cd client/go && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 garble -literals -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-windows.exe
 	cd client/go/bin && 7za -y a rdpcloud-client-windows.7z rdpcloud-client-windows.exe
-	cd client/go && CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 garble -literals -tiny -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-darwin
+	cd client/go && CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 garble -literals -seed=random build -ldflags '$(CLIENT_GO_LDFLAGS)' -o bin/rdpcloud-client-darwin
 	cd client/go/bin && 7za -y a rdpcloud-client-darwin.7z rdpcloud-client-darwin
 
 build-client-php-whmcs-provisioning-module:
