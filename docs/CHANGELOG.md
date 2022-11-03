@@ -6,6 +6,9 @@ All notable changes to this project (rdpcloud) will be documented in this file.
 ### Fixed:
  - Missing trace info in case of a panic
 
+### Changed:
+ - License is now based on both the Local IP and the Public IP
+
 ## [0.1.2] - 30/10/2022
 ### Added:
  - MSI Service

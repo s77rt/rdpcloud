@@ -58,7 +58,7 @@ func init() {
 		log.Fatalf("Failed to read license: %v", err)
 	}
 
-	// Check License Server IP (Against Local IP)
+	// Check License Server Local IP
 	conn, err := net.Dial("udp4", "8.8.8.8:53")
 	if err != nil {
 		log.Fatalf("Failed to dial udp4: %v", err)
@@ -67,11 +67,11 @@ func init() {
 
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 
-	if !(localAddr.IP.Equal(licenseInfo.ServerIP)) {
-		log.Fatalf("Server IP does not match; expected %s, got %s", licenseInfo.ServerIP, localAddr.IP)
+	if !(localAddr.IP.Equal(licenseInfo.ServerLocalIP)) {
+		log.Fatalf("Server Local IP does not match; expected %s, got %s", licenseInfo.ServerLocalIP, localAddr.IP)
 	}
 
-	// Check License Server IP (Against Public IP)
+	// Check License Server Public IP
 	consensus := externalip.DefaultConsensus(nil, nil)
 	consensus.UseIPProtocol(4)
 
@@ -80,8 +80,8 @@ func init() {
 		log.Fatalf("Failed to read public IP: %v", err)
 	}
 
-	if !(publicIP.Equal(licenseInfo.ServerIP)) {
-		log.Fatalf("Server IP does not match; expected %s, got %s", licenseInfo.ServerIP, publicIP)
+	if !(publicIP.Equal(licenseInfo.ServerPublicIP)) {
+		log.Fatalf("Server Public IP does not match; expected %s, got %s", licenseInfo.ServerPublicIP, publicIP)
 	}
 
 	// Check License Exp. Date
@@ -112,9 +112,9 @@ func main() {
 	log.Printf("Running RDPCloud Server (Version: %s)", Version)
 
 	if licenseInfo.ExpDate.IsZero() {
-		log.Printf("Licensed to %s (%s)", licenseInfo.ServerName, licenseInfo.ServerIP)
+		log.Printf("Licensed to %s (%s | %s)", licenseInfo.ServerName, licenseInfo.ServerLocalIP, licenseInfo.ServerPublicIP)
 	} else {
-		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerIP, licenseInfo.ExpDate)
+		log.Printf("Licensed to %s (%s | %s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerLocalIP, licenseInfo.ServerPublicIP, licenseInfo.ExpDate)
 	}
 
 	lis, err := net.Listen("tcp4", fmt.Sprintf(":%d", port))

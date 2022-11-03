@@ -1,15 +1,19 @@
-GIT_TAG := $(shell git describe --tags --always)
+VERSION := $(shell git describe --tags --always)
 
 export SERVER_NAME
-export SERVER_IP
+export SERVER_LOCAL_IP
+export SERVER_PUBLIC_IP
 export IS_FREE_TRIAL
 export FREE_TRIAL_DURATION = 30
 
 ifndef SERVER_NAME
 $(error SERVER_NAME is not set)
 endif
-ifndef SERVER_IP
-$(error SERVER_IP is not set)
+ifndef SERVER_LOCAL_IP
+$(error SERVER_LOCAL_IP is not set)
+endif
+ifndef SERVER_PUBLIC_IP
+$(error SERVER_PUBLIC_IP is not set)
 endif
 ifndef IS_FREE_TRIAL
 $(error IS_FREE_TRIAL is not set)
@@ -28,12 +32,13 @@ endif
 ENCRYPTION_KEY := $(shell openssl rand 128 | base64 -w 0)
 ENCRYPTION_KEY_X :=  $(shell xor '$(ENCRYPTION_KEY)' 'RDPCloud' | base64 -w 0)
 ENCRYPTED_SERVER_NAME := $(shell xor '$(SERVER_NAME)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
-ENCRYPTED_SERVER_IP := $(shell xor '$(SERVER_IP)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+ENCRYPTED_SERVER_LOCAL_IP := $(shell xor '$(SERVER_LOCAL_IP)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+ENCRYPTED_SERVER_PUBLIC_IP := $(shell xor '$(SERVER_PUBLIC_IP)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
 ENCRYPTED_EXP_DATE := $(shell xor '$(EXP_DATE)' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
-SIGNATURE := $(shell xor '$(ENCRYPTED_SERVER_NAME)$(ENCRYPTED_SERVER_IP)$(ENCRYPTED_EXP_DATE)SIGNATURE' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
+SIGNATURE := $(shell xor '$(ENCRYPTED_SERVER_NAME)$(ENCRYPTED_SERVER_LOCAL_IP)$(ENCRYPTED_SERVER_PUBLIC_IP)$(ENCRYPTED_EXP_DATE)SIGNATURE' '$(ENCRYPTION_KEY_X)' | base64 -w 0)
 
-SERVER_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/server/go/license.Signature=$(SIGNATURE)'
-CLIENT_GO_LDFLAGS := -X 'main.Version=$(GIT_TAG)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerIP=$(ENCRYPTED_SERVER_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/client/go/license.Signature=$(SIGNATURE)'
+SERVER_GO_LDFLAGS := -X 'main.Version=$(VERSION)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerLocalIP=$(ENCRYPTED_SERVER_LOCAL_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedServerPublicIP=$(ENCRYPTED_SERVER_PUBLIC_IP)' -X 'github.com/s77rt/rdpcloud/server/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/server/go/license.Signature=$(SIGNATURE)'
+CLIENT_GO_LDFLAGS := -X 'main.Version=$(VERSION)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptionKey=$(ENCRYPTION_KEY)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerName=$(ENCRYPTED_SERVER_NAME)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerLocalIP=$(ENCRYPTED_SERVER_LOCAL_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedServerPublicIP=$(ENCRYPTED_SERVER_PUBLIC_IP)' -X 'github.com/s77rt/rdpcloud/client/go/license.EncryptedExpDate=$(ENCRYPTED_EXP_DATE)' -X 'github.com/s77rt/rdpcloud/client/go/license.Signature=$(SIGNATURE)'
 
 all: dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module build-bundle info
 
@@ -119,15 +124,16 @@ build-bundle:
 	cp -r proto/ bundle/development/
 	mkdir bundle/development/cert
 	cp cert/server-cert.pem bundle/development/cert/
-	cd bundle && echo "${SERVER_NAME} (${SERVER_IP})" > LICENSEE.md
+	cd bundle && echo "${SERVER_NAME} (${SERVER_LOCAL_IP} | ${SERVER_PUBLIC_IP})" > LICENSEE.md
 	cd bundle && echo "Read the docs inside the /docs folder" > README.md
 	cd bundle && 7za -y a -x!.keep rdpcloud-bundle.7z .
 
 info:
 	@echo '########################################'
-	@echo 'VERSION:         $(GIT_TAG)'
-	@echo 'SERVER_NAME:     $(SERVER_NAME)'
-	@echo 'SERVER_IP:       $(SERVER_IP)'
-	@echo 'IS_FREE_TRIAL:   $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
-	@echo 'EXP_DATE:        $(EXP_DATE)'
+	@echo 'VERSION:           $(VERSION)'
+	@echo 'SERVER_NAME:       $(SERVER_NAME)'
+	@echo 'SERVER_LOCAL_IP:   $(SERVER_LOCAL_IP)'
+	@echo 'SERVER_PUBLIC_IP:  $(SERVER_PUBLIC_IP)'
+	@echo 'IS_FREE_TRIAL:     $(IS_FREE_TRIAL) ($(FREE_TRIAL_DURATION) days)'
+	@echo 'EXP_DATE:          $(EXP_DATE)'
 	@echo '########################################'

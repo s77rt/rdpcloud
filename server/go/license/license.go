@@ -15,23 +15,25 @@ import (
 var (
 	EncryptionKey string
 
-	EncryptedServerName string
-	EncryptedServerIP   string
-	EncryptedExpDate    string
+	EncryptedServerName     string
+	EncryptedServerLocalIP  string
+	EncryptedServerPublicIP string
+	EncryptedExpDate        string
 
 	Signature string
 )
 
 type License struct {
-	ServerName string
-	ServerIP   net.IP
-	ExpDate    time.Time
+	ServerName     string
+	ServerLocalIP  net.IP
+	ServerPublicIP net.IP
+	ExpDate        time.Time
 }
 
 func Read() (*License, error) {
 	encryptionKeyX := b64Encode(xor.XOR([]byte(EncryptionKey), []byte("RDPCloud")))
 
-	readSignature := b64Encode(xor.XOR([]byte(EncryptedServerName+EncryptedServerIP+EncryptedExpDate+"SIGNATURE"), []byte(encryptionKeyX)))
+	readSignature := b64Encode(xor.XOR([]byte(EncryptedServerName+EncryptedServerLocalIP+EncryptedServerPublicIP+EncryptedExpDate+"SIGNATURE"), []byte(encryptionKeyX)))
 	if readSignature != Signature {
 		return nil, errors.New("Signature does not match")
 	}
@@ -44,13 +46,21 @@ func Read() (*License, error) {
 	decryptedServerName := xor.XOR(decodedServerName, []byte(encryptionKeyX))
 	serverName = string(decryptedServerName)
 
-	var serverIP net.IP
-	decodedServerIP, err := b64Decode(EncryptedServerIP)
+	var serverLocalIP net.IP
+	decodedServerLocalIP, err := b64Decode(EncryptedServerLocalIP)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Unable to decode server ip (%v)", err))
+		return nil, errors.New(fmt.Sprintf("Unable to decode server local ip (%v)", err))
 	}
-	decryptedServerIP := xor.XOR(decodedServerIP, []byte(encryptionKeyX))
-	serverIP = net.ParseIP(string(decryptedServerIP))
+	decryptedServerLocalIP := xor.XOR(decodedServerLocalIP, []byte(encryptionKeyX))
+	serverLocalIP = net.ParseIP(string(decryptedServerLocalIP))
+
+	var serverPublicIP net.IP
+	decodedServerPublicIP, err := b64Decode(EncryptedServerPublicIP)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Unable to decode server public ip (%v)", err))
+	}
+	decryptedServerPublicIP := xor.XOR(decodedServerPublicIP, []byte(encryptionKeyX))
+	serverPublicIP = net.ParseIP(string(decryptedServerPublicIP))
 
 	var expDate time.Time
 	decodedExpDate, err := b64Decode(EncryptedExpDate)
@@ -66,9 +76,10 @@ func Read() (*License, error) {
 	}
 
 	return &License{
-		ServerName: serverName,
-		ServerIP:   serverIP,
-		ExpDate:    expDate,
+		ServerName:     serverName,
+		ServerLocalIP:  serverLocalIP,
+		ServerPublicIP: serverPublicIP,
+		ExpDate:        expDate,
 	}, nil
 }
 

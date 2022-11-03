@@ -92,12 +92,12 @@ func main() {
 	log.Printf("Running RDPCloud Client (Version: %s)", Version)
 
 	if licenseInfo.ExpDate.IsZero() {
-		log.Printf("Licensed to %s (%s)", licenseInfo.ServerName, licenseInfo.ServerIP)
+		log.Printf("Licensed to %s (%s | %s)", licenseInfo.ServerName, licenseInfo.ServerLocalIP, licenseInfo.ServerPublicIP)
 	} else {
-		log.Printf("Licensed to %s (%s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerIP, licenseInfo.ExpDate)
+		log.Printf("Licensed to %s (%s | %s) [Exp. Date: %s]", licenseInfo.ServerName, licenseInfo.ServerLocalIP, licenseInfo.ServerPublicIP, licenseInfo.ExpDate)
 	}
 
-	addr := fmt.Sprintf("%s:%d", licenseInfo.ServerIP, port)
+	addr := fmt.Sprintf("%s:%d", licenseInfo.ServerPublicIP, port)
 	target := licenseInfo.ServerName
 
 	serverCert, err := c.ReadFile("cert/server-cert.pem")
