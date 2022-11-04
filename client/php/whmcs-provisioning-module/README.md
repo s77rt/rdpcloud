@@ -22,8 +22,9 @@ The certificate file should be placed at `cert/server-cert.pem`
 ## Notes
 - WHMCS Terminate function will delete the user and his profile directory. Only the profile directory will be deleted, if the user owns other files in other locations they will remain untouched and the terminate function may fail
 - It's recommended to have only one volume in the system
-- Make sure the quota is enabled (enforced)
+- Make sure the quota is enabled and enforced (Use Windows GUI (Volume Properties) or set the quota state to 2 using the rdp control panel)
 - This module is expected to work on case insensitive file systems (That's normally the default behaviour in Windows)
+- It's advised not to provide/sell/offer accounts with admin access
 
 ## FREE INSTALLATION:
 You can get a free installation for your first server via AnyDesk. Read /docs/SUPPORT.md file

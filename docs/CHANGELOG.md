@@ -8,6 +8,7 @@ All notable changes to this project (rdpcloud) will be documented in this file.
 
 ### Changed:
  - License is now based on both the Local IP and the Public IP
+ - Updated the docs
 
 ## [0.1.2] - 30/10/2022
 ### Added:
