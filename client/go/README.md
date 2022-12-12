@@ -13,6 +13,3 @@
 ## Notes
 - The files should be placed in a protected location (where other users do not have access to)
 - Ratelimit can be done using a reverse proxy (envoy, nginx, etc.)
-
-## FREE INSTALLATION:
-You can get a free installation for your first server via AnyDesk. Read /docs/SUPPORT.md file
