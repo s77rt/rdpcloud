@@ -25,6 +25,3 @@ The certificate file should be placed at `cert/server-cert.pem`
 - Make sure the quota is enabled and enforced (Use Windows GUI (Volume Properties) or set the quota state to 2 using the rdp control panel)
 - This module is expected to work on case insensitive file systems (That's normally the default behaviour in Windows)
 - It's advised not to provide/sell/offer accounts with admin access
-
-## FREE INSTALLATION:
-You can get a free installation for your first server via AnyDesk. Read /docs/SUPPORT.md file

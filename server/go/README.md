@@ -16,6 +16,3 @@
 - You may want to delete/disable $RECYCLE.BIN folder(s) to avoid quota issues
 - You may want to enable quota (enforced) and set default quotas (can be done using the RDPCloud Client)
 - Ratelimit can be done using a reverse proxy (envoy, nginx, etc.)
-
-## FREE INSTALLATION:
-You can get a free installation for your first server via AnyDesk. Read /docs/SUPPORT.md file
