@@ -1,15 +1,15 @@
-THIS WAS A PAID SOFTWARE! NOW IT'S COMPLETELY FREE AND OPEN-SOURCE !
+📢 THIS WAS A PAID SOFTWARE! NOW IT'S COMPLETELY FREE AND OPEN-SOURCE !
 
 # RDPCloud
 ## RDP Control Panel
 
-### Overview
+### 💫 Overview
 RDPCloud is a simple and innovative RDP Control Panel. Designed to simplify the process of RDP Control for hosting providers and users
 #### Videos:
 - https://youtu.be/fGuu0ZIOxmw
 - https://youtu.be/6SUfM0VSokI
 
-### Features
+### ⭐️ Features
 * #### Portable
     RDPCloud is portable, works out of the box, and requires zero configuration
 * #### Secure by Design
@@ -29,22 +29,22 @@ RDPCloud is a simple and innovative RDP Control Panel. Designed to simplify the 
 * #### Cross-Platform
     RDPCloud Client is cross-platform and runs on Linux, Windows, and macOS. RDPCloud Server runs on Windows only
 
-### Price
+### 💰 Price
 This was $99 per server, but now it's complelty **free** yet I have left the license functionality. You can license your servers as much as you want.
 
-### Build / Install
+### 🚀 Build / Install
 `make SERVER_NAME=RDPCloud SERVER_LOCAL_IP=1.2.3.4 SERVER_PUBLIC_IP=1.2.3.4 IS_FREE_TRIAL=FALSE`
 - Replace RDPCloud with your desired server name (business name)
 - Replace 1.2.3.4 with yoour server IP
 
 A bundle file will be created on the bundle folder. From here you can follow the linked videos above.
 
-### Limits
+### 🚩 Limits
 - Does not support domain controller
 
-### TODO
+### 📋 TODO
 - Write a better README
 - Fix the mentioned limits
 
-### Buy me a coffee
+### ☕ Buy me a coffee
 Programmers love coffee, [buy me a coffee](https://www.buymeacoffee.com/s77rt)
