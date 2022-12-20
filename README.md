@@ -32,6 +32,12 @@ RDPCloud is a simple and innovative RDP Control Panel. Designed to simplify the 
 ### 💰 Price
 This was $99 per server, but now it's complelty **free** yet I have left the license functionality. You can license your servers as much as you want.
 
+### ⚒ Requirements
+- Go
+- npm
+- protoc
+- composer
+
 ### 🚀 Build / Install
 `make SERVER_NAME=RDPCloud SERVER_LOCAL_IP=1.2.3.4 SERVER_PUBLIC_IP=1.2.3.4 IS_FREE_TRIAL=FALSE`
 - Replace RDPCloud with your desired server name (business name)

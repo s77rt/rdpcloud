@@ -43,7 +43,7 @@ CLIENT_GO_LDFLAGS := -X 'main.Version=$(VERSION)' -X 'github.com/s77rt/rdpcloud/
 all: dep gen-cert gen-go gen-php build-server-go build-client-frontend-react build-client-go build-client-php-whmcs-provisioning-module build-bundle info
 
 dep:
-	go install mvdan.cc/garble@latest
+	go install mvdan.cc/garble@v0.7.2
 	go install github.com/s77rt/xor/cmd/xor@latest
 
 gen-cert:
