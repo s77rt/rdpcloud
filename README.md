@@ -1,5 +1,3 @@
-📢 THIS WAS A PAID SOFTWARE! NOW IT'S COMPLETELY FREE AND OPEN-SOURCE !
-
 # RDPCloud
 ## RDP Control Panel
 
@@ -44,13 +42,3 @@ This was $99 per server, but now it's complelty **free** yet I have left the lic
 - Replace 1.2.3.4 with yoour server IP
 
 A bundle file will be created on the bundle folder. From here you can follow the linked videos above.
-
-### 🚩 Limits
-- Does not support domain controller
-
-### 📋 TODO
-- Write a better README
-- Fix the mentioned limits
-
-### ☕ Buy me a coffee
-Programmers love coffee, [buy me a coffee](https://www.buymeacoffee.com/s77rt)
