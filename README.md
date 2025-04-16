@@ -27,9 +27,6 @@ RDPCloud is a simple and innovative RDP Control Panel. Designed to simplify the 
 * #### Cross-Platform
     RDPCloud Client is cross-platform and runs on Linux, Windows, and macOS. RDPCloud Server runs on Windows only
 
-### 💰 Price
-This was $99 per server, but now it's complelty **free** yet I have left the license functionality. You can license your servers as much as you want.
-
 ### ⚒ Requirements
 - Go
 - npm
